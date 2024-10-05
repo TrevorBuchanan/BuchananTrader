@@ -1,0 +1,19 @@
+body {
+    background-color: #0b0e0a; 
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: rgb(177, 177, 177);
+}
+
+.mainContent {
+    margin: 0rem 1rem;
+}
+
+a {
+    color: rgb(177, 177, 177);
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(255, 255, 255);
+}

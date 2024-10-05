@@ -1,0 +1,65 @@
+/* src/components/Header/Header.css */
+/* Green: #037c03 */
+
+header {
+    padding: 1rem 1rem; 
+    right: 0;
+    left: 0;
+    top: 0;
+    position: fixed;
+}
+
+.navbar {
+    display: flex;
+    align-items: flex-end;  
+}
+
+.logoTitleContainer {
+    margin: 0;
+    width: 14rem;
+    display: flex;
+    align-items: flex-end;
+}
+
+.logo {
+    width: 2rem;
+    height: auto;
+    margin: 0;
+}
+  
+
+.title {
+    font-style: italic;
+    font-size: 1.6rem;
+    margin: 0;
+}
+
+.nav_links {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    margin-left: auto; 
+    margin-right: 0;
+}
+
+li {
+    font-size: large;
+    list-style-type: none;
+    margin: 0;
+    padding-left: 1rem;
+}
+
+.bottomLine {
+    background-color: rgb(103, 103, 103);
+    height: 1px;
+    margin: 0;
+    right: 0;
+    left: 0;
+    top: 0;
+    margin-top: 70px;
+    position: fixed;
+}
+
+.spacer {
+    height: 70px;
+}
