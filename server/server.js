@@ -2,6 +2,12 @@ const express = require('express');
 const cors = require('cors'); 
 const path = require('path');
 const app = express();
+const apiRoutes = require('./routes/apiRoutes');
+
+require('dotenv').config();
+
+const apiKey = process.env.COINBASE_API_KEY;
+const privateKey = process.env.COINBASE_PRIVATE_KEY;
 
 // Middleware
 app.use(express.json());
@@ -9,15 +15,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors()); 
 
+// API Routes
+app.use('/routes', apiRoutes);
+
 // Set up the EJS view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); // Set the views directory
-
-// Example API route
-app.get('/api/example', (req, res) => {
-  const exampleData = 'Hello from the backend!';
-  res.json(exampleData);
-});
 
 // Set up the EJS view engine
 app.set('view engine', 'ejs');
