@@ -1,0 +1,18 @@
+.priceTimeGraph {
+    border: solid;
+    border-color: #b1b1b1;
+    border-width: 2px;
+    border-radius: 10px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+}
+
+.chartTitle {
+    font-size: medium;
+    margin-left: 2rem;
+}
+
+.temp {
+    background-color: #407E3D;
+}

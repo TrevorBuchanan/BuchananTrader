@@ -30,7 +30,6 @@ const Header = () => {
           </nav>
         </div>
       </header>
-      <div className={styles.bottomLine}></div>
       <div className={styles.spacer}></div>
     </>
   );

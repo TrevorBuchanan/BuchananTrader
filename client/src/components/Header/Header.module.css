@@ -1,5 +1,5 @@
 /* src/components/Header/Header.css */
-/* Green: #037c03 */
+/* Green: ##407E3D */
 
 header {
     padding: 1rem 1rem; 
@@ -7,6 +7,8 @@ header {
     left: 0;
     top: 0;
     position: fixed;
+    z-index: 1000; 
+    background-color: #101010b4;
 }
 
 .navbar {
@@ -16,13 +18,13 @@ header {
 
 .logoTitleContainer {
     margin: 0;
-    width: 14rem;
+    width: 16rem;
     display: flex;
     align-items: flex-end;
 }
 
 .logo {
-    width: 2rem;
+    width: 2.5rem;
     height: auto;
     margin: 0;
 }
@@ -49,17 +51,7 @@ li {
     padding-left: 1rem;
 }
 
-.bottomLine {
-    background-color: rgb(103, 103, 103);
-    height: 1px;
-    margin: 0;
-    right: 0;
-    left: 0;
-    top: 0;
-    margin-top: 70px;
-    position: fixed;
-}
 
 .spacer {
-    height: 70px;
+    height: 100px;
 }

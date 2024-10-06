@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors'); 
+const cors = require('cors');
 const path = require('path');
 const app = express();
 const apiRoutes = require('./routes/apiRoutes');
@@ -13,7 +13,7 @@ const privateKey = process.env.COINBASE_PRIVATE_KEY;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors()); 
+app.use(cors());
 
 // API Routes
 app.use('/routes', apiRoutes);
@@ -22,38 +22,74 @@ app.use('/routes', apiRoutes);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); // Set the views directory
 
-// Set up the EJS view engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Sample data
+const sampleData = [
+  {
+    "timestamp": "2024-01-01",
+    "series": [
+      { "name": "Bitcoin", "price": 332 },
+      { "name": "Buchanan", "price": 100 },
+      { "name": "Ethereum", "price": 25 }
+    ]
+  },
+  {
+    "timestamp": "2024-01-02",
+    "series": [
+      { "name": "Bitcoin", "price": 433 },
+      { "name": "Buchanan", "price": 290 },
+      { "name": "Ethereum", "price": 91 }
+    ]
+  },
+  {
+    "timestamp": "2024-01-03",
+    "series": [
+      { "name": "Bitcoin", "price": 522 },
+      { "name": "Buchanan", "price": null },
+      { "name": "Ethereum", "price": 198 }
+    ]
+  },
+  {
+    "timestamp": "2024-01-04",
+    "series": [
+      { "name": "Bitcoin", "price": 320 },
+      { "name": "Buchanan", "price": null },
+      { "name": "Ethereum", "price": 190 }
+    ]
+  },
+  {
+    "timestamp": "2024-01-05",
+    "series": [
+      { "name": "Bitcoin", "price": 230 },
+      { "name": "Buchanan", "price": null },
+      { "name": "Ethereum", "price": 200 }
+    ]
+  },
+  {
+    "timestamp": "2024-01-06",
+    "series": [
+      { "name": "Bitcoin", "price": 135 },
+      { "name": "Buchanan", "price": 400 },
+      { "name": "Ethereum", "price": 311 }
+    ]
+  },
+  {
+    "timestamp": "2024-01-07",
+    "series": [
+      { "name": "Bitcoin", "price": 250 },
+      { "name": "Buchanan", "price": 340 },
+      { "name": "Ethereum", "price": 510 }
+    ]
+  },
+];
 
-// Route for rendering EJS views
-app.get('/', (req, res) => {
-  res.render('home', { title: 'Home'})
-})
-
-app.get('/login', (req, res) => {
-  res.render('login', { title: 'Login Page' });
+// API endpoint to get price data
+app.get('/api/graph-data', (req, res) => {
+  res.json(sampleData);
 });
 
-app.get('/register', (req, res) => {
-  res.render('register', { title: 'Register Page' });
-});
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-app.get('/user-profile', (req, res) => {
-  res.render('userProfile', { title: 'User Profile' });
-});
-
-app.get('/admin-profile', (req, res) => {
-  res.render('adminProfile', { title: 'Admin Profile' });
-});
-
-app.get('/user-hub', (req, res) => {
-  res.render('userHub', { title: 'User Trading Hub' });
-});
-
-app.get('/admin-hub', (req, res) => {
-  res.render('adminHub', { title: 'Admin Trading Hub' });
-});
 
 // Start the server
 const PORT = process.env.PORT || 6000;

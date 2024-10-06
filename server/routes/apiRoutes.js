@@ -13,4 +13,13 @@ router.get('/coinbase', async (req, res) => {
   }
 });
 
+router.get('/coinbase', async (req, res) => {
+  try {
+    const data = await getCoinbaseData();
+    res.json(data);
+  } catch (error) {
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
