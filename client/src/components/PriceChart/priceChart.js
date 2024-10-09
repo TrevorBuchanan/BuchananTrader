@@ -8,7 +8,7 @@ const PriceChart = ({ chartName }) => {
     const [dates, setDates] = useState([]); // Timestamps for the chart
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [interval, setIntervalState] = useState(5000); // Default to 5 seconds
+    const [interval, setIntervalState] = useState(1000); // Default to 5 seconds
 
     useEffect(() => {
         let intervalId;
@@ -102,7 +102,7 @@ const PriceChart = ({ chartName }) => {
         <div className={styles.priceTimeGraph}>
             <h2 className={styles.chartTitle}>{chartName}</h2>
             <div>
-                <label className={styles.chartUpdateTime}>Update Interval: {interval / 10000} second(s)</label>
+                <label className={styles.chartUpdateTime}>Update Interval: {interval / 1000} second(s)</label>
                 <input
                     type="range"
                     min="1000"
