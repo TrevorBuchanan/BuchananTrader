@@ -1,8 +1,13 @@
-const axios = require('axios');
+const { getCoinbaseData } = require('../config/coinbase');
 
-const getCoinbasePrice = async () => {
-  const response = await axios.get('https://api.coinbase.com/v2/prices/BTC-USD/spot');
-  return response.data.data.amount;
+const fetchCoinbaseInfo = async (endpoint) => {
+  try {
+    const data = await getCoinbaseData(endpoint);
+    return data;
+  } catch (error) {
+    console.error('Error in fetchCoinbaseInfo:', error); // Log the full error here
+    throw new Error('Failed to fetch Coinbase data');
+  }
 };
 
-module.exports = { getCoinbasePrice };
+module.exports = { fetchCoinbaseInfo };

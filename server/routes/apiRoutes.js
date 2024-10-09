@@ -1,25 +1,8 @@
 const express = require('express');
-const { getCoinbaseData } = require('../config/coinbase');
-
 const router = express.Router();
+const { getCoinbaseData } = require('../controllers/coinbaseController');
 
-// Example route to get data from Coinbase
-router.get('/coinbase', async (req, res) => {
-  try {
-    const data = await getCoinbaseData();
-    res.json(data);
-  } catch (error) {
-    res.status(500).send('Server Error');
-  }
-});
-
-router.get('/coinbase', async (req, res) => {
-  try {
-    const data = await getCoinbaseData();
-    res.json(data);
-  } catch (error) {
-    res.status(500).send('Server Error');
-  }
-});
+// Fetch prices for specific cryptocurrencies (e.g., Bitcoin, Ethereum)
+router.get('/coinbase/:endpoint', getCoinbaseData);
 
 module.exports = router;

@@ -1,58 +1,58 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Chart from 'react-apexcharts';
+import styles from './priceChart.module.css';
 
-import styles from './priceChart.module.css'
-
-const PriceChart = ({chartName}) => {
-    const [seriesData, setSeriesData] = useState([]);
-    const [dates, setDates] = useState([]);
+const PriceChart = ({ chartName }) => {
+    const [seriesData, setSeriesData] = useState([{ name: 'Bitcoin', data: [] }]);
+    const [dates, setDates] = useState([]); // Timestamps for the chart
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [interval, setIntervalState] = useState(5000); // Default to 5 seconds
 
     useEffect(() => {
-        const fetchData = async () => {
+        let intervalId;
+
+        const fetchPrices = async () => {
             try {
-                const response = await fetch('/api/graph-data'); 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
+                const response = await axios.get('/api/coinbase/prices');
+                const priceData = response.data.data;
 
-                
-                if (!data || !Array.isArray(data)) {
-                    throw new Error('Invalid data format from API');
-                }
+                // Append the new price and date to the series
+                setSeriesData(prevSeries => [
+                    {
+                        ...prevSeries[0],
+                        data: [...prevSeries[0].data, parseFloat(priceData.amount)],
+                    },
+                ]);
 
-                // Extract timestamps
-                const timeStamps = data.map(item => new Date(item.timestamp).toLocaleDateString());
+                // Append the current date to the dates array
+                setDates(prevDates => [
+                    ...prevDates,
+                    new Date().toLocaleTimeString(), // Format time for easier viewing
+                ]);
 
-                // Process series data
-                const series = {};
-
-                data.forEach(item => {
-                    item.series.forEach(priceItem => {
-                        if (!series[priceItem.name]) {
-                            series[priceItem.name] = [];
-                        }
-                        series[priceItem.name].push(priceItem.price);
-                    });
-                });
-
-                // Format series data for ApexCharts
-                const formattedSeries = Object.keys(series).map(name => ({
-                    name: name,
-                    data: series[name]
-                }));
-
-                setDates(timeStamps);
-                setSeriesData(formattedSeries);
-            } catch (error) {
-                console.error('Error fetching price data:', error);
-                setError('Failed to load chart data');
+                setLoading(false);
+            } catch (err) {
+                setError('Failed to fetch prices');
+                setLoading(false);
             }
         };
 
-        fetchData();
-    }, []);
+        // Fetch the price at the set interval
+        const startPolling = () => {
+            fetchPrices(); // Initial fetch
+            intervalId = setInterval(fetchPrices, interval);
+        };
+
+        startPolling();
+
+        // Clear the interval on cleanup or when interval changes
+        return () => clearInterval(intervalId);
+    }, [interval]); // Re-run effect when interval changes
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
 
     const chartOptions = {
         chart: {
@@ -71,7 +71,7 @@ const PriceChart = ({chartName}) => {
             },
         },
         xaxis: {
-            categories: dates,
+            categories: dates, // Use the updated timestamps
         },
         yaxis: {
             title: {
@@ -93,9 +93,25 @@ const PriceChart = ({chartName}) => {
         },
     };
 
+    const handleSliderChange = (event) => {
+        const newInterval = Number(event.target.value);
+        setIntervalState(newInterval); // Update the interval state
+    };
+
     return (
         <div className={styles.priceTimeGraph}>
             <h2 className={styles.chartTitle}>{chartName}</h2>
+            <div>
+                <label className={styles.chartUpdateTime}>Update Interval: {interval / 10000} second(s)</label>
+                <input
+                    type="range"
+                    min="1000"
+                    max="60000"
+                    value={interval}
+                    step="1000"
+                    onChange={handleSliderChange}
+                />
+            </div>
             {error ? (
                 <div>{error}</div>
             ) : (

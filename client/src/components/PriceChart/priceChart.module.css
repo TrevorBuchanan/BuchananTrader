@@ -13,6 +13,11 @@
     margin-left: 2rem;
 }
 
+.chartUpdateTime {
+    font-size: medium;
+    margin-left: 2rem;
+}
+
 .temp {
     background-color: #407E3D;
 }
