@@ -12,10 +12,10 @@ const PriceChart = ({ chartName }) => {
 
     useEffect(() => {
         let intervalId;
-
+        console.log("At priceChart");
         const fetchPrices = async () => {
             try {
-                const response = await axios.get('/api/coinbase/prices');
+                const response = await axios.get('/api/coinbase/products');
                 const priceData = response.data.data;
 
                 // Append the new price and date to the series

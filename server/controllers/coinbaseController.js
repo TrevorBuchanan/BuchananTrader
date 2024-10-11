@@ -1,15 +1,54 @@
-const { fetchCoinbaseInfo } = require('../services/coinbaseService');
+const coinbaseService = require('../services/coinbaseService');
 
-// Controller to handle Coinbase API requests
-const getCoinbaseData = async (req, res) => {
+// Controller to get accounts
+const getAccounts = async (req, res) => {
   try {
-    const { endpoint } = req.params; // Extract the endpoint from the request params
-    const coinbaseData = await fetchCoinbaseInfo(endpoint);
-    res.status(200).json(coinbaseData);
+    const accounts = await coinbaseService.getAccounts();
+    res.json(accounts);
   } catch (error) {
-    console.error('Error in getCoinbaseData:', error.message);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching accounts', error: error.message });
   }
 };
 
-module.exports = { getCoinbaseData };
+// Controller to get currencies
+const getCurrencies = async (req, res) => {
+  try {
+    const currencies = await coinbaseService.getCurrencies();
+    res.json(currencies);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching currencies', error: error.message });
+  }
+};
+
+// Controller to get products
+const getProducts = async (req, res) => {
+  try {
+    const products = await coinbaseService.getProducts();
+    res.json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching products', error: error.message });
+  }
+};
+
+// Controller to create a transaction
+const createTransaction = async (req, res) => {
+  const { accountId, amount, currency } = req.body;
+  try {
+    const transaction = await coinbaseService.createTransaction(accountId, amount, currency);
+    res.json(transaction);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error creating transaction', error: error.message });
+  }
+};
+
+// Export the controller functions
+module.exports = {
+  getAccounts,
+  getCurrencies,
+  getProducts,
+  createTransaction,
+};

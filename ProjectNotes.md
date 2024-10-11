@@ -18,4 +18,5 @@
 
 
 **Misc**
+* Show which process is running on port-number: `sudo lsof -i :<port-number>`
 * Kill process: `kill -9 <PID>`

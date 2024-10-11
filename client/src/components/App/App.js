@@ -1,16 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
-import Home from '../Home/Home';
-import UserProfile from '../UserProfile/UserProfile';
-import AdminProfile from '../AdminProfile/AdminProfile';
-import UserHub from '../UserHub/UserHub';
-import AdminHub from '../AdminHub/AdminHub';
-import Login from '../Login/Login';
-import Register from '../Register/Register';
-import NotFound from '../NotFound/NotFound'
-import PrivateRoute from '../PrivateRoute/PrivateRoute';
+import Header from '../Header/header';
+import Footer from '../Footer/footer';
+import Home from '../Home/home';
+import UserProfile from '../UserProfile/userProfile';
+import AdminProfile from '../AdminProfile/adminProfile';
+import UserHub from '../UserHub/userHub';
+import AdminHub from '../AdminHub/adminHub';
+import Login from '../Login/login';
+import Register from '../Register/register';
+import NotFound from '../NotFound/notFound'
+import PrivateRoute from '../PrivateRoute/privateRoute';
 
 import styles from './App.module.css';
 

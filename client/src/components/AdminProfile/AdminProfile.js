@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './AdminProfile.module.css';
+import styles from './adminProfile.module.css';
 
 function AdminProfile() {
   return (

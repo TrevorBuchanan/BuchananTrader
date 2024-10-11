@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { getCoinbaseData } = require('../controllers/coinbaseController');
+const coinbaseController = require('../controllers/coinbaseController');
 
-// Fetch prices for specific cryptocurrencies (e.g., Bitcoin, Ethereum)
-router.get('/coinbase/:endpoint', getCoinbaseData);
+// Define your API routes
+router.get('/coinbase/accounts', coinbaseController.getAccounts);
+router.get('/coinbase/currencies', coinbaseController.getCurrencies);
+router.get('/coinbase/products', coinbaseController.getProducts);
+router.post('/coinbase/transactions', coinbaseController.createTransaction); // POST for creating transactions
 
+// Export the router
 module.exports = router;
