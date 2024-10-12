@@ -1,17 +1,5 @@
 const coinbaseService = require('../services/coinbaseService');
 
-// Controller to get accounts
-const getAccounts = async (req, res) => {
-  try {
-    const accounts = await coinbaseService.getAccounts();
-    res.json(accounts);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error fetching accounts', error: error.message });
-  }
-};
-
-// Controller to get currencies
 const getCurrencies = async (req, res) => {
   try {
     const currencies = await coinbaseService.getCurrencies();
@@ -22,7 +10,6 @@ const getCurrencies = async (req, res) => {
   }
 };
 
-// Controller to get products
 const getProducts = async (req, res) => {
   try {
     const products = await coinbaseService.getProducts();
@@ -33,7 +20,6 @@ const getProducts = async (req, res) => {
   }
 };
 
-// Controller to create a transaction
 const createTransaction = async (req, res) => {
   const { accountId, amount, currency } = req.body;
   try {
@@ -45,9 +31,7 @@ const createTransaction = async (req, res) => {
   }
 };
 
-// Export the controller functions
 module.exports = {
-  getAccounts,
   getCurrencies,
   getProducts,
   createTransaction,

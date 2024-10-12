@@ -1,63 +1,40 @@
-const client = require('../config/coinbase');
+const client = require('../config/coinbase'); // Import the `makeRequest` function
 
-console.log(client);
-
-// Function to get accounts
-const getAccounts = async () => {
-  return new Promise((resolve, reject) => {
-    client.getAccounts({}, (err, accounts) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(accounts);
-    });
-  });
-};
-
-// Function to get all currencies
+// Function to get all available currencies
 const getCurrencies = async () => {
-  return new Promise((resolve, reject) => {
-    client.getCurrencies({}, (err, currencies) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(currencies);
-    });
-  });
+  try {
+    const response = await client.makeRequest('GET', '/currencies'); // Use makeRequest directly
+    return response.data || response; // Adjust based on response structure
+  } catch (error) {
+    throw new Error(`Error fetching currencies: ${error.message}`);
+  }
 };
 
-// Function to get products (trading pairs)
+// Function to get all available products (trading pairs)
 const getProducts = async () => {
-  return new Promise((resolve, reject) => {
-    client.getProducts({}, (err, products) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(products);
-    });
-  });
+  try {
+    const response = await client.makeRequest('GET', '/products'); // Use makeRequest directly
+    return response.data || response; // Adjust based on response structure
+  } catch (error) {
+    throw new Error(`Error fetching products: ${error.message}`);
+  }
 };
 
-// Function to create a transaction
+// Function to create a transaction (send money or crypto)
 const createTransaction = async (accountId, amount, currency) => {
-  return new Promise((resolve, reject) => {
-    client.getAccount(accountId, (err, account) => {
-      if (err) {
-        return reject(err);
-      }
-      account.sendMoney({ amount, currency }, (err, transaction) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(transaction);
-      });
-    });
-  });
+  try {
+    const body = {
+      amount,
+      currency,
+    };
+    const response = await client.makeRequest('POST', `/accounts/${accountId}/transactions`, body); // Use makeRequest directly
+    return response.data || response;
+  } catch (error) {
+    throw new Error(`Error creating transaction: ${error.message}`);
+  }
 };
 
-// Export the service functions
 module.exports = {
-  getAccounts,
   getCurrencies,
   getProducts,
   createTransaction,
