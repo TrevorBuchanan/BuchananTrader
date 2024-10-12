@@ -5,7 +5,6 @@ import styles from './home.module.css';
 
 
 function Home() {
-  console.log("At home");
   return (<div className={styles.homeContainer}>
     <AssetSearch />
     {/* <PriceChart chartName="Buying Tracker"/> */}

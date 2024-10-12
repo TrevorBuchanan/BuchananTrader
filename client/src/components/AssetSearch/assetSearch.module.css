@@ -1,0 +1,35 @@
+.searchInput {
+    width: 10rem;
+    padding: 10px;
+    border: 1px solid #4b4b4b;
+    background-color: #353535;
+    color: rgb(177, 177, 177);
+    border-radius: 10px;
+}
+
+.dropdown {
+    list-style-type: none;
+    padding: 0;
+    margin: 2px 0 0;
+    border: 1px solid #4b4b4b;
+    border-radius: 4px;
+    background-color: rgb(46, 46, 46);
+    position: absolute;
+    z-index: 1; /* Ensure it appears above other elements */
+    width: 9rem; /* Adjust for border width */
+}
+
+.dropdownItem {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdownItem:hover {
+    background-color: #353535; /* Highlight on hover */
+}
+
+.noResults {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #353535; /* Highlight on hover */
+}
