@@ -11,7 +11,7 @@ const debounce = (func, delay) => {
     };
 };
 
-const AssetSearch = () => {
+const AssetSearch = ({ onAssetSelect }) => {
     const [assets, setAssets] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredAssets, setFilteredAssets] = useState([]);
@@ -65,6 +65,8 @@ const AssetSearch = () => {
     const handleAssetSelect = (asset) => {
         setSearchTerm(asset.display_name); 
         setIsFocused(false); 
+        onAssetSelect(asset.display_name); // Notify Home component of the selected asset
+        setSearchTerm('');
     };
 
     const handleFocus = () => {

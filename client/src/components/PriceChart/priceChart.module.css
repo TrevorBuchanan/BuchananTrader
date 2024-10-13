@@ -20,3 +20,21 @@
 .statusText {
     margin: 2rem;
 }
+
+.titleSection {
+    display: flex;
+}
+
+.removeButton {
+    color: rgb(177, 177, 177);
+    font-size: large;
+    font-weight: bold;
+    background: none;
+    border: none;
+    height: 20px;
+    display: flex;
+    margin: 5px;
+    margin-left: auto; 
+    margin-right: 0;
+}
+

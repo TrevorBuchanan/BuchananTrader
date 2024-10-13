@@ -3,7 +3,7 @@ import axios from 'axios';
 import Chart from 'react-apexcharts';
 import styles from './priceChart.module.css';
 
-const PriceChart = ({ targetAsset, updateFrequency = 5000 }) => {
+const PriceChart = ({ targetAsset, onRemove, updateFrequency = 5000 }) => {
     // Initialize states
     const [seriesData, setSeriesData] = useState([
         { name: targetAsset, data: [] }
@@ -72,7 +72,7 @@ const PriceChart = ({ targetAsset, updateFrequency = 5000 }) => {
         },
         yaxis: {
             title: {
-                text: 'Price (USD)',
+                text: 'Price',
             },
         },
         grid: {
@@ -92,7 +92,10 @@ const PriceChart = ({ targetAsset, updateFrequency = 5000 }) => {
 
     return (
         <div className={styles.priceTimeGraph}>
-            <h2 className={styles.chartTitle}>{targetAsset} Price Tracker</h2>
+            <div className={styles.titleSection}>
+                <h2 className={styles.chartTitle}>{targetAsset} Price Tracker</h2>
+                <button className={styles.removeButton} onClick={() => onRemove(targetAsset)}>X</button> {/* Remove button */}
+            </div>
             {error ? (
                 <div className={styles.statusText}>{error}</div>
             ) : (
