@@ -16,11 +16,11 @@ import styles from './App.module.css';
 
 function App() {
   return (
-    <div className="mainContent">
+    <div>
       <Router>
-        <Header />  { }
+        <Header /> 
 
-        <main>
+        <main className="content">
           <Routes>
             <Route path="/" element={<Home />} />
             {/* Use the PrivateRoute wrapper here */}

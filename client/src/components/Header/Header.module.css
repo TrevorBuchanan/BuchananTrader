@@ -2,13 +2,13 @@
 /* Green: ##407E3D */
 
 header {
-    padding: 1rem 1rem; 
     right: 0;
     left: 0;
     top: 0;
     position: fixed;
     z-index: 1000; 
     background-color: #101010b4;
+    height: 60px;
 }
 
 .navbar {
@@ -16,8 +16,9 @@ header {
     align-items: flex-end;  
 }
 
-.logoTitleContainer {
+.titleContainer {
     margin: 0;
+    padding: 1rem;
     width: 16rem;
     display: flex;
     align-items: flex-end;
@@ -37,7 +38,7 @@ header {
 
 .nav_links {
     display: flex;
-    padding: 0;
+    padding: 1rem;
     margin: 0;
     margin-left: auto; 
     margin-right: 0;
@@ -48,9 +49,4 @@ li {
     list-style-type: none;
     margin: 0;
     padding-left: 1rem;
-}
-
-
-.spacer {
-    height: 100px;
 }
