@@ -4,8 +4,8 @@
 }
 
 .leftCol {
+    width: 30%;
     padding: 1rem;
-    flex: 1;
 }
 
 .middleCol {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'; // Import useState
 import PriceChart from '../PriceChart/priceChart';
+// import ProfitLossChart from '../ProfitLossChart/profitLossChart';
 import AssetSearch from '../AssetSearch/assetSearch';
 import styles from './home.module.css';
 

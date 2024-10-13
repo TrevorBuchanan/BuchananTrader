@@ -3,7 +3,9 @@ import axios from 'axios';
 import Chart from 'react-apexcharts';
 import styles from './priceChart.module.css';
 
-const PriceChart = ({ targetAsset, onRemove, updateFrequency = 5000 }) => {
+const PriceChart = ({ targetAsset, onRemove, updateFrequency = 5 }) => {
+    const [updateFrequencyVal, setValue] = useState(updateFrequency);
+    const [tempValue, setTempValue] = useState(updateFrequency);
     // Initialize states
     const [seriesData, setSeriesData] = useState([
         { name: targetAsset, data: [] }
@@ -11,6 +13,16 @@ const PriceChart = ({ targetAsset, onRemove, updateFrequency = 5000 }) => {
     const [dates, setDates] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // Update tempValue while the slider is moving (but not the actual value)
+    const handleTempChange = (e) => {
+        setTempValue(parseFloat(e.target.value));
+    };
+
+    // Only set the actual value when the user releases the slider
+    const handleSliderRelease = () => {
+        setValue(tempValue);
+    };
 
     useEffect(() => {
         const fetchPrices = async () => {
@@ -42,12 +54,12 @@ const PriceChart = ({ targetAsset, onRemove, updateFrequency = 5000 }) => {
         // Start polling at a set interval
         const intervalId = setInterval(() => {
             fetchPrices(); // Fetch data on each interval
-        }, updateFrequency);
+        }, updateFrequencyVal * 1000);
 
         fetchPrices(); // Initial fetch
 
         return () => clearInterval(intervalId); // Cleanup interval on unmount or when dependencies change
-    }, [updateFrequency, targetAsset]);
+    }, [updateFrequencyVal, targetAsset]);
 
     if (loading) return <div className={styles.statusText}>Loading...</div>;
 
@@ -94,6 +106,21 @@ const PriceChart = ({ targetAsset, onRemove, updateFrequency = 5000 }) => {
         <div className={styles.priceTimeGraph}>
             <div className={styles.titleSection}>
                 <h2 className={styles.chartTitle}>{targetAsset} Price Tracker</h2>
+                <div>
+                    <input
+                        type="range"
+                        min="0.5"
+                        max="10.0"
+                        step="0.1" // Adjust the step for precision
+                        value={updateFrequencyVal}
+                        onChange={handleTempChange} // Update tempValue while dragging
+                        onMouseUp={handleSliderRelease} // Commit value when mouse is released
+                        onTouchEnd={handleSliderRelease} // Commit value on touch end for mobile
+                    />
+                    <p>Update Frequency: {updateFrequencyVal} Seconds</p>
+                </div>
+                <button className={styles.startTradingButton}>START Trading</button>
+                <button className={styles.stopTradingButton}>STOP Trading</button>
                 <button className={styles.removeButton} onClick={() => onRemove(targetAsset)}>X</button> {/* Remove button */}
             </div>
             {error ? (
