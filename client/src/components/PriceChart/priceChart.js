@@ -3,30 +3,30 @@ import axios from 'axios';
 import Chart from 'react-apexcharts';
 import styles from './priceChart.module.css';
 
-const PriceChart = ({ chartName }) => {
-    const [seriesData, setSeriesData] = useState([{ name: 'Bitcoin', data: [] }]);
-    const [dates, setDates] = useState([]); // Timestamps for the chart
+const PriceChart = ({ targetAsset, updateFrequency = 5000 }) => {
+    // Initialize states
+    const [seriesData, setSeriesData] = useState([
+        { name: targetAsset, data: [] }
+    ]);
+    const [dates, setDates] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [interval, setIntervalState] = useState(1000); // Default to 5 seconds
 
     useEffect(() => {
-        let intervalId;
-        console.log("At priceChart");
         const fetchPrices = async () => {
             try {
-                const response = await axios.get('/api/coinbase/products');
-                const priceData = response.data.data;
-
-                // Append the new price and date to the series
+                const response = await axios.get(`/api/coinbase/products/${targetAsset}`);
+                console.log(response.data);
+                const priceData = response.data;
+                // Append new price and update series
                 setSeriesData(prevSeries => [
                     {
                         ...prevSeries[0],
-                        data: [...prevSeries[0].data, parseFloat(priceData.amount)],
+                        data: [...prevSeries[0].data, parseFloat(priceData.price)],
                     },
                 ]);
 
-                // Append the current date to the dates array
+                // Append new date
                 setDates(prevDates => [
                     ...prevDates,
                     new Date().toLocaleTimeString(), // Format time for easier viewing
@@ -39,20 +39,17 @@ const PriceChart = ({ chartName }) => {
             }
         };
 
-        // Fetch the price at the set interval
-        const startPolling = () => {
-            fetchPrices(); // Initial fetch
-            intervalId = setInterval(fetchPrices, interval);
-        };
+        // Start polling at a set interval
+        const intervalId = setInterval(() => {
+            fetchPrices(); // Fetch data on each interval
+        }, updateFrequency);
 
-        startPolling();
+        fetchPrices(); // Initial fetch
 
-        // Clear the interval on cleanup or when interval changes
-        return () => clearInterval(intervalId);
-    }, [interval]); // Re-run effect when interval changes
+        return () => clearInterval(intervalId); // Cleanup interval on unmount or when dependencies change
+    }, [updateFrequency, targetAsset]);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
+    if (loading) return <div className={styles.statusText}>Loading...</div>;
 
     const chartOptions = {
         chart: {
@@ -61,9 +58,9 @@ const PriceChart = ({ chartName }) => {
                 tools: {
                     download: true,
                     selection: true,
-                    zoom: true,
-                    zoomin: true,
-                    zoomout: true,
+                    zoom: false,
+                    zoomin: false,
+                    zoomout: false,
                     pan: true,
                     reset: true,
                 },
@@ -71,7 +68,7 @@ const PriceChart = ({ chartName }) => {
             },
         },
         xaxis: {
-            categories: dates, // Use the updated timestamps
+            categories: dates,
         },
         yaxis: {
             title: {
@@ -93,27 +90,11 @@ const PriceChart = ({ chartName }) => {
         },
     };
 
-    const handleSliderChange = (event) => {
-        const newInterval = Number(event.target.value);
-        setIntervalState(newInterval); // Update the interval state
-    };
-
     return (
         <div className={styles.priceTimeGraph}>
-            <h2 className={styles.chartTitle}>{chartName}</h2>
-            <div>
-                <label className={styles.chartUpdateTime}>Update Interval: {interval / 1000} second(s)</label>
-                <input
-                    type="range"
-                    min="1000"
-                    max="60000"
-                    value={interval}
-                    step="1000"
-                    onChange={handleSliderChange}
-                />
-            </div>
+            <h2 className={styles.chartTitle}>{targetAsset} Price Tracker</h2>
             {error ? (
-                <div>{error}</div>
+                <div className={styles.statusText}>{error}</div>
             ) : (
                 <Chart
                     options={chartOptions}

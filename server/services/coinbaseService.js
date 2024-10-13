@@ -20,6 +20,15 @@ const getProducts = async () => {
   }
 };
 
+const getProduct = async (product_id) => {
+  try {
+    const response = await client.makeRequest('GET', `/products/${product_id}`); // Dynamically include product_id
+    return response.data || response; // Return the relevant part of the response
+  } catch (error) {
+    throw new Error(`Error fetching product ${product_id}: ${error.message}`);
+  }
+};
+
 // Function to create a transaction (send money or crypto)
 const createTransaction = async (accountId, amount, currency) => {
   try {
@@ -37,5 +46,6 @@ const createTransaction = async (accountId, amount, currency) => {
 module.exports = {
   getCurrencies,
   getProducts,
+  getProduct,
   createTransaction,
 };

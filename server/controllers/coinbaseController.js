@@ -20,6 +20,17 @@ const getProducts = async (req, res) => {
   }
 };
 
+const getProduct = async (req, res) => {
+  const { product_id } = req.params; // Extract the product_id from the route parameter
+  try {
+    const product = await coinbaseService.getProduct(product_id); // Pass product_id to the service
+    res.json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: `Error fetching product ${product_id}`, error: error.message });
+  }
+};
+
 const createTransaction = async (req, res) => {
   const { accountId, amount, currency } = req.body;
   try {
@@ -34,5 +45,6 @@ const createTransaction = async (req, res) => {
 module.exports = {
   getCurrencies,
   getProducts,
+  getProduct,
   createTransaction,
 };

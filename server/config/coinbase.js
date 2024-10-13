@@ -20,8 +20,9 @@ const makeHeaders = (uri) => {
 };
 
 
-const makeRequest = async (method, requestPath, params = {}, data = {}, timeout = 5000) => {
+const makeRequest = async (method, requestPath, params = {}, data = {}, timeout = 10000) => {
   url = `https://${BASE_URL}${API_PREFIX}${requestPath}`;
+
   console.log(method + ' ' + url);
 
   const headers = makeHeaders(`${method} ${BASE_URL}${API_PREFIX}${requestPath}`);
@@ -35,6 +36,7 @@ const makeRequest = async (method, requestPath, params = {}, data = {}, timeout 
       headers: headers,
       timeout: timeout,
     });
+    // console.log(response.data);
     return response.data; // Return the response data from the API
   } catch (error) {
     console.error('Error making request:', error.response ? error.response.data : error.message);

@@ -39,6 +39,7 @@
 
 .searchInput {
     margin: 0;
+    border-radius: 5px;
     width: 100%;
     padding: 10px;
     border: 1px solid #4b4b4b;

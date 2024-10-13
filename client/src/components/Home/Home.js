@@ -7,15 +7,16 @@ import styles from './home.module.css';
 function Home() {
   return (
     <div className={styles.row}>
-      <div className={styles.leftCol}></div>
+      <div className={styles.leftCol}>
+        <PriceChart targetAsset="SEI-USD"/>
+        <PriceChart targetAsset="BTC-USD"/>
+      </div>
       <div className={styles.middleCol}>
-        {/* <PriceChart chartName="Profit and Loss"/> */}
-        {/* <PriceChart chartName="Buying Tracker"/> */}
+        <PriceChart targetAsset="ETH-USD"/>
+        <PriceChart targetAsset="SOL-USD"/>
       </div>
       <div className={styles.rightCol}>
-        <div className={styles.assetSearch}>
-          <AssetSearch></AssetSearch>
-        </div>
+        <AssetSearch></AssetSearch>
       </div>
     </div>
   );

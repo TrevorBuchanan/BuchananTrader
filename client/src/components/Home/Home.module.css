@@ -4,15 +4,18 @@
 }
 
 .leftCol {
+    padding: 1rem;
     flex: 1;
 }
 
 .middleCol {
+    padding: 1rem;
     flex: 1;
 }
 
 
 .rightCol {
+    border-radius: 5px;
     width: 20%;
     background-color: #161b23; 
     min-height: calc(100vh - 60px);
