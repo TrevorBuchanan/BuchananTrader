@@ -36,7 +36,9 @@ function App() {
           </Routes>
         </main>
 
-        <Footer />  {/* Include the Footer */}
+        <div>
+          <Footer />  
+        </div>
       </Router>
     </div>
   );

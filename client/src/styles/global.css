@@ -10,10 +10,11 @@ html, body {
 
 .content {
     padding-top: 60px; 
-    min-height: calc(100vh - 60px - 50px);
+    min-height: calc(100vh - 60px);
 }
 
 a {
+    font-family: Arial, sans-serif;
     color: rgb(177, 177, 177);
     text-decoration: none;
 }

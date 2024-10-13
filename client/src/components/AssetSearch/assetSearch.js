@@ -63,7 +63,8 @@ const AssetSearch = () => {
     };
 
     const handleAssetSelect = (asset) => {
-        setSearchTerm(asset.display_name); // Set the search term to the selected asset name
+        setSearchTerm(asset.display_name); 
+        setIsFocused(false); 
     };
 
     const handleFocus = () => {
@@ -71,19 +72,22 @@ const AssetSearch = () => {
     };
 
     const handleBlur = () => {
-        setIsFocused(false);
+        setTimeout(() => {
+            setIsFocused(false);
+        }, 200); // Delay to ensure the click event on dropdown item is captured
     };
 
     return (
-        <div className={styles.container}>
-            <h3>Search Spot Tradable Assets</h3>
-            {loading && <p>Loading assets...</p>}
-            {error && <p className={styles.error}>{error}</p>}
+        <div className={styles.assetContainer}>
+            <div className={styles.choiceContainer}>
+                <button className={styles.choiceButton}>Spot</button>
+                <button className={styles.choiceButton}>Futures</button>
+            </div>
             <input
                 type="text"
                 value={searchTerm}
                 onChange={handleInputChange}
-                placeholder="Search assets"
+                placeholder={loading ? "Loading assets..." : "Search tradable assets"}
                 className={styles.searchInput}
                 onFocus={handleFocus}
                 onBlur={handleBlur} // Track focus state
@@ -93,7 +97,7 @@ const AssetSearch = () => {
                     {filteredAssets.map((asset) => (
                         <li
                             key={asset.product_id}
-                            onClick={() => handleAssetSelect(asset)}
+                            onMouseDown={() => handleAssetSelect(asset)}
                             className={styles.dropdownItem}
                         >
                             {asset.display_name}
@@ -103,6 +107,7 @@ const AssetSearch = () => {
             ) : (
                 isFocused && searchTerm && <p className={styles.noResults}>No results found.</p>
             )}
+            {error && <p className={styles.error}>{error}</p>}
         </div>
     );
 };

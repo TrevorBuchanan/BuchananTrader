@@ -13,7 +13,9 @@ function Home() {
         {/* <PriceChart chartName="Buying Tracker"/> */}
       </div>
       <div className={styles.rightCol}>
-        <AssetSearch></AssetSearch>
+        <div className={styles.assetSearch}>
+          <AssetSearch></AssetSearch>
+        </div>
       </div>
     </div>
   );
