@@ -10,6 +10,7 @@
 .chartTitle {
     font-size: medium;
     margin-left: 2rem;
+    width: 14rem;
 }
 
 .chartUpdateTime {
@@ -34,21 +35,21 @@
     height: 20px;
     display: flex;
     margin: 5px;
-    margin-left: 1rem; 
+    margin-left: 1rem;
     margin-right: 0;
 }
 
 .startTradingButton {
     color: rgb(177, 177, 177);
-    background-color:rgb(0, 82, 1);
+    background-color: rgb(0, 82, 1);
     font-weight: bold;
     border: none;
-    margin-top: 5px;
+    margin-top: 1rem;
     margin-left: 1rem;
-    margin-right: 0;
+    margin-right: 5px;
+    height: 3rem;
     text-align: center;
-    padding: 5px;
-    height: 30px;
+    padding: 4px;
     border-radius: 10px;
     border: 1px solid rgb(177, 177, 177);
 }
@@ -58,13 +59,24 @@
     color: rgb(177, 177, 177);
     font-weight: bold;
     border: none;
-    margin-top: 5px;
+    height: 3rem;
+    margin-top: 1rem;
     margin-left: auto;
-    margin-right: 0;
+    margin-right: 0px;
     text-align: center;
-    padding: 5px;
-    height: 30px;
+    padding: 4px;
     border-radius: 10px;
     border: 1px solid rgb(177, 177, 177);
 }
 
+.sliderContainer {
+    width: 16rem;
+    margin: 20px auto;
+}
+
+.slider {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    outline: none;
+}

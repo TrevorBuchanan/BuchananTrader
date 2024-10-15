@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Chart from 'react-apexcharts';
-import styles from './priceChart.module.css';
+import styles from './assetHandler.module.css';
 
-const PriceChart = ({ targetAsset, onRemove, updateFrequency = 5 }) => {
+// Stop bouncing on moves
+// Add panning
+// Fetch historical values
+// Fix buttons and css
+// Fix slider update
+
+const AssetHandler = ({ targetAsset, onRemove, updateFrequency = 5 }) => {
     const [updateFrequencyVal, setValue] = useState(updateFrequency);
     const [tempValue, setTempValue] = useState(updateFrequency);
     // Initialize states
@@ -106,8 +112,9 @@ const PriceChart = ({ targetAsset, onRemove, updateFrequency = 5 }) => {
         <div className={styles.priceTimeGraph}>
             <div className={styles.titleSection}>
                 <h2 className={styles.chartTitle}>{targetAsset} Price Tracker</h2>
-                <div>
+                <div className={styles.sliderContainer}>
                     <input
+                        className={styles.slider}
                         type="range"
                         min="0.5"
                         max="10.0"
@@ -137,4 +144,4 @@ const PriceChart = ({ targetAsset, onRemove, updateFrequency = 5 }) => {
     );
 };
 
-export default PriceChart;
+export default AssetHandler;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'; // Import useState
-import PriceChart from '../PriceChart/priceChart';
-// import ProfitLossChart from '../ProfitLossChart/profitLossChart';
+import ProfitLossChart from '../ProfitLossChart/profitLossChart';
+import AssetHandler from '../AssetHandler/assetHandler';
 import AssetSearch from '../AssetSearch/assetSearch';
 import styles from './home.module.css';
 
@@ -23,12 +23,12 @@ function Home() {
   return (
     <div className={styles.row}>
       <div className={styles.leftCol}>
-        {/* Additional content can go here */}
+        <ProfitLossChart />
       </div>
       <div className={styles.middleCol}>
         {targetAssets.length > 0 ? (
           targetAssets.map((asset, index) => (
-            <PriceChart key={index} targetAsset={asset} onRemove={handleRemoveAsset} /> // Render a PriceChart for each asset
+            <AssetHandler key={index} targetAsset={asset} onRemove={handleRemoveAsset} /> // Render a PriceChart for each asset
           ))
         ) : (
           <p>Search tradable assets to add a trading chart</p> // Placeholder message if no assets are selected
