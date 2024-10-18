@@ -2,12 +2,14 @@ import axios from 'axios';
 
 // Singleton
 class AssetHandler {
+    #assetList 
+
     constructor() {
         if (AssetHandler.instance) {
             return AssetHandler.instance;
         }
 
-        this.assetList = {};
+        this.#assetList = {};
 
         AssetHandler.instance = this;
 
@@ -22,29 +24,19 @@ class AssetHandler {
         return AssetHandler.instance;
     }    
 
-    // Placeholder method for a test buyer
-    useTestBuyer() {
-        // Define the logic for test buyer if needed
-    }
-
-    // Placeholder method for a Coinbase buyer
-    useCoinbaseBuyer() {
-        // Define the logic for Coinbase buyer if needed
-    }
-
     // Method to add Coinbase prices to an asset's price series
     addCoinbasePrice = async (assetName) => {
         try {
             // Ensure the asset exists in assetList, otherwise initialize it
-            if (!this.assetList[assetName]) {
-                this.assetList[assetName] = { prices: [], profitLosses: [], updateFreq: 0 };
+            if (!this.#assetList[assetName]) {
+                this.#assetList[assetName] = { prices: [], profitLosses: [], updateFreq: 0 };
             }
 
             const response = await axios.get(`/api/coinbase/products/${assetName}`);
             const priceData = response.data;
 
             // Append new price to the asset's price series
-            this.assetList[assetName].prices.push({
+            this.#assetList[assetName].prices.push({
                 price: parseFloat(priceData.price), // Ensure price is a number
                 date: new Date().toLocaleTimeString(),
             });
@@ -59,15 +51,15 @@ class AssetHandler {
     addProfitLoss = async (assetName) => {
         try {
             // Ensure the asset exists in assetList, otherwise initialize it
-            if (!this.assetList[assetName]) {
-                this.assetList[assetName] = { prices: [], profitLosses: [], updateFreq: 0 };
+            if (!this.#assetList[assetName]) {
+                this.#assetList[assetName] = { prices: [], profitLosses: [], updateFreq: 0 };
             }
 
             const response = await axios.get(`/api/trading-engine/profit-loss`);
             const responseObj = response.data;
 
             // Append new profit-loss to the asset's profit-loss series
-            this.assetList[assetName].profitLosses.push({
+            this.#assetList[assetName].profitLosses.push({
                 profitLoss: parseFloat(responseObj.profitLoss), // Ensure profit-loss is a number
                 date: new Date().toLocaleTimeString(),
             });
@@ -79,12 +71,12 @@ class AssetHandler {
     };
 
     getAssetList() {
-        return this.assetList;
+        return this.#assetList;
     }
 
     getAsset(assetName) {
-        if (this.assetList[assetName]) {
-            return this.assetList[assetName];
+        if (this.#assetList[assetName]) {
+            return this.#assetList[assetName];
         } else {
             console.warn(`Asset "${assetName}" not found.`);
             return null; 
@@ -112,8 +104,8 @@ class AssetHandler {
     }
 
     removeAsset(assetName) {
-        if (this.assetList[assetName]) {
-            delete this.assetList[assetName];
+        if (this.#assetList[assetName]) {
+            delete this.#assetList[assetName];
             console.log(`Asset "${assetName}" removed successfully.`);
         } else {
             console.warn(`Asset "${assetName}" not found.`);

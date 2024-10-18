@@ -18,6 +18,7 @@ function Home() {
 
   const handleRemoveAsset = (asset) => {
     setTargetAssets((prevAssets) => prevAssets.filter((a) => a !== asset)); // Remove the specified asset
+    AssetHandler.getInstance().removeAsset(asset);
   };
 
 

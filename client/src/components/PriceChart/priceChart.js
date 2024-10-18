@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import Chart from 'react-apexcharts';
 import styles from './priceChart.module.css';
 import AssetHandler from '../assetHandler';
@@ -99,7 +98,7 @@ const PriceChart = ({ targetAsset, onRemove, updateFrequency }) => {
         <div className={styles.priceTimeGraph}>
             <div className={styles.titleSection}>
                 <h2 className={styles.chartTitle}>{targetAsset} Price Tracker</h2>
-                <div class={styles.tradingButtonsSection}>
+                <div className={styles.tradingButtonsSection}>
                     <button className={styles.tradingButton}>Start Trading</button>
                     <button className={styles.tradingButton}>Stop Trading</button>
                 </div>

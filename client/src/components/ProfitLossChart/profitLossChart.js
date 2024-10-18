@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import AssetHandler from '../assetHandler';
-import axios from 'axios';
 import Chart from 'react-apexcharts';
 import styles from './profitLossChart.module.css';
 
@@ -26,7 +25,7 @@ const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency }) => {
                 const updatedDates = profitLossSeries.map(item => item.date);
 
                 // Update state
-                setSeriesData([{ name: targetAsset, data: updatedData }]);
+                setSeriesData([{ name: `Profit-loss`, data: updatedData }]);
                 setDates(updatedDates);
                 setLoading(false);
             } catch (err) {

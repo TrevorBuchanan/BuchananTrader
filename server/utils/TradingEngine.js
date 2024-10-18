@@ -1,40 +1,79 @@
 class TradingEngine {
+    #priceSeries
+    #minSeriesLen
+    #resistancesLines
+    #supportsLines
+    #isLonging
+    #isShorting
+    #balance
+
     constructor() {
-        this.minSeriesLen = 10;
+        this.#priceSeries = []
 
-        this.resistances = [];
-        this.supports = [];
+        this.#minSeriesLen = 10;
 
-        this.isLonging = false;
-        this.isShorting = false;
+        this.#resistancesLines = [];
+        this.#supportsLines = [];
 
-        this.balance = 0;
+        this.#isLonging = false;
+        this.#isShorting = false;
+
+        this.#balance = 0;
     }
 
     addPrice(price) {
-        this.priceSeries.push(price);
+        this.#priceSeries.push(price);
     }
 
     analyzeSeriesForAction() {
-        if (this.priceSeries.length < this.minSeriesLen) {
+        if (this.#priceSeries.length < this.#minSeriesLen) {
             return "Not enough data to decide action";
         }
 
-        const latestValue = this.priceSeries[this.priceSeries.length - 1];
-        const previousValue = this.priceSeries[this.priceSeries.length - 2];
+        const latestValue = this.#priceSeries[this.#priceSeries.length - 1];
+        const previousValue = this.#priceSeries[this.#priceSeries.length - 2];
 
         // Enter logic
-        if (latestValue > previousValue) {
-            return "Buy/Long";
-        } else if (latestValue < previousValue) {
-            return "Short/Sell";
-        } else {
-            return "Hold";
+        if (latestValue > previousValue && !this.#isLonging) {
+            this.#isLonging = true;
+            return "Long";
+        } else if (latestValue < previousValue && !this.#isShorting) {
+            this.#isShorting = true;
+            return "Short";
+        }
+
+        // Exit logic
+        if (latestValue < previousValue && !this.#isShorting) {
+
         }
     }
 
+    #upTrendForLength(length) {
+
+    }
+
+    #downTrendForLength(length) {
+
+    }
+
+    #shouldLong() {
+
+    }
+
+    #shouldShort() {
+        
+    }
+
+    #shouldShortSell () {
+
+    }
+
+    #shouldLongSell () {
+
+    }
+
     getProfitLoss() {
-        return this.balance;
+        return this.#balance;
     }
 }
 

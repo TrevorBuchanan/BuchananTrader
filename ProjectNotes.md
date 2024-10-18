@@ -1,6 +1,7 @@
 # Project Notes
 
-### To identify process using PORT_NUMBER: `lsof -i :<PORT_NUMBER>`
+## Run Website
+* To run front and back end: `npm start`
 
 ## Commands
 **Database**
@@ -18,5 +19,5 @@
 
 
 **Misc**
-* Show which process is running on port-number: `sudo lsof -i :<port-number>`
+* Show which process is running on port-number: `lsof -i :<port-number>`
 * Kill process: `kill -9 <PID>`
