@@ -16,13 +16,12 @@ const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency = 5}) => {
         const fetchProfitLoss = async () => {
             try {
                 const response = await axios.get(`/api/trading-engine/profit-loss`);
-                const profitLoss = response.data;
-                console.log(profitLoss);
+                const responseObj = response.data;
                 // Append new price and update series
                 setSeriesData(prevSeries => [
                     {
                         ...prevSeries[0],
-                        data: [...prevSeries[0].data, parseFloat(profitLoss)],
+                        data: [...prevSeries[0].data, parseFloat(responseObj.profitLoss)],
                     },
                 ]);
 

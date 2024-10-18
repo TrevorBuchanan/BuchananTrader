@@ -111,7 +111,7 @@ const AssetHandler = ({ targetAsset, onRemove, updateFrequency = 5 }) => {
         <div className={styles.priceTimeGraph}>
             <div className={styles.titleSection}>
                 <h2 className={styles.chartTitle}>{targetAsset} Price Tracker</h2>
-                <div className={styles.sliderContainer}>
+                {/* <div className={styles.sliderContainer}>
                     <input
                         className={styles.slider}
                         type="range"
@@ -124,9 +124,11 @@ const AssetHandler = ({ targetAsset, onRemove, updateFrequency = 5 }) => {
                         onTouchEnd={handleSliderRelease} // Commit value on touch end for mobile
                     />
                     <p>Update Frequency: {updateFrequencyVal} Seconds</p>
+                </div> */}
+                <div class={styles.tradingButtonsSection}>
+                    <button className={styles.tradingButton}>Start</button>
+                    <button className={styles.tradingButton}>Stop</button>
                 </div>
-                <button className={styles.startTradingButton}>START Trading</button>
-                <button className={styles.stopTradingButton}>STOP Trading</button>
                 <button className={styles.removeButton} onClick={() => onRemove(targetAsset)}>X</button> {/* Remove button */}
             </div>
             {error ? (
