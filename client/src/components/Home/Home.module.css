@@ -4,13 +4,13 @@
 }
 
 .leftCol {
-    background-color: #1c212c; 
+    /* background-color: #1c212c;  */
     padding: 1rem;
     flex: 1;
 }
 
 .middleCol {
-    background-color: #191d27; 
+    /* background-color: #191d27;  */
     padding: 1rem;
     flex: 1;
 }

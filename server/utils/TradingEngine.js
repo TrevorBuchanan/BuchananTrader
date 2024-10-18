@@ -1,5 +1,7 @@
 class TradingEngine {
     constructor() {
+        this.minSeriesLen = 10;
+
         this.resistances = [];
         this.supports = [];
 
@@ -14,8 +16,8 @@ class TradingEngine {
     }
 
     analyzeSeriesForAction() {
-        if (this.priceSeries.length < 10) {
-            return "Not enough data";
+        if (this.priceSeries.length < this.minSeriesLen) {
+            return "Not enough data to decide action";
         }
 
         const latestValue = this.priceSeries[this.priceSeries.length - 1];

@@ -40,6 +40,10 @@
     color:  rgb(255, 255, 255);
 }
 
+.removeButton:active {
+    color:  rgb(118, 118, 118);
+}
+
 .tradingButtonsSection {
     margin-left: 8px;
 }

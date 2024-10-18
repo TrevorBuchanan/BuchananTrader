@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import AssetHandler from '../assetHandler';
 import axios from 'axios';
 import Chart from 'react-apexcharts';
-import styles from './profitLossChart.module.css';
+import styles from './priceChart.module.css';
+import AssetHandler from '../assetHandler';
 
-const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency }) => {
-    const [seriesData, setSeriesData] = useState([{ name: targetAsset, data: [] }]);
+// Stop bouncing on moves
+// Add panning
+// Fetch historical values
+// Fix buttons and css
+// Fix slider update
+
+const PriceChart = ({ targetAsset, onRemove, updateFrequency }) => {
+    // Initialize states
+    const [seriesData, setSeriesData] = useState([
+        { name: targetAsset, data: [] }
+    ]);
     const [dates, setDates] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -15,22 +24,22 @@ const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency }) => {
 
         const updateSeries = async () => {
             try {
-                // Fetch the updated profit-loss for the asset
-                await assetHandler.addProfitLoss(targetAsset);
+                // Fetch the updated prices for the asset
+                await assetHandler.addCoinbasePrice(targetAsset);
 
-                // Get the updated profit-loss series
-                const profitLossSeries = assetHandler.getAssetProfitLossSeries(targetAsset);
+                // Get the updated price series
+                const priceSeries = assetHandler.getAssetPriceSeries(targetAsset);
 
                 // Update the series data and dates
-                const updatedData = profitLossSeries.map(item => item.profitLoss);
-                const updatedDates = profitLossSeries.map(item => item.date);
+                const updatedData = priceSeries.map(item => item.price);
+                const updatedDates = priceSeries.map(item => item.date);
 
                 // Update state
                 setSeriesData([{ name: targetAsset, data: updatedData }]);
                 setDates(updatedDates);
                 setLoading(false);
             } catch (err) {
-                setError('Error fetching profit-loss data');
+                setError('Error fetching price data');
                 setLoading(false);
             }
         };
@@ -89,7 +98,11 @@ const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency }) => {
     return (
         <div className={styles.priceTimeGraph}>
             <div className={styles.titleSection}>
-                <h2 className={styles.chartTitle}>{targetAsset} Profit and Loss</h2>
+                <h2 className={styles.chartTitle}>{targetAsset} Price Tracker</h2>
+                <div class={styles.tradingButtonsSection}>
+                    <button className={styles.tradingButton}>Start Trading</button>
+                    <button className={styles.tradingButton}>Stop Trading</button>
+                </div>
                 <button className={styles.removeButton} onClick={() => onRemove(targetAsset)}>X</button> {/* Remove button */}
             </div>
             {error ? (
@@ -106,4 +119,4 @@ const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency }) => {
     );
 };
 
-export default ProfitLossChart;
+export default PriceChart;

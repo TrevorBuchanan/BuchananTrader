@@ -1,7 +1,8 @@
 import React, { useState } from 'react'; // Import useState
 import ProfitLossChart from '../ProfitLossChart/profitLossChart';
-import AssetHandler from '../AssetHandler/assetHandler';
+import PriceChart from '../PriceChart/priceChart';
 import AssetSearch from '../AssetSearch/assetSearch';
+import AssetHandler from '../assetHandler';
 import styles from './home.module.css';
 
 function Home() {
@@ -25,7 +26,7 @@ function Home() {
       <div className={styles.leftCol}>
         {targetAssets.length > 0 ? (
           targetAssets.map((asset, index) => (
-            <ProfitLossChart key={index} targetAsset={asset} onRemove={handleRemoveAsset} />
+            <ProfitLossChart key={index} targetAsset={asset} onRemove={handleRemoveAsset} updateFrequency={2}/>
           ))
         ) : (
           <p>Search tradable assets to add a profit-loss chart</p> // Placeholder message if no assets are selected
@@ -34,7 +35,7 @@ function Home() {
       <div className={styles.middleCol}>
         {targetAssets.length > 0 ? (
           targetAssets.map((asset, index) => (
-            <AssetHandler key={index} targetAsset={asset} onRemove={handleRemoveAsset} />
+            <PriceChart key={index} targetAsset={asset} onRemove={handleRemoveAsset} updateFrequency={2} />
           ))
         ) : (
           <p>Search tradable assets to add a trading chart</p> // Placeholder message if no assets are selected
