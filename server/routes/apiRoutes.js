@@ -10,7 +10,8 @@ router.get('/coinbase/products/:product_id', coinbaseController.getProduct)
 router.post('/coinbase/transactions', coinbaseController.createTransaction);
 
 // Mock buying API routes 
-router.post('/trading-engine/addPrice', tradingEngineController.addPrice); 
-router.get('/trading-engine/getAction', tradingEngineController.getAction);
+router.post('/trading-engine/add-price', tradingEngineController.addPrice); 
+router.get('/trading-engine/action', tradingEngineController.getAction);
+router.get('/trading-engine/profit-loss', tradingEngineController.getProfitLoss);
 
 module.exports = router;

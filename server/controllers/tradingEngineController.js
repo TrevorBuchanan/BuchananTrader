@@ -19,6 +19,15 @@ const TradingEngineController = {
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
+    },
+
+    getProfitLoss: async (req, res) => {
+        try {
+            const profitLoss = await TradingEngineService.getProfitLoss();
+            res.json({profitLoss});
+        } catch (error) {
+            res.status(500).json({error: error.message});
+        }
     }
 };
 

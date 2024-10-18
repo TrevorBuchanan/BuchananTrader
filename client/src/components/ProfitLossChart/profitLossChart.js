@@ -3,7 +3,7 @@ import axios from 'axios';
 import Chart from 'react-apexcharts';
 import styles from './profitLossChart.module.css';
 
-const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency = 5000 }) => {
+const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency = 5}) => {
     // Initialize states
     const [seriesData, setSeriesData] = useState([
         { name: targetAsset, data: [] }
@@ -13,16 +13,16 @@ const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency = 5000 }) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchPrices = async () => {
+        const fetchProfitLoss = async () => {
             try {
-                const response = await axios.get(`/api/profit-loss`);
-                console.log(response.data);
-                const priceData = response.data;
+                const response = await axios.get(`/api/trading-engine/profit-loss`);
+                const profitLoss = response.data;
+                console.log(profitLoss);
                 // Append new price and update series
                 setSeriesData(prevSeries => [
                     {
                         ...prevSeries[0],
-                        data: [...prevSeries[0].data, parseFloat(priceData.price)],
+                        data: [...prevSeries[0].data, parseFloat(profitLoss)],
                     },
                 ]);
 
@@ -34,17 +34,17 @@ const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency = 5000 }) => {
 
                 setLoading(false);
             } catch (err) {
-                setError('Failed to fetch prices');
+                setError('Failed to fetch profit-loss');
                 setLoading(false);
             }
         };
 
         // Start polling at a set interval
         const intervalId = setInterval(() => {
-            fetchPrices(); // Fetch data on each interval
-        }, updateFrequency);
+            fetchProfitLoss(); 
+        }, updateFrequency * 1000);
 
-        fetchPrices(); // Initial fetch
+        fetchProfitLoss(); // Initial fetch
 
         return () => clearInterval(intervalId); // Cleanup interval on unmount or when dependencies change
     }, [updateFrequency, targetAsset]);
@@ -93,7 +93,7 @@ const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency = 5000 }) => {
     return (
         <div className={styles.priceTimeGraph}>
             <div className={styles.titleSection}>
-                <h2 className={styles.chartTitle}>{targetAsset} Price Tracker</h2>
+                <h2 className={styles.chartTitle}>{targetAsset} Profit and Loss</h2>
                 <button className={styles.removeButton} onClick={() => onRemove(targetAsset)}>X</button> {/* Remove button */}
             </div>
             {error ? (
@@ -110,4 +110,4 @@ const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency = 5000 }) => {
     );
 };
 
-export default PriceChart;
+export default ProfitLossChart;

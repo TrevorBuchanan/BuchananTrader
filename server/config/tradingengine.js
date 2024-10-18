@@ -1,8 +1,7 @@
 const TradingEngine = require('../utils/TradingEngine');
 
-const getAction = async (newVal) => {
+const getAction = async () => {
     try {
-        TradingEngine.addPrice(newVal);
         const action = TradingEngine.analyzeSeriesForAction();
         return action; 
     } catch (error) {
@@ -10,6 +9,24 @@ const getAction = async (newVal) => {
     }
 }
 
+const addPrice = async (price) => {
+    try {
+        TradingEngine.addPrice(price);
+    } catch (error) {
+        throw error;
+    }
+}
+
+const getProfitLoss = async () => {
+    try {
+        return TradingEngine.getProfitLoss();
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     getAction,
+    addPrice,
+    getProfitLoss,
 };

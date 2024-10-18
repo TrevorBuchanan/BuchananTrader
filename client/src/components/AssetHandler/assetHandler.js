@@ -34,7 +34,6 @@ const AssetHandler = ({ targetAsset, onRemove, updateFrequency = 5 }) => {
         const fetchPrices = async () => {
             try {
                 const response = await axios.get(`/api/coinbase/products/${targetAsset}`);
-                console.log(response.data);
                 const priceData = response.data;
                 // Append new price and update series
                 setSeriesData(prevSeries => [

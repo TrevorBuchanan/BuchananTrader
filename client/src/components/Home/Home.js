@@ -23,12 +23,18 @@ function Home() {
   return (
     <div className={styles.row}>
       <div className={styles.leftCol}>
-        <ProfitLossChart />
+        {targetAssets.length > 0 ? (
+          targetAssets.map((asset, index) => (
+            <ProfitLossChart key={index} targetAsset={asset} onRemove={handleRemoveAsset} />
+          ))
+        ) : (
+          <p>Search tradable assets to add a profit-loss chart</p> // Placeholder message if no assets are selected
+        )}
       </div>
       <div className={styles.middleCol}>
         {targetAssets.length > 0 ? (
           targetAssets.map((asset, index) => (
-            <AssetHandler key={index} targetAsset={asset} onRemove={handleRemoveAsset} /> // Render a PriceChart for each asset
+            <AssetHandler key={index} targetAsset={asset} onRemove={handleRemoveAsset} />
           ))
         ) : (
           <p>Search tradable assets to add a trading chart</p> // Placeholder message if no assets are selected

@@ -1,8 +1,12 @@
 class TradingEngine {
     constructor() {
-        if (new.target === TradingEngine) {
-            throw new Error("Cannot instantiate an abstract class!");
-        }
+        this.resistances = [];
+        this.supports = [];
+
+        this.isLonging = false;
+        this.isShorting = false;
+
+        this.balance = 0;
     }
 
     addPrice(price) {
@@ -10,7 +14,25 @@ class TradingEngine {
     }
 
     analyzeSeriesForAction() {
-        throw new Error("Abstract method 'speak' must be implemented by subclasses");
+        if (this.priceSeries.length < 10) {
+            return "Not enough data";
+        }
+
+        const latestValue = this.priceSeries[this.priceSeries.length - 1];
+        const previousValue = this.priceSeries[this.priceSeries.length - 2];
+
+        // Enter logic
+        if (latestValue > previousValue) {
+            return "Buy/Long";
+        } else if (latestValue < previousValue) {
+            return "Short/Sell";
+        } else {
+            return "Hold";
+        }
+    }
+
+    getProfitLoss() {
+        return this.balance;
     }
 }
 
