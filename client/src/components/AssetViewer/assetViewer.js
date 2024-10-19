@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
-import styles from './priceChart.module.css';
+import styles from './assetViewer.module.css';
 import AssetHandler from '../assetHandler';
 
 // Stop bouncing on moves
@@ -9,7 +9,7 @@ import AssetHandler from '../assetHandler';
 // Fix buttons and css
 // Fix slider update
 
-const PriceChart = ({ targetAsset, onRemove, updateFrequency }) => {
+const AssetViewer = ({ targetAsset, onRemove, updateFrequency }) => {
     // Initialize states
     const [seriesData, setSeriesData] = useState([
         { name: targetAsset, data: [] }
@@ -17,6 +17,7 @@ const PriceChart = ({ targetAsset, onRemove, updateFrequency }) => {
     const [dates, setDates] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isTrading, setIsTrading] = useState(false);
 
     useEffect(() => {
         const assetHandler = AssetHandler.getInstance();
@@ -32,6 +33,11 @@ const PriceChart = ({ targetAsset, onRemove, updateFrequency }) => {
                 // Update the series data and dates
                 const updatedData = priceSeries.map(item => item.price);
                 const updatedDates = priceSeries.map(item => item.date);
+
+                // Trade if trading
+                if (isTrading) {
+                    await assetHandler.tradeAsset(targetAsset);
+                }
 
                 // Update state
                 setSeriesData([{ name: targetAsset, data: updatedData }]);
@@ -51,8 +57,16 @@ const PriceChart = ({ targetAsset, onRemove, updateFrequency }) => {
         updateSeries(); // Initial update
 
         return () => clearInterval(intervalId); // Clean up on component unmount
-    }, [updateFrequency, targetAsset]);
+    }, [updateFrequency, targetAsset, isTrading]);
 
+    const handleStartTrading = () => {
+        setIsTrading(true);
+    };
+
+    const handleStopTrading = () => {
+        setIsTrading(false);
+    };
+    
     if (loading) return <div className={styles.statusText}>Loading...</div>;
 
     const chartOptions = {
@@ -99,8 +113,8 @@ const PriceChart = ({ targetAsset, onRemove, updateFrequency }) => {
             <div className={styles.titleSection}>
                 <h2 className={styles.chartTitle}>{targetAsset} Price Tracker</h2>
                 <div className={styles.tradingButtonsSection}>
-                    <button className={styles.tradingButton}>Start Trading</button>
-                    <button className={styles.tradingButton}>Stop Trading</button>
+                    <button className={styles.tradingButton} onClick={handleStartTrading}>Start Trading</button>
+                    <button className={styles.tradingButton} onClick={handleStopTrading}>Stop Trading</button>
                 </div>
                 <button className={styles.removeButton} onClick={() => onRemove(targetAsset)}>X</button> {/* Remove button */}
             </div>
@@ -118,4 +132,4 @@ const PriceChart = ({ targetAsset, onRemove, updateFrequency }) => {
     );
 };
 
-export default PriceChart;
+export default AssetViewer;

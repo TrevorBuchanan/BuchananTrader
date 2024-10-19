@@ -29,7 +29,7 @@ class AssetHandler {
         try {
             // Ensure the asset exists in assetList, otherwise initialize it
             if (!this.#assetList[assetName]) {
-                this.#assetList[assetName] = { prices: [], profitLosses: [], updateFreq: 0 };
+                this.#assetList[assetName] = { prices: [], profitLosses: [] };
             }
 
             const response = await axios.get(`/api/coinbase/products/${assetName}`);
@@ -52,7 +52,7 @@ class AssetHandler {
         try {
             // Ensure the asset exists in assetList, otherwise initialize it
             if (!this.#assetList[assetName]) {
-                this.#assetList[assetName] = { prices: [], profitLosses: [], updateFreq: 0 };
+                this.#assetList[assetName] = { prices: [], profitLosses: [] };
             }
 
             const response = await axios.get(`/api/trading-engine/profit-loss`);
@@ -63,6 +63,24 @@ class AssetHandler {
                 profitLoss: parseFloat(responseObj.profitLoss), // Ensure profit-loss is a number
                 date: new Date().toLocaleTimeString(),
             });
+
+        } catch (err) {
+            console.error('Failed to fetch profit-loss:', err.message);
+            throw new Error('Failed to fetch profit-loss');
+        }
+    };
+
+    tradeAsset = async (assetName) => {
+        try {
+            // Ensure the asset exists in assetList, otherwise initialize it
+            if (!this.#assetList[assetName]) {
+                this.#assetList[assetName] = { prices: [], profitLosses: [] };
+            }
+
+            const response = await axios.get(`/api/trading-engine/get-action`);
+            const responseObj = response.data;
+
+            console.log(assetName + ' ' + responseObj);
 
         } catch (err) {
             console.error('Failed to fetch profit-loss:', err.message);

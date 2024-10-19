@@ -1,33 +1,34 @@
-const tradingEngine = require('../config/tradingengine'); 
+const tradingEngineClient = require('../config/tradingengine'); 
 
-const getAction = async () => {
+const getAssetAction = async (assetName) => {
     try {
-        const action = await tradingEngine.getAction(); // Directly call the getAction function
+        const action = await tradingEngineClient.getAssetAction(assetName);
         return action; 
     } catch (error) {
-        throw new Error(`Error fetching action: ${error.message}`);
+        throw new Error(`Error fetching action for ${assetName}: ${error.message}`);
     }
 };
 
-const addPrice = async (price) => {
+const addAssetPrice = async (assetName, price) => {
     try {
-        await tradingEngine.addPrice(price); // Directly call the addPrice function
+        const result = await tradingEngineClient.addAssetPrice(assetName, price); 
+        return result; // Return result if needed
     } catch (error) {
-        throw new Error(`Error adding price to trading engine: ${error.message}`);
+        throw new Error(`Error adding price to ${assetName} trading engine: ${error.message}`);
     }
 };
 
-const getProfitLoss = async () => {
+const getAssetProfitLoss = async (assetName) => {
     try {
-        const profitLoss = await tradingEngine.getProfitLoss(); // Directly call the getProfitLoss function
+        const profitLoss = await tradingEngineClient.getAssetProfitLoss(assetName); 
         return profitLoss;
     } catch (error) {
-        throw new Error(`Error fetching profit-loss: ${error.message}`);
+        throw new Error(`Error fetching profit-loss for ${assetName}: ${error.message}`);
     }
 }
 
 module.exports = {
-    getAction,
-    addPrice,
-    getProfitLoss,
+    getAssetAction,
+    addAssetPrice,
+    getAssetProfitLoss,
 };

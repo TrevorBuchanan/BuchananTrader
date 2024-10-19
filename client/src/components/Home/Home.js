@@ -1,23 +1,22 @@
-import React, { useState } from 'react'; // Import useState
+import React, { useState } from 'react';
 import ProfitLossChart from '../ProfitLossChart/profitLossChart';
-import PriceChart from '../PriceChart/priceChart';
+import AssetViewer from '../AssetViewer/assetViewer';
 import AssetSearch from '../AssetSearch/assetSearch';
 import AssetHandler from '../assetHandler';
 import styles from './home.module.css';
 
 function Home() {
-  const [targetAssets, setTargetAssets] = useState([]); // Initialize state as an empty array
+  const [targetAssets, setTargetAssets] = useState([]); 
+  const UPDATE_FREQUENCY = 1; // 1 second 
 
-  // Callback function to update the target assets
   const handleAssetChange = (asset) => {
-    // Check if the asset is already in the list
     if (!targetAssets.includes(asset)) {
-      setTargetAssets((prevAssets) => [...prevAssets, asset]); // Add the new asset to the array
+      setTargetAssets((prevAssets) => [...prevAssets, asset]); 
     }
   };
 
   const handleRemoveAsset = (asset) => {
-    setTargetAssets((prevAssets) => prevAssets.filter((a) => a !== asset)); // Remove the specified asset
+    setTargetAssets((prevAssets) => prevAssets.filter((a) => a !== asset)); 
     AssetHandler.getInstance().removeAsset(asset);
   };
 
@@ -27,23 +26,23 @@ function Home() {
       <div className={styles.leftCol}>
         {targetAssets.length > 0 ? (
           targetAssets.map((asset, index) => (
-            <ProfitLossChart key={index} targetAsset={asset} onRemove={handleRemoveAsset} updateFrequency={2}/>
+            <ProfitLossChart key={index} targetAsset={asset} onRemove={handleRemoveAsset} updateFrequency={UPDATE_FREQUENCY}/>
           ))
         ) : (
-          <p>Search tradable assets to add a profit-loss chart</p> // Placeholder message if no assets are selected
+          <p>Search tradable assets to add a profit-loss chart</p> 
         )}
       </div>
       <div className={styles.middleCol}>
         {targetAssets.length > 0 ? (
           targetAssets.map((asset, index) => (
-            <PriceChart key={index} targetAsset={asset} onRemove={handleRemoveAsset} updateFrequency={2} />
+            <AssetViewer key={index} targetAsset={asset} onRemove={handleRemoveAsset} updateFrequency={UPDATE_FREQUENCY} />
           ))
         ) : (
-          <p>Search tradable assets to add a trading chart</p> // Placeholder message if no assets are selected
+          <p>Search tradable assets to add a trading chart</p> 
         )}
       </div>
       <div className={styles.rightCol}>
-        <AssetSearch onAssetSelect={handleAssetChange} /> {/* Pass the callback to AssetSearch */}
+        <AssetSearch onAssetSelect={handleAssetChange} /> 
       </div>
     </div>
   );

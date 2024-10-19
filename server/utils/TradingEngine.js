@@ -128,4 +128,4 @@ class TradingEngine {
     }
 }
 
-module.exports = new TradingEngine();
+module.exports = TradingEngine;

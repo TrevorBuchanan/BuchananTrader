@@ -1,32 +1,37 @@
-const TradingEngine = require('../utils/TradingEngine');
+const TradingEngineManager = require('../utils/TradingEngineManager');
 
-const getAction = async () => {
+const tradingEngineManager = new TradingEngineManager();
+
+const getAssetAction = async (assetName) => {
     try {
-        const action = TradingEngine.analyzeSeriesForAction();
+        const action = tradingEngineManager.getAssetAction(assetName);
         return action; 
     } catch (error) {
         throw error; 
     }
 }
 
-const addPrice = async (price) => {
+const addAssetPrice = async (assetName, price) => {
     try {
-        TradingEngine.addPrice(price);
+        const result = tradingEngineManager.addAssetPrice(assetName, price);
+        return result;
     } catch (error) {
         throw error;
     }
 }
 
-const getProfitLoss = async () => {
+const getAssetProfitLoss = async (assetName) => {
     try {
-        return TradingEngine.getProfitLoss();
+        const profitLoss = tradingEngineManager.getAssetProfitLoss(assetName);
+        return profitLoss;
     } catch (error) {
         throw error;
     }
 }
 
+// Exporting the functions with correct names
 module.exports = {
-    getAction,
-    addPrice,
-    getProfitLoss,
+    getAssetAction,
+    addAssetPrice,
+    getAssetProfitLoss,
 };
