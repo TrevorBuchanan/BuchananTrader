@@ -88,7 +88,7 @@ const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency }) => {
     return (
         <div className={styles.priceTimeGraph}>
             <div className={styles.titleSection}>
-                <h2 className={styles.chartTitle}>{targetAsset} Profit and Loss</h2>
+                <h2 className={styles.chartTitle}>{targetAsset} Theoretical Profit and Loss</h2>
                 <button className={styles.removeButton} onClick={() => onRemove(targetAsset)}>X</button> {/* Remove button */}
             </div>
             {error ? (

@@ -1,7 +1,9 @@
+import TradingEngine from "../../../server/utils/TradingEngine";
 import AssetHandler from "./assetHandler";
 import axios from 'axios';
 
 class TradingEngineHandler {
+    #tradingEngines
     constructor() {
         if (TradingEngineHandler.instance) {
             return TradingEngineHandler.instance;
@@ -9,24 +11,19 @@ class TradingEngineHandler {
 
         TradingEngineHandler.instance = this;
 
+        this.#tradingEngines = {}
+
         Object.freeze(TradingEngineHandler.instance);
     }
 
-    getTradingAction = async (assetName) => {
-        try {
-            const response = await axios.get(`/api/trading-engine/${assetName}`);
-            const priceData = response.data;
-
-            // Append new price to the asset's price series
-            this.#assetList[assetName].prices.push({
-                price: parseFloat(priceData.price), // Ensure price is a number
-                date: new Date().toLocaleTimeString(),
-            });
-
-        } catch (err) {
-            console.error('Failed to fetch prices:', err.message);
-            throw new Error('Failed to fetch prices');
+    addTradingEngine(assetName) {
+        if  (!this.tradingEngines[assetName]) {
+        this.#tradingEngines[assetName] = new TradingEngine();
         }
+    }
+
+    getTradingAction(assetName) {
+        this.#tradingEngines[assetName]
     };
 
     #MockTradingEngine() {
