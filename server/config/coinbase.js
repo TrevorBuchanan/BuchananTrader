@@ -23,7 +23,7 @@ const makeHeaders = (uri) => {
 const makeRequest = async (method, requestPath, params = {}, data = {}, timeout = 10000) => {
   url = `https://${BASE_URL}${API_PREFIX}${requestPath}`;
 
-  console.log(method + ' ' + url);
+  // console.log(method + ' ' + url);
 
   const headers = makeHeaders(`${method} ${BASE_URL}${API_PREFIX}${requestPath}`);
 

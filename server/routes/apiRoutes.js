@@ -11,7 +11,8 @@ router.post('/coinbase/transactions', coinbaseController.createTransaction);
 
 // Mock buying API routes 
 router.post('/trading-engine/add-price', tradingEngineController.addAssetPrice); 
-router.post('/trading-engine/action', tradingEngineController.getAssetAction);
+router.get('/trading-engine/action', tradingEngineController.getAssetAction);
 router.get('/trading-engine/profit-loss', tradingEngineController.getAssetProfitLoss);
+router.delete('/trading-engine/remove-asset/:assetName', tradingEngineController.removeAsset);
 
 module.exports = router;

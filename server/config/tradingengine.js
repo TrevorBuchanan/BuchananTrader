@@ -11,10 +11,9 @@ const getAssetAction = async (assetName) => {
     }
 }
 
-const addAssetPrice = async (assetName, price) => {
+const addAssetPrice = async (assetName, price, time) => {
     try {
-        const result = tradingEngineManager.addAssetPrice(assetName, price);
-        return result;
+        tradingEngineManager.addAssetPrice(assetName, price, time);
     } catch (error) {
         throw error;
     }
@@ -29,9 +28,19 @@ const getAssetProfitLoss = async (assetName) => {
     }
 }
 
+const removeAsset = async (assetName) => {
+    try {
+        resultMsg = tradingEngineManager.removeAssetTradingEngine(assetName);
+        return resultMsg;
+    } catch (error) {
+        throw error;
+    }
+}
+
 // Exporting the functions with correct names
 module.exports = {
     getAssetAction,
     addAssetPrice,
     getAssetProfitLoss,
+    removeAsset,
 };

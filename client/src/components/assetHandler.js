@@ -27,39 +27,50 @@ class AssetHandler {
     // Method to add Coinbase prices to an asset's price series
     addCoinbaseAssetPrice = async (assetName) => {
         try {
-            // Ensure the asset exists in assetList
+            // Ensure the asset exists in assetList, otherwise initialize it
             if (!this.#assetList[assetName]) {
-                throw new Error(`Asset ${assetName} does not exist`)
+                this.#assetList[assetName] = { prices: [], profitLosses: [] };
             }
 
             const response = await axios.get(`/api/coinbase/products/${assetName}`);
             const priceData = response.data;
 
+            const currentDateTime = new Date().toLocaleTimeString();
+            const price = parseFloat(priceData.price);
             // Append new price to the asset's price series
             this.#assetList[assetName].prices.push({
-                price: parseFloat(priceData.price), // Ensure price is a number
-                date: new Date().toLocaleTimeString(),
+                price: price, 
+                date: currentDateTime,
             });
 
+            try {
+                await axios.post('/api/trading-engine/add-price', {
+                    assetName: assetName,
+                    price: price,
+                    time: currentDateTime
+                });
+            } catch (err) {
+                console.error('Failed to save price to engine:', err.message);
+                console.error('Error stack:', err.stack);  
+                throw new Error('Failed to save price to engine');
+            }
         } catch (err) {
-            console.error('Failed to fetch prices:', err.message);
-            throw new Error('Failed to fetch prices');
+            console.error('Failed to fetch price:', err.message);
+            throw new Error('Failed to fetch price');
         }
     };
 
     // Method to add profit-loss to the series
     addAssetProfitLoss = async (assetName) => {
         try {
-            // Ensure the asset exists in assetList
+            // Ensure the asset exists in assetList, otherwise initialize it
             if (!this.#assetList[assetName]) {
-                throw new Error(`Asset ${assetName} does not exist`)
+                this.#assetList[assetName] = { prices: [], profitLosses: [] };
             }
 
             // Fetch profit-loss for the asset
             const response = await axios.get(`/api/trading-engine/profit-loss?assetName=${assetName}`);
             const responseObj = response.data;
-            console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            console.log(responseObj);
 
             // Append new profit-loss to the asset's profit-loss series
             this.#assetList[assetName].profitLosses.push({
@@ -76,19 +87,18 @@ class AssetHandler {
     // Method to trade an asset
     tradeAsset = async (assetName) => {
         try {
-            // Ensure the asset exists in assetList
+            // Ensure the asset exists in assetList, otherwise initialize it
             if (!this.#assetList[assetName]) {
-                throw new Error(`Asset ${assetName} does not exist`)
+                this.#assetList[assetName] = { prices: [], profitLosses: [] };
             }
 
             // Fetch action for the asset
-            const response = await axios.post(`/api/trading-engine/action`, { assetName });
+            const response = await axios.get(`/api/trading-engine/action?assetName=${assetName}`);
             const responseObj = response.data;
 
-            console.log(`Action for ${assetName}:`, responseObj.action);
+            console.log(`Action for ${assetName}:` + responseObj.action);
 
-            // Here, you can append the action to a corresponding list if needed
-            // this.#assetList[assetName].actions.push(responseObj.action);
+            // Perform actions
 
         } catch (err) {
             console.error('Failed to fetch trading action:', err.message);
@@ -129,22 +139,18 @@ class AssetHandler {
         }
     }
 
-    addAsset(assetName) {
-        if (!this.#assetList[assetName]) {
-            console.log(`Asset ${assetName} added`);
-            this.#assetList[assetName] = { prices: [], profitLosses: [], tradingEngine };
-
-        } else {
-            console.log(`Asset ${assetName} already exists`);
-        }
-    }
-
-    removeAsset(assetName) {
+    removeAsset = async (assetName) => {
         if (this.#assetList[assetName]) {
             delete this.#assetList[assetName];
-            console.log(`Asset "${assetName}" removed successfully.`);
         } else {
             console.warn(`Asset "${assetName}" not found.`);
+        }
+        try {
+            // Fetch profit-loss for the asset
+            await axios.delete(`/api/trading-engine/remove-asset/${assetName}`);
+        } catch (err) {
+            console.error(`Failed to deleting ${assetName}`, err.message);
+            throw new Error(`Failed to deleting ${assetName}`);
         }
     }
 }

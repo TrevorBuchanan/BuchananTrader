@@ -40,12 +40,16 @@ class TradingEngine {
         this.#shortLossLimit = 0;  
     }
 
+    getProfitLoss() {
+        return this.#profitLoss;
+    }
+
     getAssetName() {
         return this.#assetName;
     }
 
-    addPrice(price) {
-        this.#priceSeries.push(price);
+    addPrice(price, time) {
+        this.#priceSeries.push({'price': price, 'time': time});
     }
 
     analyzeSeriesForAction() {
@@ -54,7 +58,7 @@ class TradingEngine {
         }
         const actions = [];
 
-        const latestValue = this.#priceSeries[this.#priceSeries.length - 1];
+        const latestValue = this.#priceSeries[this.#priceSeries.length - 1]['price'];
 
         // Enter logic: Should we enter a long or short position?
         if (this.#shouldLong()) {
@@ -62,7 +66,8 @@ class TradingEngine {
             this.#isLonging = true;
             this.#isShorting = false;
             actions.push("Long");
-        } else if (this.#shouldShort()) {
+        } 
+        if (this.#shouldShort()) {
             this.#shortEntryPrice = latestValue;
             this.#isShorting = true;
             this.#isLonging = false;
@@ -70,11 +75,12 @@ class TradingEngine {
         }
 
         // Exit logic: Should we close a long or short position?
-        if (this.#isLonging && this.#shouldCloseLong()) {
+        if (this.#shouldCloseLong()) {
             this.#profitLoss += latestValue - this.#longEntryPrice;
             this.#isLonging = false;
             actions.push("Close Long");
-        } else if (this.#isShorting && this.#shouldCloseShort()) {
+        }
+        if (this.#shouldCloseShort()) {
             this.#profitLoss += this.#shortEntryPrice - latestValue;
             this.#isShorting = false;
             actions.push("Close Short");
@@ -90,7 +96,7 @@ class TradingEngine {
     #upTrendForLength(length) {
         if (this.#priceSeries.length < length) return false;
         for (let i = this.#priceSeries.length - length; i < this.#priceSeries.length - 1; i++) {
-            if (this.#priceSeries[i] >= this.#priceSeries[i + 1]) {
+            if (this.#priceSeries[i]['price'] >= this.#priceSeries[i + 1]['price']) {
                 return false;
             }
         }
@@ -100,7 +106,7 @@ class TradingEngine {
     #downTrendForLength(length) {
         if (this.#priceSeries.length < length) return false;
         for (let i = this.#priceSeries.length - length; i < this.#priceSeries.length - 1; i++) {
-            if (this.#priceSeries[i] <= this.#priceSeries[i + 1]) {
+            if (this.#priceSeries[i]['price'] <= this.#priceSeries[i + 1]['price']) {
                 return false;
             }
         }
@@ -116,15 +122,11 @@ class TradingEngine {
     }
 
     #shouldCloseLong () {
-        return this.#downTrendForLength(2);
+        return this.#isLonging && this.#downTrendForLength(2);
     }
 
     #shouldCloseShort () {
-        return this.#upTrendForLength(2);
-    }
-
-    getProfitLoss() {
-        return this.#profitLoss;
+        return this.#isShorting && this.#upTrendForLength(2);
     }
 }
 

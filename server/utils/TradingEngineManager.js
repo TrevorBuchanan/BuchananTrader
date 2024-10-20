@@ -7,37 +7,25 @@ class TradingEngineManager {
         this.#tradingEngines = {};
     }
 
-    addAssetPrice(assetName, price) {
-        if (this.#tradingEngines[assetName]) {
-            this.#tradingEngines[assetName].addPrice(price);
-            return this.#tradingEngines[assetName].analyzeSeriesForAction();
-        } else {
-            return `No trading engine for ${assetName}`;
+    addAssetPrice(assetName, price, time) {
+        if (!this.#tradingEngines[assetName]) {
+            this.#tradingEngines[assetName] = new TradingEngine(assetName);
         }
+        this.#tradingEngines[assetName].addPrice(price, time);
     }
 
     getAssetProfitLoss(assetName) {
-        if (this.#tradingEngines[assetName]) {
-            return this.#tradingEngines[assetName].getProfitLoss();
-        } else {
-            return `No trading engine for ${assetName}`;
+        if (!this.#tradingEngines[assetName]) {
+            this.#tradingEngines[assetName] = new TradingEngine(assetName);
         }
+        return this.#tradingEngines[assetName].getProfitLoss();
     }
 
     getAssetAction(assetName) {
-        if (this.#tradingEngines[assetName]) {
-            return this.#tradingEngines[assetName].analyzeSeriesForAction();
-        } else {
-            return `No trading engine for ${assetName}`;
-        }
-    }
-
-    addAssetTradingEngine(assetName) {
         if (!this.#tradingEngines[assetName]) {
             this.#tradingEngines[assetName] = new TradingEngine(assetName);
-        } else {
-            return `Trading engine for ${assetName} already exists.`;
         }
+        return this.#tradingEngines[assetName].analyzeSeriesForAction();
     }
 
     removeAssetTradingEngine(assetName) {
