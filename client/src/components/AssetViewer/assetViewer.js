@@ -25,7 +25,7 @@ const AssetViewer = ({ targetAsset, onRemove, updateFrequency }) => {
         const updateSeries = async () => {
             try {
                 // Fetch the updated prices for the asset
-                await assetHandler.addCoinbasePrice(targetAsset);
+                await assetHandler.addCoinbaseAssetPrice(targetAsset);
 
                 // Get the updated price series
                 const priceSeries = assetHandler.getAssetPriceSeries(targetAsset);

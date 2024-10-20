@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Singleton
 class AssetHandler {
-    #assetList 
+    #assetList
 
     constructor() {
         if (AssetHandler.instance) {
@@ -22,14 +22,14 @@ class AssetHandler {
             AssetHandler.instance = new AssetHandler();
         }
         return AssetHandler.instance;
-    }    
+    }
 
     // Method to add Coinbase prices to an asset's price series
-    addCoinbasePrice = async (assetName) => {
+    addCoinbaseAssetPrice = async (assetName) => {
         try {
-            // Ensure the asset exists in assetList, otherwise initialize it
+            // Ensure the asset exists in assetList
             if (!this.#assetList[assetName]) {
-                this.#assetList[assetName] = { prices: [], profitLosses: [] };
+                throw new Error(`Asset ${assetName} does not exist`)
             }
 
             const response = await axios.get(`/api/coinbase/products/${assetName}`);
@@ -48,15 +48,18 @@ class AssetHandler {
     };
 
     // Method to add profit-loss to the series
-    addProfitLoss = async (assetName) => {
+    addAssetProfitLoss = async (assetName) => {
         try {
-            // Ensure the asset exists in assetList, otherwise initialize it
+            // Ensure the asset exists in assetList
             if (!this.#assetList[assetName]) {
-                this.#assetList[assetName] = { prices: [], profitLosses: [] };
+                throw new Error(`Asset ${assetName} does not exist`)
             }
 
-            const response = await axios.get(`/api/trading-engine/profit-loss`);
+            // Fetch profit-loss for the asset
+            const response = await axios.get(`/api/trading-engine/profit-loss?assetName=${assetName}`);
             const responseObj = response.data;
+            console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            console.log(responseObj);
 
             // Append new profit-loss to the asset's profit-loss series
             this.#assetList[assetName].profitLosses.push({
@@ -70,21 +73,26 @@ class AssetHandler {
         }
     };
 
+    // Method to trade an asset
     tradeAsset = async (assetName) => {
         try {
-            // Ensure the asset exists in assetList, otherwise initialize it
+            // Ensure the asset exists in assetList
             if (!this.#assetList[assetName]) {
-                this.#assetList[assetName] = { prices: [], profitLosses: [] };
+                throw new Error(`Asset ${assetName} does not exist`)
             }
 
-            const response = await axios.get(`/api/trading-engine/get-action`);
+            // Fetch action for the asset
+            const response = await axios.post(`/api/trading-engine/action`, { assetName });
             const responseObj = response.data;
 
-            console.log(assetName + ' ' + responseObj);
+            console.log(`Action for ${assetName}:`, responseObj.action);
+
+            // Here, you can append the action to a corresponding list if needed
+            // this.#assetList[assetName].actions.push(responseObj.action);
 
         } catch (err) {
-            console.error('Failed to fetch profit-loss:', err.message);
-            throw new Error('Failed to fetch profit-loss');
+            console.error('Failed to fetch trading action:', err.message);
+            throw new Error('Failed to fetch trading action');
         }
     };
 
@@ -97,7 +105,7 @@ class AssetHandler {
             return this.#assetList[assetName];
         } else {
             console.warn(`Asset "${assetName}" not found.`);
-            return null; 
+            return null;
         }
     }
 
@@ -107,7 +115,7 @@ class AssetHandler {
         if (asset) {
             return asset.prices;
         } else {
-            return []; 
+            return [];
         }
     }
 
@@ -117,7 +125,17 @@ class AssetHandler {
         if (asset) {
             return asset.profitLosses;
         } else {
-            return []; 
+            return [];
+        }
+    }
+
+    addAsset(assetName) {
+        if (!this.#assetList[assetName]) {
+            console.log(`Asset ${assetName} added`);
+            this.#assetList[assetName] = { prices: [], profitLosses: [], tradingEngine };
+
+        } else {
+            console.log(`Asset ${assetName} already exists`);
         }
     }
 
@@ -129,6 +147,6 @@ class AssetHandler {
             console.warn(`Asset "${assetName}" not found.`);
         }
     }
-} 
+}
 
 export default AssetHandler;

@@ -12,6 +12,7 @@ function Home() {
   const handleAssetChange = (asset) => {
     if (!targetAssets.includes(asset)) {
       setTargetAssets((prevAssets) => [...prevAssets, asset]); 
+      AssetHandler.getInstance().addAsset(asset);
     }
   };
 

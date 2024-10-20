@@ -15,7 +15,7 @@ const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency }) => {
         const updateSeries = async () => {
             try {
                 // Fetch the updated profit-loss for the asset
-                await assetHandler.addProfitLoss(targetAsset);
+                await assetHandler.addAssetProfitLoss(targetAsset);
 
                 // Get the updated profit-loss series
                 const profitLossSeries = assetHandler.getAssetProfitLossSeries(targetAsset);

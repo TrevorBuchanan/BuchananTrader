@@ -35,17 +35,18 @@ const TradingEngineController = {
     },
 
     getAssetProfitLoss: async (req, res) => {
-        const { assetName } = req.body;
-
+        const { assetName } = req.query;  
+    
         // Validate input
         if (!assetName) {
             return res.status(400).json({ error: 'Invalid input: assetName is required.' });
         }
-
+    
         try {
             const profitLoss = await TradingEngineService.getAssetProfitLoss(assetName);
             res.json({ profitLoss });
         } catch (error) {
+            console.error('Error fetching profit/loss:', error);  // Log the error for debugging
             res.status(500).json({ error: error.message });
         }
     }
