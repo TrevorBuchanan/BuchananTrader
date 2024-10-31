@@ -1,4 +1,6 @@
-const TradingEngine = require("./TradingEngine");
+
+
+const AssetTradingEngine = require("./AssetTradingEngine");
 
 class TradingEngineManager {
     #tradingEngines
@@ -9,21 +11,21 @@ class TradingEngineManager {
 
     addAssetPrice(assetName, price, time) {
         if (!this.#tradingEngines[assetName]) {
-            this.#tradingEngines[assetName] = new TradingEngine(assetName);
+            this.#tradingEngines[assetName] = new AssetTradingEngine(assetName);
         }
         this.#tradingEngines[assetName].addPrice(price, time);
     }
 
     getAssetProfitLoss(assetName) {
         if (!this.#tradingEngines[assetName]) {
-            this.#tradingEngines[assetName] = new TradingEngine(assetName);
+            this.#tradingEngines[assetName] = new AssetTradingEngine(assetName);
         }
         return this.#tradingEngines[assetName].getProfitLoss();
     }
 
     getAssetAction(assetName) {
         if (!this.#tradingEngines[assetName]) {
-            this.#tradingEngines[assetName] = new TradingEngine(assetName);
+            this.#tradingEngines[assetName] = new AssetTradingEngine(assetName);
         }
         return this.#tradingEngines[assetName].analyzeSeriesForAction();
     }

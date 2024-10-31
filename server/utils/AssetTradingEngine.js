@@ -1,4 +1,6 @@
-class TradingEngine {
+
+
+class AssetTradingEngine {
     #MIN_SERIES_LENGTH
 
     #assetName
@@ -93,7 +95,7 @@ class TradingEngine {
         }
     }
 
-    #upTrendForLength(length) {
+    upTrendForLength(length) {
         if (this.#priceSeries.length < length) return false;
         for (let i = this.#priceSeries.length - length; i < this.#priceSeries.length - 1; i++) {
             if (this.#priceSeries[i]['price'] >= this.#priceSeries[i + 1]['price']) {
@@ -103,7 +105,7 @@ class TradingEngine {
         return true;
     }
 
-    #downTrendForLength(length) {
+    downTrendForLength(length) {
         if (this.#priceSeries.length < length) return false;
         for (let i = this.#priceSeries.length - length; i < this.#priceSeries.length - 1; i++) {
             if (this.#priceSeries[i]['price'] <= this.#priceSeries[i + 1]['price']) {
@@ -114,20 +116,20 @@ class TradingEngine {
     }
 
     #shouldLong() {
-        return this.#upTrendForLength(2) && !this.#isLonging;
+        return this.upTrendForLength(2) && !this.#isLonging;
     }
 
     #shouldShort() {
-        return this.#downTrendForLength(2) && !this.#isShorting;
+        return this.downTrendForLength(2) && !this.#isShorting;
     }
 
     #shouldCloseLong () {
-        return this.#isLonging && this.#downTrendForLength(2);
+        return this.#isLonging && this.downTrendForLength(2);
     }
 
     #shouldCloseShort () {
-        return this.#isShorting && this.#upTrendForLength(2);
+        return this.#isShorting && this.upTrendForLength(2);
     }
 }
 
-module.exports = TradingEngine;
+module.exports = AssetTradingEngine;
