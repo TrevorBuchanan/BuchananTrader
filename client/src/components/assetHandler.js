@@ -139,18 +139,21 @@ class AssetHandler {
         }
     }
 
+    
     removeAsset = async (assetName) => {
-        if (this.#assetList[assetName]) {
-            delete this.#assetList[assetName];
-        } else {
-            console.warn(`Asset "${assetName}" not found.`);
+        if (!this.#assetList[assetName]) {
+            console.warn(`Asset "${assetName}" not found. Cannot delete.`);
+            return;
         }
+    
         try {
-            // Fetch profit-loss for the asset
             await axios.delete(`/api/trading-engine/remove-asset/${assetName}`);
+            
+            delete this.#assetList[assetName];
+            console.log(`Successfully deleted asset: ${assetName}`);
         } catch (err) {
-            console.error(`Failed to deleting ${assetName}`, err.message);
-            throw new Error(`Failed to deleting ${assetName}`);
+            console.error(`Failed to delete ${assetName} from server:`, err.message);
+            throw new Error(`Failed to delete ${assetName} from server`);
         }
     }
 }

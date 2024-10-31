@@ -10,10 +10,7 @@ import AssetHandler from '../assetHandler';
 // Fix slider update
 
 const AssetViewer = ({ targetAsset, onRemove, updateFrequency }) => {
-    // Initialize states
-    const [seriesData, setSeriesData] = useState([
-        { name: targetAsset, data: [] }
-    ]);
+    const [seriesData, setSeriesData] = useState([{ name: targetAsset, data: [] }]);
     const [dates, setDates] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -22,24 +19,19 @@ const AssetViewer = ({ targetAsset, onRemove, updateFrequency }) => {
     useEffect(() => {
         const assetHandler = AssetHandler.getInstance();
 
+        // Function to fetch and update price data
         const updateSeries = async () => {
             try {
-                // Fetch the updated prices for the asset
-                await assetHandler.addCoinbaseAssetPrice(targetAsset);
+                await assetHandler.addCoinbaseAssetPrice(targetAsset);  // Fetch the updated prices
+                const priceSeries = assetHandler.getAssetPriceSeries(targetAsset); // Get price series
 
-                // Get the updated price series
-                const priceSeries = assetHandler.getAssetPriceSeries(targetAsset);
-
-                // Update the series data and dates
                 const updatedData = priceSeries.map(item => item.price);
                 const updatedDates = priceSeries.map(item => item.date);
 
-                // Trade if trading
                 if (isTrading) {
-                    await assetHandler.tradeAsset(targetAsset);
+                    await assetHandler.tradeAsset(targetAsset); // Trade if trading
                 }
 
-                // Update state
                 setSeriesData([{ name: targetAsset, data: updatedData }]);
                 setDates(updatedDates);
                 setLoading(false);
@@ -49,14 +41,24 @@ const AssetViewer = ({ targetAsset, onRemove, updateFrequency }) => {
             }
         };
 
-        // Start polling at a set interval
+        // Update function with debounce to reduce frequent calls
+        const debounce = (func, delay) => {
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => func.apply(this, args), delay);
+            };
+        };
+        const debouncedUpdateSeries = debounce(updateSeries, 500);
+
+        // Start polling
         const intervalId = setInterval(() => {
-            updateSeries();
+            debouncedUpdateSeries();
         }, updateFrequency * 1000);
 
-        updateSeries(); // Initial update
+        updateSeries(); // Initial data fetch
 
-        return () => clearInterval(intervalId); // Clean up on component unmount
+        return () => clearInterval(intervalId); // Cleanup on component unmount
     }, [updateFrequency, targetAsset, isTrading]);
 
     const handleStartTrading = () => {
@@ -66,19 +68,20 @@ const AssetViewer = ({ targetAsset, onRemove, updateFrequency }) => {
     const handleStopTrading = () => {
         setIsTrading(false);
     };
-    
+
     if (loading) return <div className={styles.statusText}>Loading...</div>;
 
     const chartOptions = {
         chart: {
             type: 'line',
+            animations: { enabled: true, easing: 'linear', speed: 800 },
             toolbar: {
                 tools: {
                     download: true,
                     selection: true,
                     zoom: false,
                     zoomin: false,
-                    zoomout: false,
+                    zoomout: false, 
                     pan: true,
                     reset: true,
                 },
@@ -89,44 +92,55 @@ const AssetViewer = ({ targetAsset, onRemove, updateFrequency }) => {
             categories: dates,
         },
         yaxis: {
-            title: {
-                text: 'Price',
-            },
+            title: { text: 'Price' },
         },
-        grid: {
-            borderColor: '#3d3d3d',
-        },
-        stroke: {
-            width: 2,
-        },
+        grid: { borderColor: '#3d3d3d' },
+        stroke: { width: 2 },
         tooltip: {
             theme: 'dark',
             shared: true,
         },
-        legend: {
-            position: 'top',
-        },
+        legend: { position: 'top' },
     };
 
     return (
         <div className={styles.priceTimeGraph}>
             <div className={styles.titleSection}>
-                <h2 className={styles.chartTitle}>{targetAsset} Price Tracker</h2>
+                <h2 className={styles.chartTitle}>
+                    {targetAsset} Price Tracker {isTrading && <span className={styles.tradingIndicator}>Trading...</span>}
+                </h2>
                 <div className={styles.tradingButtonsSection}>
-                    <button className={styles.tradingButton} onClick={handleStartTrading}>Start Trading</button>
-                    <button className={styles.tradingButton} onClick={handleStopTrading}>Stop Trading</button>
+                    <button 
+                        className={styles.tradingButton} 
+                        onClick={handleStartTrading} 
+                        disabled={isTrading} 
+                        aria-label={`Start trading ${targetAsset}`}
+                    >
+                        Start Trading
+                    </button>
+                    <button 
+                        className={styles.tradingButton} 
+                        onClick={handleStopTrading} 
+                        disabled={!isTrading}
+                        aria-label={`Stop trading ${targetAsset}`}
+                    >
+                        Stop Trading
+                    </button>
                 </div>
-                <button className={styles.removeButton} onClick={() => onRemove(targetAsset)}>X</button> {/* Remove button */}
+                <button 
+                    className={styles.removeButton} 
+                    onClick={() => onRemove(targetAsset)}
+                    aria-label={`Remove ${targetAsset}`}
+                >
+                    X
+                </button>
             </div>
             {error ? (
-                <div className={styles.statusText}>{error}</div>
+                <div className={styles.statusText}>
+                    {error} <button onClick={updateSeries} className={styles.retryButton}>Retry</button>
+                </div>
             ) : (
-                <Chart
-                    options={chartOptions}
-                    series={seriesData}
-                    type="line"
-                    height={350}
-                />
+                <Chart options={chartOptions} series={seriesData} type="line" height={350} />
             )}
         </div>
     );

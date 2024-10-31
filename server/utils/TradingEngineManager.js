@@ -33,7 +33,7 @@ class TradingEngineManager {
             delete this.#tradingEngines[assetName];
             return `Trading engine for ${assetName} removed.`;
         } else {
-            return `No trading engine for ${assetName}`;
+            throw new Error(`No trading engine for ${assetName}`);
         }
     }
 }

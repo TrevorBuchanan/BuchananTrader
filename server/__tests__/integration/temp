@@ -1,0 +1,2 @@
+api.test.js          // Tests for API routes
+database.test.js      // Tests for database interactions

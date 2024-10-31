@@ -1,4 +1,6 @@
 const express = require('express');
+const loggerMiddleware = require('./middlewares/loggerMiddleware');
+const errorHandler = require('./middlewares/errorHandler');
 const path = require('path');
 const apiRoutes = require('./routes/apiRoutes');
 
@@ -8,11 +10,14 @@ const { Pool } = require('pg');
 
 const app = express();
 
+
 // Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(loggerMiddleware); // Logs each request
+app.use(errorHandler); 
 
 // PostgreSQL connection
 const pool = new Pool({

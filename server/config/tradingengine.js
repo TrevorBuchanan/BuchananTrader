@@ -7,7 +7,7 @@ const getAssetAction = async (assetName) => {
         const action = tradingEngineManager.getAssetAction(assetName);
         return action; 
     } catch (error) {
-        throw error; 
+        throw new Error(`Error getting asset action: ${error.message}`); 
     }
 }
 
@@ -15,7 +15,7 @@ const addAssetPrice = async (assetName, price, time) => {
     try {
         tradingEngineManager.addAssetPrice(assetName, price, time);
     } catch (error) {
-        throw error;
+        throw new Error(`Error adding asset price: ${error.message}`); 
     }
 }
 
@@ -24,16 +24,16 @@ const getAssetProfitLoss = async (assetName) => {
         const profitLoss = tradingEngineManager.getAssetProfitLoss(assetName);
         return profitLoss;
     } catch (error) {
-        throw error;
+        throw new Error(`Error adding asset profit loss: ${error.message}`); 
     }
 }
 
 const removeAsset = async (assetName) => {
     try {
-        resultMsg = tradingEngineManager.removeAssetTradingEngine(assetName);
+        const resultMsg = await tradingEngineManager.removeAssetTradingEngine(assetName);
         return resultMsg;
     } catch (error) {
-        throw error;
+        throw new Error(`Error removing asset: ${error.message}`); 
     }
 }
 
