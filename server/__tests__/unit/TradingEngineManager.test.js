@@ -15,9 +15,9 @@ describe('Trading Engine Manager Tests', () => {
         time = new Date().toISOString();
         tradingEngineManager = new TradingEngineManager(); // Instantiate the TradingEngineManager for each test
 
-        AssetTradingEngine.prototype.analyzeSeriesForAction = jest.fn();
+        AssetTradingEngine.prototype.analyzeSeriesForAction = jest.fn().mockReturnValue('Hold');
         AssetTradingEngine.prototype.addPrice = jest.fn();
-        AssetTradingEngine.prototype.getProfitLoss = jest.fn();
+        AssetTradingEngine.prototype.getProfitLoss = jest.fn().mockReturnValue(100);
     });
 
     afterEach(() => {
@@ -25,37 +25,67 @@ describe('Trading Engine Manager Tests', () => {
     });
 
     /**
-     * Testing getAssetAction success
+     * Testing getTradingEngines
      */
+    test('getTradingEngines should return the current list of trading engines', () => {
+        expect(tradingEngineManager.getTradingEngines()).toStrictEqual({});
+    })
 
     /**
-     * Testing getAssetAction failure
+     * Testing addAssetPrice
      */
+    test('addAssetPrice should add a price to an existing asset', () => {
+        tradingEngineManager.addAssetPrice(assetName, price, time); // Add and initialize
+        tradingEngineManager.addAssetPrice(assetName, price, time); // Add to existing
+        expect(AssetTradingEngine).toHaveBeenCalledWith(assetName);
+        expect(AssetTradingEngine.prototype.addPrice).toHaveBeenCalledWith(price, time);
+    });
 
     /**
-     * Testing addAssetPrice success
+     * Testing getAssetProfitLoss
      */
+    test('getAssetProfitLoss should return profit/loss for an existing asset', () => {
+        tradingEngineManager.addAssetPrice(assetName, price, time); // Ensuring asset exists
+        const profitLoss = tradingEngineManager.getAssetProfitLoss(assetName);
+        expect(AssetTradingEngine.prototype.getProfitLoss).toHaveBeenCalled();
+        expect(profitLoss).toBe(100);
+    });
+
+    test('getAssetProfitLoss should initialize AssetTradingEngine if asset does not exist', () => {
+        const profitLoss = tradingEngineManager.getAssetProfitLoss(assetName);
+        expect(AssetTradingEngine).toHaveBeenCalledWith(assetName);
+        expect(AssetTradingEngine.prototype.getProfitLoss).toHaveBeenCalled();
+        expect(profitLoss).toBe(100);
+    });
 
     /**
-     * Testing addAssetPrice failure
+     * Testing getAssetAction
      */
+    test('getAssetAction should return action for an existing asset', () => {
+        tradingEngineManager.addAssetPrice(assetName, price, time); // Ensuring asset exists
+        const action = tradingEngineManager.getAssetAction(assetName);
+        expect(AssetTradingEngine.prototype.analyzeSeriesForAction).toHaveBeenCalled();
+        expect(action).toBe('Hold');
+    });
+
+    test('getAssetAction should initialize AssetTradingEngine if asset does not exist', () => {
+        const action = tradingEngineManager.getAssetAction(assetName);
+        expect(AssetTradingEngine).toHaveBeenCalledWith(assetName);
+        expect(AssetTradingEngine.prototype.analyzeSeriesForAction).toHaveBeenCalled();
+        expect(action).toBe('Hold');
+    });
 
     /**
-     * Testing getAssetProfitLoss success
+     * Testing removeAssetTradingEngine
      */
+    test('removeAssetTradingEngine should remove an existing asset', () => {
+        tradingEngineManager.addAssetPrice(assetName, price, time); // Ensuring asset exists
+        const result = tradingEngineManager.removeAssetTradingEngine(assetName);
+        expect(tradingEngineManager.getTradingEngines()).not.toHaveProperty(assetName);
+        expect(result).toBe(`Trading engine for ${assetName} removed.`);
+    });
 
-    /**
-     * Testing getAssetProfitLoss failure
-     */
-
-    /**
-     * Testing removeAsset success
-     */
-
-    /**
-     * Testing removeAsset failure
-     */
-    test('example test', async () => {
-        expect(1).toBe(1);
+    test('removeAssetTradingEngine should throw error for non-existent asset', () => {
+        expect(() => tradingEngineManager.removeAssetTradingEngine(assetName)).toThrow(`No trading engine for ${assetName}`);
     });
 });

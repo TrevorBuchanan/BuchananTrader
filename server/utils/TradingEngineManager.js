@@ -9,6 +9,10 @@ class TradingEngineManager {
         this.#tradingEngines = {};
     }
 
+    getTradingEngines() {
+        return this.#tradingEngines;
+    }
+
     addAssetPrice(assetName, price, time) {
         if (!this.#tradingEngines[assetName]) {
             this.#tradingEngines[assetName] = new AssetTradingEngine(assetName);

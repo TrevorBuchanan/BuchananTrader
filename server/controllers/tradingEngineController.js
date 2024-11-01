@@ -53,17 +53,18 @@ const TradingEngineController = {
     },
 
     removeAsset: async (req, res) => {
-        const { assetName } = req.params;  
-
+        const { assetName } = req.params;
+    
         // Validate input
         if (!assetName) {
             return res.status(400).json({ error: 'Invalid input: assetName is required.' });
         }
+        
         try {
-            resultMsg = await TradingEngineService.removeAsset(assetName);
-            return resultMsg;
+            const resultMsg = await TradingEngineService.removeAsset(assetName);
+            res.json(resultMsg); // Send the result message in the response
         } catch (error) {
-            console.error('Error deleting asset', error);  
+            console.error('Error deleting asset', error);
             res.status(500).json({ error: error.message });
         }
     }
