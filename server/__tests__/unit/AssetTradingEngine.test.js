@@ -34,37 +34,59 @@ describe('Asset Trading Engine Tests', () => {
     });
 
     /**
+     * Testing getAssetName
+     */
+    test('should return the correct price series', () => {
+        expect(tradingEngine.getPriceSeries()).toStrictEqual([]);
+    });
+
+    /**
      * Testing addPrice
      */
     test('should add a new price entry to the price series', () => {
         tradingEngine.addPrice(price, time);
-        const priceSeries = tradingEngine.analyzeSeriesForAction();  // We use analyzeSeriesForAction to access priceSeries indirectly
+        const priceSeries = tradingEngine.getPriceSeries();  // We use analyzeSeriesForAction to access priceSeries indirectly
         expect(priceSeries).toBeDefined();
         expect(priceSeries[priceSeries.length - 1]).toEqual({ price, time });
     });
 
     /**
-     * Testing analyzeSeriesForAction when not enough data
+     * Testing analyzeSeriesForAction
      */
-    test('should return "Not enough data to decide action" if price series is shorter than minimum length', () => {
+    test('should return entry/exit actions according to series', () => {
+        // Not enough data test
         for (let i = 0; i < 9; i++) {
             tradingEngine.addPrice(price, new Date().toISOString());
         }
         expect(tradingEngine.analyzeSeriesForAction()).toEqual("Not enough data to decide action");
-    });
+        
+        // No action test
+        tradingEngine.addPrice(price, new Date().toISOString());
+        expect(tradingEngine.analyzeSeriesForAction()).toEqual(["No Action"]);
 
-    /**
-     * Testing analyzeSeriesForAction when sufficient data and constant series
-     */
-    test('should return "Hold" if no entry/exit conditions are met', () => {
-        for (let i = 0; i < 10; i++) {
-            tradingEngine.addPrice(price, new Date().toISOString());
-        }
-        expect(tradingEngine.analyzeSeriesForAction()).toEqual(["Hold"]);
+        // Long action test
+        tradingEngine.addPrice(price + 1, new Date().toISOString());
+        tradingEngine.addPrice(price + 2, new Date().toISOString()); // Double increase
+        expect(tradingEngine.analyzeSeriesForAction()).toEqual(["Long"]); // Should expect long initially 
+
+        // Hold Long action test
+        expect(tradingEngine.analyzeSeriesForAction()).toEqual(["Hold Long"]); // Once longing should expect Hold
+
+        // Short and Close Long test
+        tradingEngine.addPrice(price - 1, new Date().toISOString());
+        tradingEngine.addPrice(price - 2, new Date().toISOString()); // Double decrease
+        expect(tradingEngine.analyzeSeriesForAction()).toEqual(["Short", "Close Long"]); // Decreased twice so short and close long
+
+        // Hold Short test
+        expect(tradingEngine.analyzeSeriesForAction()).toEqual(["Hold Short"]); // No change so hold short
+
+        tradingEngine.addPrice(price + 1, new Date().toISOString());
+        tradingEngine.addPrice(price + 2, new Date().toISOString()); // Double increase
+        expect(tradingEngine.analyzeSeriesForAction()).toEqual(["Long", "Close Short"]); // Increased so close short and start long
     });
 
     // TODO: Add analyze series for action for more series options
-    
+
     /**
      * Testing upTrendForLength
      */

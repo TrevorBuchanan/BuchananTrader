@@ -1,4 +1,8 @@
+// AssetTradingEngine.js
 
+// console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+// console.log(this.#isLonging);
+// console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
 class AssetTradingEngine {
     #MIN_SERIES_LENGTH
@@ -50,6 +54,10 @@ class AssetTradingEngine {
         return this.#assetName;
     }
 
+    getPriceSeries() {
+        return this.#priceSeries;
+    }
+
     addPrice(price, time) {
         this.#priceSeries.push({'price': price, 'time': time});
     }
@@ -66,13 +74,11 @@ class AssetTradingEngine {
         if (this.#shouldLong()) {
             this.#longEntryPrice = latestValue;
             this.#isLonging = true;
-            this.#isShorting = false;
             actions.push("Long");
         } 
         if (this.#shouldShort()) {
             this.#shortEntryPrice = latestValue;
             this.#isShorting = true;
-            this.#isLonging = false;
             actions.push("Short");
         }
 
@@ -89,10 +95,17 @@ class AssetTradingEngine {
         }
 
         if(actions.length == 0) {
-            return ["Hold"];
-        } else {
-            return actions;
+            if (this.#isLonging) {
+                actions.push("Hold Long");
+            }
+            if (this.#isShorting) {
+                actions.push("Hold Short");
+            }
+            if (!this.#isLonging && !this.#isShorting) {
+                actions.push("No Action");
+            }
         }
+        return actions;
     }
 
     upTrendForLength(length) {
