@@ -22,7 +22,7 @@ const makeJWT = (keyVar, secretVar, uri) => {
             type: 'sec1' // sec1 is used for EC keys
         });
     } catch (error) {
-        console.error('Error loading EC private key:', error.message);
+        throw new Error('Error loading EC private key: ' + error.message);
     }
 
     const jwtData = {

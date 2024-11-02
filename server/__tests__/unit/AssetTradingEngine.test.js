@@ -2,7 +2,7 @@
 
 const AssetTradingEngine = require('../../utils/AssetTradingEngine');
 
-describe('Asset Trading Engine Tests', () => {
+describe('Asset Trading Engine', () => {
     let tradingEngine;
     let assetName;
     let price;

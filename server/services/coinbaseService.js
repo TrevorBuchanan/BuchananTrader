@@ -1,3 +1,5 @@
+// coinbaseService.js
+
 const client = require('../config/coinbase'); // Import the `makeRequest` function
 
 // Function to get all available currencies

@@ -1,10 +1,11 @@
 // tradingengine.test.js
+
 const tradingEngine = require('../../config/tradingengine');
 const TradingEngineManager = require('../../utils/TradingEngineManager');
 
 jest.mock('../../utils/TradingEngineManager');
 
-describe('Trading Engine Config Tests', () => {
+describe('Trading Engine Config', () => {
     let assetName;
     let price;
     let time;
