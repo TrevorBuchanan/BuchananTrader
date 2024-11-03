@@ -1,72 +1,32 @@
 // databaseService.test.js
 
+const User = require('../../models/User');
 const databaseService = require('../../services/databaseService');
-const bcrypt = require('bcrypt');
-const { pool } = require('../../config/database');
+const sequelizeMock = require('sequelize-mock');
 
-jest.mock('bcrypt');
-jest.mock('../../config/database');
+const dbMock = new sequelizeMock();
+const UserMock = dbMock.define('User', {
+    id: 1,
+    email: 'test@example.com',
+    password: 'hashed_password',
+});
 
-
-describe('databaseService', () => {
-    afterEach(() => {
-        jest.clearAllMocks();
+describe('Database Service', () => {
+    beforeEach(() => {
+        User.findAll = jest.fn().mockResolvedValue([UserMock]); // Mock the findAll method
+        User.create = jest.fn().mockResolvedValue(UserMock); // Mock the create method
     });
 
-    describe('registerUser', () => {
-        it('should register a new user if email does not exist', async () => {
-            // Mocking the response to simulate that no user exists
-            pool.query.mockResolvedValueOnce({ rows: [] }); // No existing users
-            
-            // Mock the password hashing
-            bcrypt.hash.mockResolvedValueOnce('hashedPassword'); // Mock password hashing
-            
-            // Mock the response of the successful registration
-            pool.query.mockResolvedValueOnce({ 
-                rows: [{ id: 1, email: 'test@example.com', created_at: new Date() }] 
-            }); // Simulating user insertion
-            
-            const result = await databaseService.registerUser('test@example.com', 'password');
-
-            expect(pool.query).toHaveBeenCalledWith('SELECT * FROM users WHERE email = $1', ['test@example.com']);
-            expect(pool.query).toHaveBeenCalledWith(
-                'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *',
-                ['test@example.com', 'hashedPassword']
-            );
-            expect(result).toBeDefined();
-            expect(result.email).toBe('test@example.com');
-        });
-
-        it('should throw an error if user already exists', async () => {
-            pool.query.mockResolvedValueOnce({ rows: [{ id: 1, email: 'test@example.com' }] }); // Simulating existing user
-            
-            await expect(databaseService.registerUser('test@example.com', 'password')).rejects.toThrow('User already exists.');
-        });
+    it('should create a user', async () => {
+        const userData = { email: 'test@example.com', password: 'plain_password' };
+        const user = await databaseService.createUser(userData);
+        expect(user).toEqual(UserMock);
+        expect(User.create).toHaveBeenCalledWith(userData);
     });
 
-    describe('loginUser', () => {
-        it('should log in a user with valid credentials', async () => {
-            pool.query.mockResolvedValueOnce({ rows: [{ id: 1, email: 'test@example.com', password: 'hashedPassword' }] });
-            bcrypt.compare.mockResolvedValueOnce(true); // Mock password comparison success
-
-            const result = await databaseService.loginUser('test@example.com', 'password');
-
-            expect(pool.query).toHaveBeenCalledWith('SELECT * FROM users WHERE email = $1', ['test@example.com']);
-            expect(result).toBeDefined();
-            expect(result.email).toBe('test@example.com');
-        });
-
-        it('should throw an error if email does not exist', async () => {
-            pool.query.mockResolvedValueOnce({ rows: [] }); // Simulate no users found
-
-            await expect(databaseService.loginUser('test@example.com', 'password')).rejects.toThrow('Invalid email or password.');
-        });
-
-        it('should throw an error if password is incorrect', async () => {
-            pool.query.mockResolvedValueOnce({ rows: [{ id: 1, email: 'test@example.com', password: 'hashedPassword' }] });
-            bcrypt.compare.mockResolvedValueOnce(false); // Mock password comparison failure
-
-            await expect(databaseService.loginUser('test@example.com', 'password')).rejects.toThrow('Invalid email or password.');
-        });
+    it('should throw an error when creating a user fails', async () => {
+        User.create.mockRejectedValue(new Error('Database error'));
+        const userData = { email: 'test@example.com', password: 'plain_password' };
+        await expect(databaseService.createUser(userData)).rejects.toThrow('Database error');
     });
 });

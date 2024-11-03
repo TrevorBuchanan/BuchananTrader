@@ -22,7 +22,7 @@ const Register = () => {
 
     try {
       await register(email, password); // Call your register function
-      navigate('/user-profile'); // Redirect after successful registration
+      navigate('/login'); // Redirect after successful registration
     } catch (error) {
       console.error("Registration failed:", error);
       alert('Registration failed. Please try again.');

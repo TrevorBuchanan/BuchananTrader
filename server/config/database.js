@@ -1,24 +1,28 @@
 // database.js
-const { Pool } = require('pg');
 
-// Create a new database pool based on the environment
-const pool = new Pool({
-    user: process.env.DB_USER || 'trevorbuchanan',
-    host: process.env.DB_HOST || 'localhost',
-    database: process.env.NODE_ENV === 'test' ? 'buchanantraderdb_test' : 'buchanantraderdb',
-    password: process.env.DB_PASSWORD || 'Buch514591#',
-    port: parseInt(process.env.DB_PORT, 10) || 5432,
+const { Sequelize } = require('sequelize');
+require('dotenv').config(); // Load environment variables from .env file
+
+// Create a new Sequelize instance using environment variables
+const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT, // Ensure you specify the port if needed
+    dialect: 'postgres', // Specify the dialect (PostgreSQL in this case)
+    logging: false, // Disable logging; set to console.log to see SQL queries
 });
 
-// Close pool function
-const closePool = async () => {
-    await pool.end();
+// Test the database connection
+const testConnection = async () => {
+    try {
+        await sequelize.authenticate();
+        console.log('Database connection has been established successfully.');
+    } catch (error) {
+        throw new Error('Unable to connect to the database:', error);
+    }
 };
 
-// Reset tables function
-const resetTables = async () => {
-    await pool.query('TRUNCATE TABLE users RESTART IDENTITY CASCADE');
+// Export the sequelize instance and testConnection function
+module.exports = {
+    sequelize,
+    testConnection,
 };
-
-// Export the pool and utility functions
-module.exports = { pool, closePool, resetTables };

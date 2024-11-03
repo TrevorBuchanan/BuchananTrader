@@ -11,12 +11,14 @@ router.get('/coinbase/products/:product_id', coinbaseController.getProduct);
 router.post('/coinbase/transactions', coinbaseController.createTransaction);
 
 // Mock buying API routes 
-router.post('/trading-engine/add-price', tradingEngineController.addAssetPrice); 
+router.post('/trading-engine/add-price', tradingEngineController.addAssetPrice);
 router.get('/trading-engine/action', tradingEngineController.getAssetAction);
 router.get('/trading-engine/profit-loss', tradingEngineController.getAssetProfitLoss);
 router.delete('/trading-engine/remove-asset/:assetName', tradingEngineController.removeAsset);
 
 // Database routes
-router.get('/users/:id', databaseController.getUser);
+router.post('/register', databaseController.registerUser);
+// router.post('/login', databaseController.loginUser);
+// router.get('/users/:id', databaseController.getUser);
 
 module.exports = router;

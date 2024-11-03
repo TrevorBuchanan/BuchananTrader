@@ -1,5 +1,6 @@
 // AuthContext.js
 
+import axios from 'axios';
 import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
@@ -18,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (email, password) => {
         try {
             // Replace the following URL with your actual login API endpoint
-            const response = await fetch('https://api/login', {
+            const response = await axios.post('https://api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -48,14 +49,13 @@ export const AuthProvider = ({ children }) => {
     const register = async (email, password) => {
         try {
             // Replace the following URL with your actual registration API endpoint
-            const response = await fetch('https://api/register', {
+            const response = await axios.post('https://api/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ email, password }),
             });
-            console.log("HERE++++++++++++++");
             if (!response.ok) {
                 throw new Error('Registration failed. Please try again.');
             }

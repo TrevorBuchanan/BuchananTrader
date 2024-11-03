@@ -14,6 +14,7 @@
     height: 50%;
     border: 1px solid #575b66; 
     min-height: fit-content;
+    animation: fadeIn 1s;
 }
 
 .registerInput {
@@ -62,3 +63,8 @@
     color: rgb(255, 255, 255);
     cursor: pointer;
 }
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}  

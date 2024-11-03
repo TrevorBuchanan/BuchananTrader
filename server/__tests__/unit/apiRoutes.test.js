@@ -5,6 +5,8 @@ const express = require('express');
 const router = require('../../routes/apiRoutes');
 const coinbaseController = require('../../controllers/coinbaseController');
 const tradingEngineController = require('../../controllers/tradingEngineController');
+const databaseController = require('../../controllers/databaseController');
+const { makeJWT } = require('../../utils/JWTgenerator');
 
 // Initialize app with the router
 const app = express();
@@ -14,6 +16,13 @@ app.use('/api', router);
 // Mock the controller methods
 jest.mock('../../controllers/coinbaseController');
 jest.mock('../../controllers/tradingEngineController');
+
+jest.mock('../../utils/JWTgenerator');
+
+beforeEach(async () => {
+    jest.setTimeout(3000); // Set timeout to 3 seconds
+});
+
 
 describe('API Routes', () => {
     describe('Coinbase Routes', () => {
@@ -100,5 +109,9 @@ describe('API Routes', () => {
             expect(response.body).toEqual({ message: 'Asset removed successfully' });
             expect(tradingEngineController.removeAsset).toHaveBeenCalled();
         });
+    });
+
+    describe('Database Routes', () => {
+        
     });
 });
