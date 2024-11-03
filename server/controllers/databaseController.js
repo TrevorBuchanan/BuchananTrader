@@ -1,40 +1,47 @@
 // databaseController.js
 
 const databaseService = require('../services/databaseService');
-const { makeJWT } = require('../utils/JWTgenerator');
 
-// Controller for user registration
 const registerUser = async (req, res) => {
-    const { email, password } = req.body;
-
+    const { username, password } = req.body;
     try {
-        const newUser = await databaseService.registerUser(email, password);
-        res.status(201).json({ id: newUser.id, email: newUser.email, created_at: newUser.created_at });
+        const newUser = await databaseService.createUser(username, password);
+        res.status(201).json(newUser);
     } catch (error) {
-        if (error.message === 'User already exists.') {
-            return res.status(400).json({ message: error.message });
-        }
-        res.status(500).json({ message: 'Internal server error' });
+        console.error('Error registering user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
-// Controller for user login
+const getUser = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const user = await databaseService.getUserById(id);
+        if (user) {
+            res.json(user);
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error retrieving user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+// Login user function
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
-
+    const { username, password } = req.body;
     try {
-        const user = await databaseService.loginUser(email, password);
-        
-        // Generate JWT
-        const token = makeJWT(user.id, process.env.EC_PRIVATE_KEY, `/user/${user.id}`);
-        
-        res.status(200).json({ message: 'Login successful', token });
-    } catch (error) {
-        if (error.message === 'Invalid email or password.') {
-            return res.status(400).json({ message: error.message });
+        const user = await databaseService.loginUser(username, password);
+        if (user) {
+            res.json(user); // Return the user information on successful login
+        } else {
+            res.status(401).json({ error: 'Invalid username or password' });
         }
-        res.status(500).json({ message: 'Internal server error' });
+    } catch (error) {
+        console.error('Error logging in user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
-module.exports = { registerUser, loginUser };
+module.exports = { getUser, registerUser, loginUser };

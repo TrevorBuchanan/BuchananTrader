@@ -3,40 +3,39 @@
 const { pool } = require('../config/database'); 
 const bcrypt = require('bcrypt');
 
-// Function to register a new user
-const registerUser = async (email, password) => {
-    try {
-        const userCheck = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-        if (userCheck.rows.length > 0) {
-            throw new Error('User already exists.');
-        }
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const result = await pool.query('INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *', [email, hashedPassword]);
-        return result.rows[0];
-    } catch (error) {
-        throw error;
-    }
+const getUserById = async (id) => {
+    const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    return result.rows[0];
+};
+
+const createUser = async (username, password) => {
+    // Hash the password before saving it to the database
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const result = await pool.query(
+        'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *',
+        [username, hashedPassword] // Store the hashed password
+    );
+    return result.rows[0];
 };
 
 // Function to log in a user
-const loginUser = async (email, password) => {
-    try {
-        const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-        if (result.rows.length === 0) {
-            throw new Error('Invalid email or password.');
-        }
-        const user = result.rows[0];
+const loginUser = async (username, password) => {
+    // Get the user by username
+    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    const user = result.rows[0];
 
-        // Check if the password matches
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            throw new Error('Invalid email or password.');
-        }
+    // If user not found, return null
+    if (!user) {
+        return null;
+    }
 
-        return user; // Return user data if login is successful
-    } catch (error) {
-        throw error;
+    // Compare the provided password with the hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (isMatch) {
+        return user; // Passwords match, return the user
+    } else {
+        return null; // Passwords do not match
     }
 };
 
-module.exports = { registerUser, loginUser };
+module.exports = { getUserById, createUser, loginUser };
