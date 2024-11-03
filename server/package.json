@@ -13,6 +13,7 @@
   "dependencies": {
     "@coinbase/coinbase-sdk": "^0.8.1",
     "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
     "coinbase": "^2.0.8",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",

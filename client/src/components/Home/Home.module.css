@@ -1,6 +1,7 @@
 .row {
     display: flex;
     height: 100%;
+    margin-top: 60px;
 }
 
 .leftCol {

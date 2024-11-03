@@ -5,7 +5,6 @@ const getCurrencies = async (req, res) => {
     const currencies = await coinbaseService.getCurrencies();
     res.json(currencies);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'Error fetching currencies', error: error.message });
   }
 };
@@ -15,7 +14,6 @@ const getProducts = async (req, res) => {
     const products = await coinbaseService.getProducts();
     res.json(products);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'Error fetching products', error: error.message });
   }
 };
@@ -26,7 +24,6 @@ const getProduct = async (req, res) => {
     const product = await coinbaseService.getProduct(product_id); // Pass product_id to the service
     res.json(product);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: `Error fetching product ${product_id}`, error: error.message });
   }
 };
@@ -37,7 +34,6 @@ const createTransaction = async (req, res) => {
     const transaction = await coinbaseService.createTransaction(accountId, amount, currency);
     res.json(transaction);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'Error creating transaction', error: error.message });
   }
 };

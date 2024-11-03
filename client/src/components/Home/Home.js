@@ -7,7 +7,7 @@ import styles from './home.module.css';
 
 function Home() {
   const [targetAssets, setTargetAssets] = useState([]); 
-  const UPDATE_FREQUENCY = 1; // 1 second 
+  const UPDATE_FREQUENCY = 3; // TODO: Make updatable
 
   const handleAssetChange = (asset) => {
     if (!targetAssets.includes(asset)) {
