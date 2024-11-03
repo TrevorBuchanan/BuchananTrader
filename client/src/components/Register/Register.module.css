@@ -12,7 +12,8 @@
     background-color: #1d2029; 
     border-radius: 10px;
     height: 50%;
-    border: 1px solid #282c37; 
+    border: 1px solid #575b66; 
+    min-height: fit-content;
 }
 
 .registerInput {
@@ -20,7 +21,7 @@
     color: rgb(177, 177, 177);
     margin: 10px;
     background: none;
-    border: 1px solid rgb(177, 177, 177);
+    border: 1px solid #494b56; 
     padding: 10px;
     border-radius: 8px;
 }
@@ -29,7 +30,8 @@
     width: 80%;
     margin: 5px;
     background-color: #202739; 
-    border: 1px solid rgb(177, 177, 177);
+    font-weight: 900;
+    border: 1px solid rgb(135, 135, 135);
     padding: 10px;
     border-radius: 25px;
     color: rgb(177, 177, 177);
@@ -39,12 +41,14 @@
 
 .registerButton:hover {
     color: rgb(255, 255, 255);
-    background-color: #2f3953; 
+    background-color: hsl(223, 28%, 25%); 
+    border-color: white;
     cursor: pointer;
 }
 
 .registerButton:active {
     color: rgb(146, 146, 146);
+    border-color: #494b56;
     background-color: #232836; 
 }
 

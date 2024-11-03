@@ -12,7 +12,8 @@
     background-color: #1d2029; 
     border-radius: 10px;
     height: 50%;
-    border: 1px solid #282c37; 
+    min-height: fit-content;
+    border: 1px solid #575b66; 
 }
 
 .loginInput {
@@ -20,7 +21,7 @@
     color: rgb(177, 177, 177);
     margin: 10px;
     background: none;
-    border: 1px solid rgb(177, 177, 177);
+    border: 1px solid #494b56; 
     padding: 10px;
     border-radius: 8px;
 }
@@ -28,8 +29,9 @@
 .loginButton {
     width: 80%;
     margin: 5px;
+    font-weight: 900;
     background-color: #202739; 
-    border: 1px solid rgb(177, 177, 177);
+    border: 1px solid rgb(135, 135, 135);
     padding: 10px;
     border-radius: 25px;
     color: rgb(177, 177, 177);
@@ -40,12 +42,14 @@
 .loginButton:hover {
     color: rgb(255, 255, 255);
     background-color: #2f3953; 
+    border-color: white;
     cursor: pointer;
 }
 
 .loginButton:active {
     color: rgb(146, 146, 146);
     background-color: #232836; 
+    border-color: #494b56;
 }
 
 .pageLink {

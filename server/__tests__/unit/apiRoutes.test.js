@@ -101,10 +101,4 @@ describe('API Routes', () => {
             expect(tradingEngineController.removeAsset).toHaveBeenCalled();
         });
     });
-
-    describe('Database Routes', () => {
-        it('GET...'), async () => {
-            //TODO: Add db tests
-        }
-    });
 });

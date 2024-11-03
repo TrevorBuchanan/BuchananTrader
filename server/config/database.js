@@ -1,32 +1,28 @@
 // database.js
-
 const { Pool } = require('pg');
 
-const pool = new Pool({
-    user: 'buchanan',
-    host: 'localhost',
-    database: 'buchanantraderdb',
-    password: 'Buch514591#',
-    port: 5432,
-});
+// Function to create a new database pool based on the environment
+const createPool = () => {
+    const database = process.env.NODE_ENV === 'test' ? 'buchanantraderdb_test' : 'buchanantraderdb';
 
-// Function to close the pool when the application exits
-const closePool = async () => {
+    return new Pool({
+        user: process.env.DB_USER || 'buchanan',
+        host: process.env.DB_HOST || 'localhost',
+        database: database,
+        password: process.env.DB_PASSWORD || 'Buch514591#',
+        port: parseInt(process.env.DB_PORT, 10) || 5432,
+    });
+};
+
+// Close pool function
+const closePool = async (pool) => {
     await pool.end();
     console.log('PostgreSQL pool has ended');
 };
 
-// Handle uncaught exceptions
-process.on('exit', closePool);
-process.on('uncaughtException', (err) => {
-    console.error('There was an uncaught error', err);
-    closePool();
-    process.exit(1);
-});
-process.on('unhandledRejection', (reason) => {
-    console.error('Unhandled Rejection:', reason);
-    closePool();
-    process.exit(1);
-});
+// Reset tables function
+const resetTables = async (pool) => {
+    await pool.query('TRUNCATE TABLE users RESTART IDENTITY CASCADE');
+};
 
-module.exports = { pool };
+module.exports = { createPool, closePool, resetTables };

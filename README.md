@@ -67,4 +67,25 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 ### Database
 
-* 
+```sh
+brew services list
+```
+
+```sh
+brew services start postgresql
+```
+
+```sh
+brew services stop postgresql
+```
+
+`psql postgres`
+* `\l` - check databases
+* `\c buchanantraderdb;` - switch to database
+* `CREATE DATABASE buchanantraderdb_test;` - create database
+* `SELECT * FROM pg_roles WHERE rolname='trevorbuchanan';` - check permissions
+* `GRANT ALL PRIVILEGES ON DATABASE buchanantraderdb TO trevorbuchanan;`
+`GRANT ALL PRIVILEGES ON DATABASE buchanantraderdb_test TO trevorbuchanan;` - grant permissions
+
+
+

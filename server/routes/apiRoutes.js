@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const coinbaseController = require('../controllers/coinbaseController');
 const tradingEngineController = require('../controllers/tradingEngineController');
-const databaseController = require('../controllers/databaseController');
 
 // Coinbase API routes
 router.get('/coinbase/currencies', coinbaseController.getCurrencies);
@@ -17,6 +16,6 @@ router.get('/trading-engine/profit-loss', tradingEngineController.getAssetProfit
 router.delete('/trading-engine/remove-asset/:assetName', tradingEngineController.removeAsset);
 
 // Database routes
-router.post('/register', databaseController.registerUser); 
+// Fill...
 
 module.exports = router;

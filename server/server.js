@@ -6,8 +6,6 @@ const apiRoutes = require('./routes/apiRoutes');
 
 const cors = require('cors');
 
-const { Pool } = require('pg');
-
 const app = express();
 
 // Middleware
@@ -17,15 +15,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(loggerMiddleware); // Logs each request
 app.use(errorHandler); 
-
-// PostgreSQL connection
-const pool = new Pool({
-  user: 'buchanan',    
-  host: 'localhost',
-  database: 'buchanantraderdb', 
-  password: 'Buch514591#',
-  port: 5432,
-});
 
 // Use API routes
 app.use('/api', apiRoutes);
