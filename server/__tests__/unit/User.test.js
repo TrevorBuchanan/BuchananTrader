@@ -84,4 +84,33 @@ describe('User Model', () => {
     it('should validate email format', async () => {
         await expect(User.create({ email: 'invalid-email', password: 'password123' })).rejects.toThrow();
     });
+
+    it('should hash the password if it has changed', async () => {
+        const user = User.build({
+            email: 'change@test.com',
+            password: 'originalPassword',
+        });
+
+        bcrypt.hash.mockResolvedValue('hashedPassword');
+        await user.save();
+
+        expect(bcrypt.hash).toHaveBeenCalledWith('originalPassword', 10);
+    });
+
+    it('should not hash the password if it has not changed', async () => {
+        // Create a user and save it with a hashed password initially
+        const user = await User.create({
+            email: 'nochange@test.com',
+            password: 'initialPassword',
+        });
+
+        // Reset bcrypt hash mock to detect if it is called again
+        bcrypt.hash.mockClear();
+
+        // Simulate updating the user without changing the password
+        user.email = 'updated@test.com';
+        await user.save();
+
+        expect(bcrypt.hash).not.toHaveBeenCalled(); // bcrypt.hash should not be called
+    });
 });

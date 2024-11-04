@@ -6,7 +6,7 @@ const router = require('../../routes/apiRoutes');
 const coinbaseController = require('../../controllers/coinbaseController');
 const tradingEngineController = require('../../controllers/tradingEngineController');
 const databaseController = require('../../controllers/databaseController');
-const { makeJWT } = require('../../utils/JWTgenerator');
+const { makeECJWT } = require('../../utils/ECJWTgenerator');
 
 // Initialize app with the router
 const app = express();
@@ -17,7 +17,7 @@ app.use('/api', router);
 jest.mock('../../controllers/coinbaseController');
 jest.mock('../../controllers/tradingEngineController');
 
-jest.mock('../../utils/JWTgenerator');
+jest.mock('../../utils/ECJWTgenerator');
 
 beforeEach(async () => {
     jest.setTimeout(3000); // Set timeout to 3 seconds

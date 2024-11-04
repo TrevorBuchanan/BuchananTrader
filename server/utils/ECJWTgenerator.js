@@ -3,7 +3,7 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
-const makeJWT = (keyVar, secretVar, uri) => {
+const makeECJWT = (keyVar, secretVar, uri) => {
     if (!secretVar.startsWith('-----BEGIN EC PRIVATE KEY-----') ||
         (!secretVar.endsWith('-----END EC PRIVATE KEY-----') && !secretVar.endsWith('-----END EC PRIVATE KEY-----\n'))) {
         throw new Error('The provided secretVar is not in a valid EC PEM format.');
@@ -51,5 +51,5 @@ const makeJWT = (keyVar, secretVar, uri) => {
 }
 
 module.exports = {
-    makeJWT,
+    makeECJWT,
 };

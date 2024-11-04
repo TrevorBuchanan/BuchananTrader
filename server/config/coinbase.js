@@ -1,5 +1,5 @@
 const axios = require('axios');
-const JWTgenerator = require('../utils/JWTgenerator');
+const ECJWTgenerator = require('../utils/ECJWTgenerator');
 require('dotenv').config();
 
 const USER_AGENT = "buchanantrader";
@@ -15,7 +15,7 @@ const privateKey = process.env.COINBASE_PRIVATE_KEY;
  * @returns {object} Headers object
  */
 const makeHeaders = (uri) => {
-  const token = JWTgenerator.makeJWT(apiKey, privateKey, uri);
+  const token = ECJWTgenerator.makeECJWT(apiKey, privateKey, uri);
   return {
     'User-agent': USER_AGENT,
     'Content-Type': 'application/json',

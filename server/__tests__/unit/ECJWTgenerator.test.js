@@ -2,12 +2,12 @@
 
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const { makeJWT } = require('../../utils/JWTgenerator');
+const { makeECJWT } = require('../../utils/ECJWTgenerator');
 
 jest.mock('jsonwebtoken');
 jest.mock('crypto');
 
-describe('JWTgenerator makeJWT', () => {
+describe('ECJWTgenerator makeECJWT', () => {
     const keyVar = 'test-api-key';
     const validECKey = `-----BEGIN EC PRIVATE KEY-----
 MHcCAQEEIDtNlxk4nXMI3/1d7MZkK8ML4Be91uIDYIzGBKk2gpvWoAoGCCqGSM49
@@ -38,7 +38,7 @@ tAvCHCMZ3Djc3w==
         tAvCHCMZ3Djc3w==
         -----END EC PRIVATE KEY-----`;
 
-        expect(() => makeJWT(keyVar, invalidSecretVar, 'test-uri'))
+        expect(() => makeECJWT(keyVar, invalidSecretVar, 'test-uri'))
             .toThrow('The provided secretVar is not in a valid EC PEM format.');
     });
 
@@ -48,7 +48,7 @@ tAvCHCMZ3Djc3w==
         AwEHoUQDQgAEzV5R8Rp9jfCfiC5P8vE2MT6jwF1j5brMUIK8mJz5XyXHd2nklYbi
         tAvCHCMZ3Djc3w==`;
 
-        expect(() => makeJWT(keyVar, invalidSecretVar, 'test-uri'))
+        expect(() => makeECJWT(keyVar, invalidSecretVar, 'test-uri'))
             .toThrow('The provided secretVar is not in a valid EC PEM format.');
     });
 
@@ -59,7 +59,7 @@ tAvCHCMZ3Djc3w==
         });
 
         // Expect the makeJWT function to throw an error
-        expect(() => makeJWT(keyVar, validECKey, 'test-uri')).toThrow('Invalid private key');
+        expect(() => makeECJWT(keyVar, validECKey, 'test-uri')).toThrow('Invalid private key');
     });
 
     it('should create a valid JWT with the correct headers and payload when uri is provided', () => {
@@ -70,7 +70,7 @@ tAvCHCMZ3Djc3w==
 
         jwt.sign.mockReturnValue('mocked-jwt-token');
 
-        const result = makeJWT(keyVar, validECKey, 'test-uri');
+        const result = makeECJWT(keyVar, validECKey, 'test-uri');
 
         const expectedJwtData = {
             sub: keyVar,
@@ -96,7 +96,7 @@ tAvCHCMZ3Djc3w==
 
         jwt.sign.mockReturnValue('mocked-jwt-token');
 
-        const result = makeJWT(keyVar, validECKey);
+        const result = makeECJWT(keyVar, validECKey);
 
         const expectedJwtData = {
             sub: keyVar,

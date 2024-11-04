@@ -3,7 +3,7 @@
 const express = require('express');
 const loggerMiddleware = require('./middlewares/loggerMiddleware');
 const errorHandler = require('./middlewares/errorHandler');
-const { testConnection } = require('./config/database');
+const { sequelize, testConnection } = require('./config/database');
 const path = require('path');
 const apiRoutes = require('./routes/apiRoutes');
 const cors = require('cors');
@@ -30,6 +30,7 @@ app.use((err, req, res, next) => {
 // Start the Server
 const startServer = async () => {
     await testConnection(); // Test the database connection
+    await sequelize.sync();
     const PORT = process.env.PORT || 6000;
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);

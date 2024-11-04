@@ -36,7 +36,6 @@ User.beforeSave(async (user) => {
     }
 });
 
-
 User.prototype.comparePassword = async function (password) {
     return bcrypt.compare(password, this.password);
 };

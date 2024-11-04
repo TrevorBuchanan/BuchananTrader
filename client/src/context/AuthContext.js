@@ -7,36 +7,35 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [error, setError] = useState(null);
 
+    // Check for a stored token when the component mounts
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            setUser(token); // You might want to decode token to get user info
+            // Optionally decode token or fetch user info to set user state
+            setUser({ token }); // Replace with decoded data if desired
         }
     }, []);
 
-    // Login function to handle user authentication
     const login = async (email, password) => {
         try {
-            // Replace the following URL with your actual login API endpoint
-            const response = await axios.post('https://api/login', {
-                method: 'POST',
+            const response = await axios.post('/api/login', {
+                email,
+                password,
+            }, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }),
             });
 
-            if (!response.ok) {
-                throw new Error('Login failed. Please check your credentials.');
-            }
-
-            const data = await response.json();
-            localStorage.setItem('token', data.token); // Store the token in local storage
-            setUser(data.user); // Assuming `data.user` contains user details
+            const data = response.data; 
+            localStorage.setItem('token', data.token); 
+            setUser({ token: data.token, ...data.user }); 
         } catch (error) {
-            console.error(error);
-            throw error; // Propagate the error to handle it in the Login component
+            console.error('Login error:', error);
+            setError('Login failed. Please check your credentials.'); // Set error message
+            throw error; 
         }
     };
 
@@ -45,32 +44,29 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
-    // Registration function to handle user registration
     const register = async (email, password) => {
         try {
-            // Replace the following URL with your actual registration API endpoint
-            const response = await axios.post('https://api/register', {
-                method: 'POST',
+            const response = await axios.post('/api/register', {
+                email,
+                password,
+            }, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }),
             });
-            if (!response.ok) {
-                throw new Error('Registration failed. Please try again.');
-            }
 
-            const data = await response.json();
-            localStorage.setItem('token', data.token); // Store the token in local storage
-            setUser(data.user); // Assuming `data.user` contains user details
+            const data = response.data; 
+            localStorage.setItem('token', data.token); 
+            setUser({ token: data.token, ...data.user }); 
         } catch (error) {
-            console.error(error);
-            throw error; // Propagate the error to handle it in the Register component
+            console.error('Registration error:', error);
+            setError('Registration failed. Please try again.'); // Set error message
+            throw error; 
         }
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, register }}>
+        <AuthContext.Provider value={{ user, login, logout, register, error }}>
             {children}
         </AuthContext.Provider>
     );
