@@ -1,3 +1,5 @@
+// assetViewer.js
+
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 import styles from './assetViewer.module.css';
@@ -58,7 +60,10 @@ const AssetViewer = ({ targetAsset, onRemove, updateFrequency }) => {
 
         updateSeries(); // Initial data fetch
 
-        return () => clearInterval(intervalId); // Cleanup on component unmount
+        return () => {
+            clearInterval(intervalId);  // Clear the polling interval
+            setIsTrading(false);  // Reset trading state on unmount
+        };
     }, [updateFrequency, targetAsset, isTrading]);
 
     const handleStartTrading = () => {

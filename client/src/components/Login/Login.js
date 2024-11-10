@@ -26,7 +26,7 @@ const Login = () => {
   return (
     <div className={styles.pageContent}>
       <div className={styles.loginContent}>
-        <h2>Log in</h2>
+        <h2>Log In</h2>
         <form onSubmit={handleLogin}>
           <input
             className={styles.loginInput}

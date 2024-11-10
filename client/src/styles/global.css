@@ -1,6 +1,6 @@
 html, body {
-    background-color: #14171e; 
-    margin: 0;
+    background-color: #14171e;
+    margin: 30px 0 0;
     font-family: Arial, sans-serif;
     height: 100%; /* Fix height here */
     display: flex;
@@ -8,8 +8,7 @@ html, body {
     color: rgb(177, 177, 177);
 }
 
-.content {
-    padding-top: 60px; 
+main {
     min-height: calc(100vh - 60px);
 }
 

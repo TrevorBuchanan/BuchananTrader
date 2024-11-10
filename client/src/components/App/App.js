@@ -6,9 +6,7 @@ import Header from '../Header/header';
 import Footer from '../Footer/footer';
 import Home from '../Home/home';
 import UserProfile from '../UserProfile/userProfile';
-import AdminProfile from '../AdminProfile/adminProfile';
 import UserHub from '../UserHub/userHub';
-import AdminHub from '../AdminHub/adminHub';
 import Login from '../Login/login';
 import Register from '../Register/register';
 import NotFound from '../NotFound/notFound';
@@ -23,16 +21,14 @@ function App() {
       <Router>
         <Header /> 
 
-        <main className={styles.content}>
+        <main className>
           <Routes>
             <Route path="/" element={<Home />} />
             
             {/* Wrap all protected routes inside PrivateRoute */}
             <Route element={<PrivateRoute />}>
               <Route path="/user-profile" element={<UserProfile />} />
-              <Route path="/admin-profile" element={<AdminProfile />} />
               <Route path="/user-hub" element={<UserHub />} />
-              <Route path="/admin-hub" element={<AdminHub />} />
             </Route>
 
             <Route path="/login" element={<Login />} />

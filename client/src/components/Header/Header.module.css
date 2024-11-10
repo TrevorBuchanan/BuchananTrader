@@ -50,3 +50,8 @@ li {
     margin: 0;
     padding-left: 1rem;
 }
+
+.logoutLink:hover {
+    color:  rgb(255, 255, 255);
+    cursor: pointer;
+}

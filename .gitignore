@@ -154,3 +154,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+/client/folder_structure.txt
+/server/folder_structure.txt

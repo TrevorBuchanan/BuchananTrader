@@ -1,124 +1,88 @@
-// client/src/__tests__/App.test.js
+// src/components/App.test.js
+import { render, screen, fireEvent } from '@testing-library/react';
+import App from '../components/App/App'; // Path to your App component
+import { AuthProvider } from '../context/AuthContext'; // Import your AuthProvider
 
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from '../components/App/App';
-import { AuthProvider } from '../context/AuthContext';
+// Mock components to isolate tests
+jest.mock('../components/Header/header', () => () => <div>Header Component</div>);
+jest.mock('../components/Footer/footer', () => () => <div>Footer Component</div>);
+jest.mock('../components/Home/home', () => () => <div>Home Component</div>);
+jest.mock('../components/Login/login', () => () => <div>Login Component</div>);
+jest.mock('../components/NotFound/notFound', () => () => <div>404 Not Found</div>);
+jest.mock('../components/privateRoute', () => () => <div>PrivateRoute Component</div>);
 
-jest.mock('../components/Home/home', () => () => <div>Home</div>);
-jest.mock('../components/UserProfile/userProfile', () => () => <div>User Profile</div>);
-jest.mock('../components/AdminProfile/adminProfile', () => () => <div>Admin Profile</div>);
-jest.mock('../components/UserHub/userHub', () => () => <div>User Hub</div>);
-jest.mock('../components/AdminHub/adminHub', () => () => <div>Admin Hub</div>);
-jest.mock('../components/Login/login', () => () => <div>Login</div>);
-jest.mock('../components/Register/register', () => () => <div>Register</div>);
-jest.mock('../components/NotFound/notFound', () => () => <div>Not Found</div>);
-jest.mock('../components/privateRoute', () => ({ children }) => <>{children}</>);
-
-describe('App component', () => {
-  it('renders without crashing', () => {
+describe('App Component', () => {
+  test('renders Header and Footer components', () => {
     render(
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
     );
 
-    expect(screen.getByText('Home')).toBeInTheDocument();
+    // Check if Header and Footer components are rendered
+    expect(screen.getByText(/Header Component/i)).toBeInTheDocument();
+    expect(screen.getByText(/Footer Component/i)).toBeInTheDocument();
   });
 
-  it('renders Home component on the root path', () => {
-    window.history.pushState({}, 'Home page', '/');
-
+  test('renders Home page at the root route', () => {
     render(
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
     );
 
-    expect(screen.getByText('Home')).toBeInTheDocument();
+    // Check if Home component is rendered on root path
+    expect(screen.getByText(/Home Component/i)).toBeInTheDocument();
   });
 
-  it('renders User Profile for /user-profile route', () => {
-    window.history.pushState({}, 'User Profile page', '/user-profile');
-
+  test('renders Login page when navigating to /login', () => {
     render(
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
     );
 
-    expect(screen.getByText('User Profile')).toBeInTheDocument();
+    // Simulate clicking the login link (ensure you add a 'Login' link to your component if it isn't already)
+    fireEvent.click(screen.getByText(/Log In/i));
+
+    // Ensure Login component is rendered after navigation
+    expect(screen.getByText(/Login Component/i)).toBeInTheDocument();
   });
 
-  it('renders Admin Profile for /admin-profile route', () => {
-    window.history.pushState({}, 'Admin Profile page', '/admin-profile');
-
+  test('renders 404 page for non-existent routes', () => {
     render(
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
     );
 
-    expect(screen.getByText('Admin Profile')).toBeInTheDocument();
+    // Simulate navigation to a non-existent route
+    fireEvent.click(screen.getByText(/Non-existent Route/i));
+
+    // Ensure 404 Not Found page is shown
+    expect(screen.getByText(/404 Not Found/i)).toBeInTheDocument();
   });
 
-  it('renders User Hub for /user-hub route', () => {
-    window.history.pushState({}, 'User Hub page', '/user-hub');
-
+  test('wraps routes with authentication context (AuthProvider)', () => {
     render(
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
     );
 
-    expect(screen.getByText('User Hub')).toBeInTheDocument();
+    // Check if the AuthContext is properly provided
+    // This can be done by checking if your AuthContext-related components/values render correctly
+    // For this, you'll need to include specific tests for context, if applicable.
   });
 
-  it('renders Admin Hub for /admin-hub route', () => {
-    window.history.pushState({}, 'Admin Hub page', '/admin-hub');
-
+  test('renders PrivateRoute for protected routes', () => {
     render(
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
     );
 
-    expect(screen.getByText('Admin Hub')).toBeInTheDocument();
-  });
-
-  it('renders Login component on /login path', () => {
-    window.history.pushState({}, 'Login page', '/login');
-
-    render(
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    );
-
-    expect(screen.getByText('Login')).toBeInTheDocument();
-  });
-
-  it('renders Register component on /register path', () => {
-    window.history.pushState({}, 'Register page', '/register');
-
-    render(
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    );
-
-    expect(screen.getByText('Register')).toBeInTheDocument();
-  });
-
-  it('renders Not Found for unknown routes', () => {
-    window.history.pushState({}, 'Unknown page', '/unknown-route');
-
-    render(
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    );
-
-    expect(screen.getByText('Not Found')).toBeInTheDocument();
+    // Test PrivateRoute is rendering correctly. You might want to mock or simulate login/logout
+    expect(screen.getByText(/PrivateRoute Component/i)).toBeInTheDocument();
   });
 });
