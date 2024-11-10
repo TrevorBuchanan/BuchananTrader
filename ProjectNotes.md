@@ -27,3 +27,4 @@
 **Misc**
 * Show which process is running on port-number: `lsof -i :<port-number>`
 * Kill process: `kill -9 <PID>`
+* Show tree without node_modules: tree -I "node_modules|target" -d /path/to/your-project > folder_structure.txt

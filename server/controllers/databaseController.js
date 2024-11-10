@@ -24,17 +24,19 @@ const loginUser = async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        const secretKey = process.env.JWT_SECRET; 
-        console.log('Secret Key:', secretKey); // Debugging output
+        const secretKey = process.env.JWT_SECRET;
 
-        if (!secretKey || typeof secretKey !== 'string') {
-            throw new Error('Invalid secret key provided.');
+        // Generate a token with error handling
+        let token;
+        try {
+            token = jwt.sign({ id: user.id }, secretKey, { expiresIn: '1h' });
+        } catch (signError) {
+            console.error('Error generating token:', signError);
+            return res.status(500).json({ error: 'Error generating token' });
         }
 
-        // Generate a token
-        const token = jwt.sign({ id: user.id }, secretKey, { expiresIn: '1h' }); 
-
-        return res.json({ token });
+        // Successful response
+        return res.status(200).json({ token });
     } catch (error) {
         console.error('Error logging in:', error);
         return res.status(500).json({ error: 'Server error' });
