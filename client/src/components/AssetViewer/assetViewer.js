@@ -62,7 +62,6 @@ const AssetViewer = ({ targetAsset, onRemove, updateFrequency }) => {
 
         return () => {
             clearInterval(intervalId);  // Clear the polling interval
-            setIsTrading(false);  // Reset trading state on unmount
         };
     }, [updateFrequency, targetAsset, isTrading]);
 
