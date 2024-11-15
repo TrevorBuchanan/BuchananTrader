@@ -1,3 +1,5 @@
+// assetHandler.js
+
 import axios from 'axios';
 
 // Singleton

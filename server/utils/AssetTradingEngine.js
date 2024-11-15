@@ -1,10 +1,9 @@
 // AssetTradingEngine.js
-const Utils = require('util/utilFunctions');
+const Utils = require('../utils/utilFunctions');
 
 class AssetTradingEngine {
     #minSeriesLen
     #sellFraction
-    #lossLimitPercent
 
     #assetName
 
@@ -28,7 +27,7 @@ class AssetTradingEngine {
     constructor(assetName) {
         this.#minSeriesLen = 3;
         this.#sellFraction = 1 / 4;
-        this.#lossLimitPercent = 0.01;
+        this.#maxLossLimit = 1;
 
         this.#assetName = assetName;
 
@@ -48,7 +47,6 @@ class AssetTradingEngine {
 
         this.#longLossLimit = 0;
         this.#shortLossLimit = 0;
-        this.#maxLossLimit = 0;
     }
 
     getProfitLoss() {
@@ -73,7 +71,6 @@ class AssetTradingEngine {
             return "Not enough data to decide action";
         }
         const actions = [];
-        this.#maxLossLimit = this.#lossLimitPercent * this.#currentPrice
 
         // Loss limit updates
         this.#updateLimits()

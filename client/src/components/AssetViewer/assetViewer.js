@@ -5,7 +5,6 @@ import Chart from 'react-apexcharts';
 import styles from './assetViewer.module.css';
 import AssetHandler from '../assetHandler';
 
-// Stop bouncing on moves
 // Add panning
 // Fetch historical values
 // Fix buttons and css

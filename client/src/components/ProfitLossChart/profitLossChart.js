@@ -1,3 +1,5 @@
+// profitLossChart.js
+
 import React, { useEffect, useState } from 'react';
 import AssetHandler from '../assetHandler';
 import Chart from 'react-apexcharts';
