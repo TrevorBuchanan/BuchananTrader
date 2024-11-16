@@ -1,7 +1,7 @@
 // src/components/App.test.js
 import { render, screen, fireEvent } from '@testing-library/react';
 import App from '../components/App/App'; // Path to your App component
-import { AuthProvider } from '../context/AuthContext'; // Import your AuthProvider
+import { AuthProvider } from '../context/authContext'; // Import your AuthProvider
 
 // Mock components to isolate tests
 jest.mock('../components/Header/header', () => () => <div>Header Component</div>);

@@ -1,13 +1,13 @@
 // home.js
 
 import AssetsController from '../AssetsController/assetsController'
-import AssetSearch from '../AssetSearch/assetSearch';
 import styles from './home.module.css';
 
 function Home() {
+    // FIXME: Move to trading hub
     return (
         <main>
-            <AssetsController />  // FIXME: Move to trading hub
+            <AssetsController />
         </main>
     );
 }

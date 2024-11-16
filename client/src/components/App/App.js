@@ -11,7 +11,7 @@ import Login from '../Login/login';
 import Register from '../Register/register';
 import NotFound from '../NotFound/notFound';
 import PrivateRoute from '../privateRoute';
-import { AuthProvider } from '../../context/AuthContext';
+import { AuthProvider } from '../../context/authContext';
 
 import styles from './App.module.css';
 

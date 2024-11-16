@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import {useAuth} from '../../context/AuthContext'; // Import useAuth to check login status
+import {useAuth} from '../../context/authContext'; // Import useAuth to check login status
 import styles from './header.module.css';
 
 const Header = () => {

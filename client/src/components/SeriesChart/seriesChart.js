@@ -1,18 +1,18 @@
-// profitLossChart.js
+// seriesChart.js
 
 import React, { useEffect, useState } from 'react';
-import AssetHandler from '../assetHandler';
+import Index from '../../api';
 import Chart from 'react-apexcharts';
-import styles from './profitLossChart.module.css';
+import styles from './seriesChart.module.css';
 
-const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency }) => {
+const SeriesChart = ({ targetAsset, onRemove, updateFrequency }) => {
     const [seriesData, setSeriesData] = useState([{ name: targetAsset, data: [] }]);
     const [dates, setDates] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const assetHandler = AssetHandler.getInstance();
+        const assetHandler = Index.getInstance();
 
         const updateSeries = async () => {
             try {
@@ -107,4 +107,4 @@ const ProfitLossChart = ({ targetAsset, onRemove, updateFrequency }) => {
     );
 };
 
-export default ProfitLossChart;
+export default SeriesChart;
