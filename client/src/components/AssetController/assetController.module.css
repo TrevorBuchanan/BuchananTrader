@@ -1,36 +1,75 @@
+.titleContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+/* Title styling */
+.titleContainer h2 {
+    margin: 0;
+    flex: 1; /* Take up remaining space */
+    text-align: left;
+    font-size: 1.5rem;
+}
+
+.removeButton {
+    color: rgb(177, 177, 177);
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.removeButton:hover {
+    color: rgb(255, 255, 255);
+}
+
+.removeButton:active {
+    color: rgb(118, 118, 118);
+}
 
 .actionButton {
     margin: 0;
     height: 100%;
     width: 100%;
     padding: 0.5rem;
-    background-color: #098924;
+    background-color: #5b0093;
     color: rgb(255, 255, 255);
     border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
 .actionButton:hover {
+    background-color: #840093;
     color: rgb(255, 255, 255);
+    transform: scale(1.03);
 }
 
 .actionButton:active {
-    color: rgb(90, 90, 90);
+    color: rgb(255, 255, 255);
+    background-color: #3e0071;
+    transform: scale(1.01);
 }
 
 .actionButton:disabled {
     color: rgb(90, 90, 90);
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
-.frequencyInput {
+.tableInput {
+    border: none;
     padding: 0.5rem;
     width: 100%;
-    background-color: #098924;
-    color: rgb(255, 255, 255);
-    border: none;
+    background-color: #373b41;
+    color: rgb(177, 177, 177);
 }
 
 table {
-    background: none;
+    background-color: #161b23;
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
@@ -52,21 +91,21 @@ td {
     padding: 0;
 }
 
-.removeButton {
-    color: rgb(177, 177, 177);
-    font-size: large;
-    font-weight: bold;
-    background: none;
-    border: none;
-    display: flex;
-    margin-right: 0;
-    margin-left: auto;
-}
+/*.removeButton {*/
+/*    color: rgb(177, 177, 177);*/
+/*    font-size: large;*/
+/*    font-weight: bold;*/
+/*    background: none;*/
+/*    border: none;*/
+/*    display: flex;*/
+/*    margin-right: 0;*/
+/*    margin-left: auto;*/
+/*}*/
 
-.removeButton:hover {
-    color:  rgb(255, 255, 255);
-}
+/*.removeButton:hover {*/
+/*    color:  rgb(255, 255, 255);*/
+/*}*/
 
-.removeButton:active {
-    color:  rgb(118, 118, 118);
-}
+/*.removeButton:active {*/
+/*    color:  rgb(118, 118, 118);*/
+/*}*/

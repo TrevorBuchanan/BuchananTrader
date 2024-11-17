@@ -34,7 +34,9 @@ const AssetsController = () => {
                     )}
                 </div>
                 <div className={styles.rightCol}>
-                    <AssetSearch onAssetSelect={onAssetSelect} />
+                    <div className={styles.searchContainer}>
+                        <AssetSearch onAssetSelect={onAssetSelect} />
+                    </div>
                 </div>
             </div>
         </main>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './assetSearch.module.css';
+import {getSpotAssets} from "../../api";
 
 const debounce = (func, delay) => {
     let timeoutId;
@@ -23,11 +24,7 @@ const AssetSearch = ({ onAssetSelect }) => {
     useEffect(() => {
         const fetchAssets = async () => {
             try {
-                const response = await fetch('/api/coinbase/products');
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
+                const data = await getSpotAssets();
                 const dataAssets = data['products'];
                 setAssets(dataAssets);
                 setFilteredAssets(dataAssets); // Initially show all assets

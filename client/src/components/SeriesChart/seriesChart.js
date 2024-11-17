@@ -3,7 +3,8 @@
 import Chart from 'react-apexcharts';
 import styles from './seriesChart.module.css';
 
-const SeriesChart = ({ series, labels }) => {
+const SeriesChart = ({ name, series, labels }) => {
+    const yAxisName = series[0].name;
     const chartOptions = {
         chart: {
             type: 'line',
@@ -25,7 +26,7 @@ const SeriesChart = ({ series, labels }) => {
         },
         yaxis: {
             title: {
-                text: 'Price',
+                text: yAxisName,
             },
         },
         grid: {
@@ -45,6 +46,7 @@ const SeriesChart = ({ series, labels }) => {
 
     return (
         <div className={styles.priceTimeGraph}>
+            <h3 className={styles.chartTitle}>{name}</h3>
             <Chart
                 options={chartOptions}
                 series={series}

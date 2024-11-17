@@ -4,23 +4,24 @@
 }
 
 .leftCol {
-    /* background-color: #1c212c;  */
     padding: 1rem;
-    flex: 1;
+    flex: 3; /* Takes up 3 parts of the available space */
+}
+
+.rightCol {
+    flex: 1; /* Takes up 1 part of the available space */
 }
 
 
-.rightCol {
+.searchContainer {
+    margin: 0.5rem;
     border-radius: 5px;
-    width: 20%;
     background-color: #161b23;
     border: 1px solid #292e3a;
     min-height: calc(100vh - 60px);
+    padding: 0 0.5rem;
 }
 
 .asset {
-    border-radius: 15px;
-    background-color: #161b23;
-    border: 1px solid #292e3a;
-    padding: 0.5rem;
+    margin: 1rem;
 }

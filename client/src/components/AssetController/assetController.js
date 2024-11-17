@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import SeriesChart from "../SeriesChart/seriesChart";
 import styles from "./assetController.module.css";
 import {
@@ -10,7 +10,7 @@ import {
     tradeAsset
 } from "../../api";
 
-const AssetController = ({ targetAsset, onRemove }) => {
+const AssetController = ({targetAsset, onRemove}) => {
     const [frequency, setFrequency] = useState(10);
     const [priceSeries, setPriceSeries] = useState([]);
     const [profitLossSeries, setProfitLossSeries] = useState([]);
@@ -64,7 +64,7 @@ const AssetController = ({ targetAsset, onRemove }) => {
                     await tradeAsset(targetAsset);
                 }
 
-                const { profitLoss } = await getAssetProfitLoss(targetAsset, price, time);
+                const {profitLoss} = await getAssetProfitLoss(targetAsset, price, time);
 
                 setPriceSeries((prev) => [...prev, price]);
                 setProfitLossSeries((prev) => [...prev, profitLoss]);
@@ -90,17 +90,23 @@ const AssetController = ({ targetAsset, onRemove }) => {
     }
 
     return (
-        <div className={styles.assetView}>
-            <h2>{targetAsset}</h2>
-            <button
-                className={styles.removeButton}
-                onClick={handleRemoveAsset}
-                aria-label="Remove"
-            >
-                X
-            </button>
+        <div>
             <table>
                 <thead>
+                <tr>
+                    <th colSpan="5">
+                        <div className={styles.titleContainer}>
+                            <h2>{targetAsset}</h2>
+                            <button
+                                className={styles.removeButton}
+                                onClick={handleRemoveAsset}
+                                aria-label="Remove"
+                            >
+                                X
+                            </button>
+                        </div>
+                    </th>
+                </tr>
                 <tr>
                     <th>Log Prices</th>
                     <th>Trade Asset</th>
@@ -116,7 +122,7 @@ const AssetController = ({ targetAsset, onRemove }) => {
                             onClick={toggleLogging}
                             className={styles.actionButton}
                         >
-                            {isLogging ? "Stop Logging Prices" : "Start Logging Prices"}
+                            {isLogging ? "Active" : "Inactive"}
                         </button>
                     </td>
                     <td>
@@ -131,7 +137,7 @@ const AssetController = ({ targetAsset, onRemove }) => {
                         <input
                             type="number"
                             onBlur={(e) => handleFrequencyChange(e.target.value)}
-                            className={styles.frequencyInput}
+                            className={styles.tableInput}
                         />
                     </td>
                     <td>
@@ -153,40 +159,76 @@ const AssetController = ({ targetAsset, onRemove }) => {
                 </tr>
                 <tr>
                     <th colSpan="5">
-                        Trading Engine Settings
+                        <h3>
+                            Trading Engine Settings
+                        </h3>
                     </th>
                 </tr>
                 <tr>
                     <th>Follow Fraction</th>
-
+                    <th>Min Series Length</th>
+                    <th>Max Loss Limit</th>
+                    <th>Show Short Limit</th>
+                    <th>Show Long Limit</th>
                 </tr>
                 <tr>
                     <td>
+                        <input
+                            type="number"
+                            className={styles.tableInput}
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="number"
+                            className={styles.tableInput}
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="number"
+                            className={styles.tableInput}
+                        />
+                    </td>
+                    <td>
+                        <button
+                            onClick={toggleProfitLossChartVisibility}
+                            className={styles.actionButton}
+                        >
+                            Hide
+                        </button>
+                    </td>
+                    <td>
+                        <button
 
+                            className={styles.actionButton}
+                        >
+                            Hide
+                        </button>
                     </td>
                 </tr>
                 {priceChartVisibility && (
                     <tr>
                         <td colSpan="5">
-                            <h3> Price </h3>
-                            <SeriesChart series={[{name: "Price", data: priceSeries}]} labels={timeSeries}/>
+                            <SeriesChart name={"Price Chart"} series={[{name: "Price", data: priceSeries}]}
+                                         labels={timeSeries}/>
                         </td>
                     </tr>
                 )}
                 {profitLossChartVisibility && (
                     <tr>
                         <td colSpan="5">
-                            <h3> Profit & Loss </h3>
-                            <SeriesChart series={[{name: "Price & Loss", data: profitLossSeries}, {
-                                name: "Test",
-                                data: [0.1, 0.2, 0.25, 0.27]
-                            }]} labels={timeSeries}/>
+                            <SeriesChart name={"Profit & Loss Chart"}
+                                         series={[{name: "Profit & Loss", data: profitLossSeries}, {
+                                             name: "Test",
+                                             data: [0.1, 0.2, 0.25, 0.27]
+                                         }]} labels={timeSeries}/>
                         </td>
                     </tr>
                 )}
                 </tbody>
             </table>
-            {error && <div className={styles.error}>{error}</div>}
+            {/*{error && <div className={styles.error}>{error}</div>}*/}
         </div>
     );
 };

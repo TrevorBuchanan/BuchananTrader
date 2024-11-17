@@ -70,7 +70,20 @@ const removeAsset = async (assetName) => {
     }
 };
 
+const getSpotAssets = async () => {
+    try {
+        const response = await fetch('/api/coinbase/products');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching spot products:', error);
+    }
+}
+
 export {
+    getSpotAssets,
     addAssetPriceToEngine,
     getCoinbaseAssetPrice,
     getAssetProfitLoss,

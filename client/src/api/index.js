@@ -3,6 +3,7 @@
 // Import API functions from different files
 import { loginUser, registerUser, logoutUser } from './auth';
 import {
+    getSpotAssets,
     addAssetPriceToEngine,
     getCoinbaseAssetPrice,
     getAssetProfitLoss,
@@ -15,6 +16,7 @@ export {
     loginUser,
     registerUser,
     logoutUser,
+    getSpotAssets,
     addAssetPriceToEngine,
     getCoinbaseAssetPrice,
     getAssetProfitLoss,
