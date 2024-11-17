@@ -1,178 +1,174 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SeriesChart from "../SeriesChart/seriesChart";
-import AssetViewer from "../AssetViewer/assetViewer";
 import styles from "./assetController.module.css";
-import AssetSearch from "../AssetSearch/assetSearch";
+import {
+    addAssetPriceToEngine,
+    getAssetProfitLoss,
+    getCoinbaseAssetPrice,
+    logAssetPrice,
+    removeAsset,
+    tradeAsset
+} from "../../api";
 
-const AssetController = () => {
-    const [targetAssets, setTargetAssets] = useState([]);  // Manage the list of selected assets
-    const [priceChartVisibility, setPriceChartVisibility] = useState({});
-    const [profitLossChartVisibility, setProfitLossChartVisibility] = useState({});
-    const [tradingStatus, setTradingStatus] = useState({});
-    const [loggingStatus, setLoggingStatus] = useState({});
-    const [frequency, setFrequency] = useState({});
-    const [priceSeries, setPriceSeries] = useState({});
-    const [profitLossSeries, setProfitLossSeries] = useState({});
+const AssetController = ({ targetAsset, onRemove }) => {
+    const [frequency, setFrequency] = useState(10);
+    const [priceSeries, setPriceSeries] = useState([]);
+    const [profitLossSeries, setProfitLossSeries] = useState([]);
+    const [timeSeries, setTimeSeries] = useState([]);
+    const [isRemoving, setIsRemoving] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [priceChartVisibility, setPriceChartVisibility] = useState(true);
+    const [profitLossChartVisibility, setProfitLossChartVisibility] = useState(false);
+    const [isTrading, setIsTrading] = useState(false);
+    const [isLogging, setIsLogging] = useState(false);
+    const [error, setError] = useState(null);
 
-
-    // Handle adding asset to targetAssets list
-    const handleAssetChange = (asset) => {
-        if (!targetAssets.includes(asset)) {
-            setTargetAssets((prevAssets) => [...prevAssets, asset]);
+    const handleRemoveAsset = async () => {
+        setIsRemoving(true);
+        try {
+            await removeAsset(targetAsset);
+            onRemove(targetAsset);
+        } catch (error) {
+            setError(`Error removing asset ${targetAsset}: ${error.message}`);
+            console.error(error);
+        } finally {
+            setIsRemoving(false);
         }
     };
 
-    // Handle asset removal
-    const handleRemoveAsset = (asset) => {
-        setTargetAssets((prevAssets) => prevAssets.filter((a) => a !== asset));
-        // If there's additional logic for removing from the backend (e.g., API call), you can call it here
+    const toggleLogging = () => setIsLogging((prev) => !prev);
+    const toggleTrading = () => setIsTrading((prev) => !prev);
+    const togglePriceChartVisibility = () => setPriceChartVisibility((prev) => !prev);
+    const toggleProfitLossChartVisibility = () => setProfitLossChartVisibility((prev) => !prev);
+
+    const handleFrequencyChange = (value) => {
+        const parsedValue = parseInt(value, 10);
+        if (!isNaN(parsedValue) && parsedValue > 0) {
+            setFrequency(parsedValue);
+        }
     };
 
-    const toggleLogging = (asset) => {
-        setLoggingStatus((prev) => ({
-            ...prev,
-            [asset]: !prev[asset],
-        }));
-    };
+    useEffect(() => {
+        const update = async () => {
+            try {
+                const result = await getCoinbaseAssetPrice(targetAsset);
+                const price = result.price;
+                const time = new Date().toLocaleTimeString();
 
-    const toggleTrading = (asset) => {
-        setTradingStatus((prev) => ({
-            ...prev,
-            [asset]: !prev[asset],
-        }));
-    };
+                await addAssetPriceToEngine(targetAsset, price, time);
 
-    const togglePriceChartVisibility = (asset) => {
-        setChartVisibility((prev) => ({
-            ...prev,
-            [`${asset}_price`]: !prev[`${asset}_price`],
-        }));
-    };
+                if (isLogging) {
+                    await logAssetPrice(targetAsset, price, time);
+                }
+                if (isTrading) {
+                    await tradeAsset(targetAsset);
+                }
 
-    const toggleProfitLossChartVisibility = (asset) => {
-        setChartVisibility((prev) => ({
-            ...prev,
-            [`${asset}_profitLoss`]: !prev[`${asset}_profitLoss`],
-        }));
-    };
+                const { profitLoss } = await getAssetProfitLoss(targetAsset, price, time);
 
-    // Handle frequency change (both onChange and onBlur)
-    const handleFrequencyChange = (asset, value) => {
-        setFrequencies((prev) => ({
-            ...prev,
-            [asset]: value > 0 ? Number(value) : 1, // Ensures frequency is always a positive number, defaults to 1
-        }));
-    };
+                setPriceSeries((prev) => [...prev, price]);
+                setProfitLossSeries((prev) => [...prev, profitLoss]);
+                setTimeSeries((prev) => [...prev, time]);
+
+            } catch (error) {
+                setError(`Error updating asset ${targetAsset}: ${error.message}`);
+                console.error(error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        const intervalId = setInterval(update, frequency * 1000);
+
+        update();
+
+        return () => clearInterval(intervalId);
+    }, [frequency, isLogging, isTrading, targetAsset]);
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
 
     return (
-        <main>
-            <div className={styles.row}>
-                <div className={styles.leftCol}>
-                    {targetAssets.length > 0 ? (
-                        targetAssets.map((asset, index) => (
-                            <div key={index} className={styles.assetView}>
-                                <h2>{asset}</h2>
-                                <button
-                                    className={styles.removeButton}
-                                    onClick={() => handleRemoveAsset(asset)}
-                                    aria-label={`Remove ${asset}`}
-                                >
-                                    X
-                                </button>
-                                <table>
-                                    <thead>
-                                    <tr>
-                                        <th>Log Prices</th>
-                                        <th>Trade Asset</th>
-                                        <th>Update Frequency</th>
-                                        <th>Price Chart</th>
-                                        <th>Profit & Loss Chart</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <button
-                                                onClick={() => toggleLogging(asset)}
-                                                className={styles.actionButton}
-                                            >
-                                                {loggingStatus[asset]
-                                                    ? "Stop Logging Prices"
-                                                    : "Start Logging Prices"}
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <button
-                                                onClick={() => toggleTrading(asset)}
-                                                className={styles.actionButton}
-                                            >
-                                                {tradingStatus[asset] ? "Active" : "Inactive"}
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <input
-                                                type="number"
-                                                placeholder="Update Frequency (sec)"
-                                                value={frequencies[asset] || 1}
-                                                onChange={(e) =>
-                                                    handleFrequencyChange(asset, e.target.value)
-                                                }
-                                                onBlur={(e) =>
-                                                    handleFrequencyChange(asset, e.target.value)
-                                                }
-                                                className={styles.frequencyInput}
-                                            />
-                                        </td>
-                                        <td>
-                                            <button
-                                                onClick={() => togglePriceChartVisibility(asset)}
-                                                className={styles.actionButton}
-                                            >
-                                                {chartVisibility[asset] ? "Hide" : "Show"}
-                                            </button>
-                                        </td>
-                                        <td>
-                                            {tradingStatus[asset] ? (
-                                                <button
-                                                    onClick={() =>
-                                                        toggleProfitLossChartVisibility(asset)
-                                                    }
-                                                    className={styles.actionButton}
-                                                >
-                                                    {chartVisibility[`${asset}_profitLoss`] ? "Hide" : "Show"}
-                                                </button>
-                                            ) : (
-                                                <span>Inactive</span>
-                                            )}
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                {chartVisibility[asset] && (
-                                    <AssetViewer
-                                        targetAsset={asset}
-                                        onRemove={handleRemoveAsset}
-                                        updateFrequency={frequencies[asset]}
-                                    />
-                                )}
-                                {tradingStatus[asset] && chartVisibility[`${asset}_profitLoss`] && (
-                                    <SeriesChart
-                                        targetAsset={asset}
-                                        onRemove={handleRemoveAsset}
-                                        updateFrequency={frequencies[asset]}
-                                    />
-                                )}
-                            </div>
-                        ))
-                    ) : (
-                        <p>Search and select tradable assets to open viewer</p>
-                    )}
-                </div>
-                <div className={styles.rightCol}>
-                    <AssetSearch onAssetSelect={handleAssetChange} />
-                </div>
-            </div>
-        </main>
+        <div className={styles.assetView}>
+            <h2>{targetAsset}</h2>
+            <button
+                className={styles.removeButton}
+                onClick={handleRemoveAsset}
+                aria-label="Remove"
+            >
+                X
+            </button>
+            <table>
+                <thead>
+                <tr>
+                    <th>Log Prices</th>
+                    <th>Trade Asset</th>
+                    <th>Update Frequency</th>
+                    <th>Price Chart</th>
+                    <th>Profit & Loss Chart</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <button
+                            onClick={toggleLogging}
+                            className={styles.actionButton}
+                        >
+                            {isLogging ? "Stop Logging Prices" : "Start Logging Prices"}
+                        </button>
+                    </td>
+                    <td>
+                        <button
+                            onClick={toggleTrading}
+                            className={styles.actionButton}
+                        >
+                            {isTrading ? "Active" : "Inactive"}
+                        </button>
+                    </td>
+                    <td>
+                        <input
+                            type="number"
+                            onBlur={(e) => handleFrequencyChange(e.target.value)}
+                            className={styles.frequencyInput}
+                        />
+                    </td>
+                    <td>
+                        <button
+                            onClick={togglePriceChartVisibility}
+                            className={styles.actionButton}
+                        >
+                            {priceChartVisibility ? "Hide" : "Show"}
+                        </button>
+                    </td>
+                    <td>
+                        <button
+                            onClick={toggleProfitLossChartVisibility}
+                            className={styles.actionButton}
+                        >
+                            {profitLossChartVisibility ? "Hide" : "Show"}
+                        </button>
+                    </td>
+                </tr>
+                {priceChartVisibility && (
+                    <tr>
+                        <td colSpan="5">
+                            <SeriesChart series={[{ name: "Price", data: priceSeries }]} labels={timeSeries} />
+                        </td>
+                    </tr>
+                )}
+                {profitLossChartVisibility && (
+                    <tr>
+                        <td colSpan="5">
+                            <SeriesChart series={[{ name: "Price & Loss", data: profitLossSeries }]} labels={timeSeries} />
+                        </td>
+                    </tr>
+                )}
+                </tbody>
+            </table>
+            {error && <div className={styles.error}>{error}</div>}
+        </div>
     );
 };
 

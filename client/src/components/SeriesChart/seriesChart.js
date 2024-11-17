@@ -1,53 +1,9 @@
 // seriesChart.js
 
-import React, { useEffect, useState } from 'react';
-import Index from '../../api';
 import Chart from 'react-apexcharts';
 import styles from './seriesChart.module.css';
 
-const SeriesChart = ({ targetAsset, onRemove, updateFrequency }) => {
-    const [seriesData, setSeriesData] = useState([{ name: targetAsset, data: [] }]);
-    const [dates, setDates] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        const assetHandler = Index.getInstance();
-
-        const updateSeries = async () => {
-            try {
-                // Fetch the updated profit-loss for the asset
-                await assetHandler.addAssetProfitLoss(targetAsset);
-
-                // Get the updated profit-loss series
-                const profitLossSeries = assetHandler.getAssetProfitLossSeries(targetAsset);
-
-                // Update the series data and dates
-                const updatedData = profitLossSeries.map(item => item.profitLoss);
-                const updatedDates = profitLossSeries.map(item => item.date);
-
-                // Update state
-                setSeriesData([{ name: `Profit-loss`, data: updatedData }]);
-                setDates(updatedDates);
-                setLoading(false);
-            } catch (err) {
-                setError('Error fetching profit-loss data');
-                setLoading(false);
-            }
-        };
-
-        // Start polling at a set interval
-        const intervalId = setInterval(() => {
-            updateSeries();
-        }, updateFrequency * 1000);
-
-        updateSeries(); // Initial update
-
-        return () => clearInterval(intervalId); // Clean up on component unmount
-    }, [updateFrequency, targetAsset]);
-
-    if (loading) return <div className={styles.statusText}>Loading...</div>;
-
+const SeriesChart = ({ series, labels }) => {
     const chartOptions = {
         chart: {
             type: 'line',
@@ -65,7 +21,7 @@ const SeriesChart = ({ targetAsset, onRemove, updateFrequency }) => {
             },
         },
         xaxis: {
-            categories: dates,
+            categories: labels,
         },
         yaxis: {
             title: {
@@ -89,20 +45,12 @@ const SeriesChart = ({ targetAsset, onRemove, updateFrequency }) => {
 
     return (
         <div className={styles.priceTimeGraph}>
-            <div className={styles.titleSection}>
-                <h2 className={styles.chartTitle}>{targetAsset} Theoretical Profit and Loss</h2>
-                <button className={styles.removeButton} onClick={() => onRemove(targetAsset)}>X</button> {/* Remove button */}
-            </div>
-            {error ? (
-                <div className={styles.statusText}>{error}</div>
-            ) : (
-                <Chart
-                    options={chartOptions}
-                    series={seriesData}
-                    type="line"
-                    height={350}
-                />
-            )}
+            <Chart
+                options={chartOptions}
+                series={series}
+                type="line"
+                height={350}
+            />
         </div>
     );
 };

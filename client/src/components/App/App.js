@@ -21,7 +21,7 @@ function App() {
       <Router>
         <Header /> 
 
-        <main className>
+        <main>
           <Routes>
             <Route path="/" element={<Home />} />
             

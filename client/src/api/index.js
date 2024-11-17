@@ -3,10 +3,11 @@
 // Import API functions from different files
 import { loginUser, registerUser, logoutUser } from './auth';
 import {
-    addAssetPrice,
+    addAssetPriceToEngine,
     getCoinbaseAssetPrice,
-    addAssetProfitLoss,
+    getAssetProfitLoss,
     tradeAsset,
+    logAssetPrice,
     removeAsset
 } from './posts';
 
@@ -14,9 +15,10 @@ export {
     loginUser,
     registerUser,
     logoutUser,
-    addAssetPrice,
+    addAssetPriceToEngine,
     getCoinbaseAssetPrice,
-    addAssetProfitLoss,
+    getAssetProfitLoss,
     tradeAsset,
+    logAssetPrice,
     removeAsset,
 };

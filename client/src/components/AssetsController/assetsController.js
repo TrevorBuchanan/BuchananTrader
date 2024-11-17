@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import AssetController from "../AssetController/assetController.js";
 import AssetSearch from "../AssetSearch/assetSearch";
-import {removeAsset} from "../../api";
+import styles from "./assetsController.module.css";
 
 const AssetsController = () => {
     const [targetAssets, setTargetAssets] = useState([]);
@@ -12,24 +12,29 @@ const AssetsController = () => {
         }
     };
 
-    const handleRemoveAsset = async (asset) => {
-        try {
-            await removeAsset(asset);
-        } catch (error) {
-            console.error(`Error removing asset ${asset}:`, error.message);
-        } finally {
-            setTargetAssets((prevAssets) => prevAssets.filter((a) => a !== asset));
-        }
+    const handleRemoveAsset = (asset) => {
+        setTargetAssets((prevAssets) => prevAssets.filter((a) => a !== asset));
     };
 
     return (
         <main>
-            <div className={styles.row}>a
+            <div className={styles.row}>
                 <div className={styles.leftCol}>
-                    assetController list
+                    {targetAssets.length > 0 ? (
+                        targetAssets.map((asset, index) => (
+                            <div key={index} className={styles.asset}>
+                                <AssetController
+                                    targetAsset={asset}
+                                    onRemove={handleRemoveAsset}
+                                />
+                            </div>
+                        ))
+                    ) : (
+                        <p>Search and select tradable assets to open viewer</p>
+                    )}
                 </div>
                 <div className={styles.rightCol}>
-                    <AssetSearch onAssetSelect={onAssetSelect}/>
+                    <AssetSearch onAssetSelect={onAssetSelect} />
                 </div>
             </div>
         </main>

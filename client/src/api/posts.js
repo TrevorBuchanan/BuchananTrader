@@ -1,12 +1,12 @@
 // src/api/posts.js
 import axios from "axios";
 
-const addAssetPrice = async (assetName, price) => {
+const addAssetPriceToEngine = async (assetName, price, time) => {
     try {
         const response = await axios.post('/api/trading-engine/add-price', {
             assetName,
             price,
-            time: new Date().toLocaleTimeString(),
+            time,
         });
         return response.data;  // Return the response data (if needed)
     } catch (err) {
@@ -25,7 +25,7 @@ const getCoinbaseAssetPrice = async (assetName) => {
     }
 };
 
-const addAssetProfitLoss = async (assetName) => {
+const getAssetProfitLoss = async (assetName) => {
     try {
         const response = await axios.get(`/api/trading-engine/profit-loss?assetName=${assetName}`);
         return response.data;  // You might want to return the profit/loss data
@@ -47,6 +47,19 @@ const tradeAsset = async (assetName) => {
     }
 };
 
+const logAssetPrice = async (assetName, price, time) => {
+    try {
+        await axios.post('/api/log-price', {
+            assetName,
+            price,
+            time,
+        });
+    } catch (err) {
+        console.error('Failed to log asset price:', err.message);
+        throw new Error('Failed to log asset price');
+    }
+}
+
 const removeAsset = async (assetName) => {
     try {
         await axios.delete(`/api/trading-engine/remove-asset/${assetName}`);
@@ -58,9 +71,10 @@ const removeAsset = async (assetName) => {
 };
 
 export {
-    addAssetPrice,
+    addAssetPriceToEngine,
     getCoinbaseAssetPrice,
-    addAssetProfitLoss,
+    getAssetProfitLoss,
     tradeAsset,
+    logAssetPrice,
     removeAsset,
 };
