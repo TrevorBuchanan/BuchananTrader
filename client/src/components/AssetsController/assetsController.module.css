@@ -14,83 +14,13 @@
     border-radius: 5px;
     width: 20%;
     background-color: #161b23;
+    border: 1px solid #292e3a;
     min-height: calc(100vh - 60px);
 }
 
 .asset {
     border-radius: 15px;
-    border: 1px solid rgb(177, 177, 177);
+    background-color: #161b23;
+    border: 1px solid #292e3a;
     padding: 0.5rem;
-}
-
-.actionButton {
-    margin: 0;
-    height: 100%;
-    width: 100%;
-    padding: 0.5rem;
-    background-color: #098924;
-    color: rgb(255, 255, 255);
-    border: none;
-}
-
-.actionButton:hover {
-    color: rgb(255, 255, 255);
-}
-
-.actionButton:active {
-    color: rgb(90, 90, 90);
-}
-
-.actionButton:disabled {
-    color: rgb(90, 90, 90);
-}
-
-.frequencyInput {
-    padding: 0.5rem;
-    width: 100%;
-    background-color: #098924;
-    color: rgb(255, 255, 255);
-    border: none;
-}
-
-table {
-    background: none;
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    overflow: hidden;
-    border-radius: 15px;
-    border: 1px solid rgb(177, 177, 177);
-}
-
-th {
-    padding: 10px;
-    border: 1px solid rgb(177, 177, 177);
-    text-align: center;
-}
-
-td {
-    border: 1px solid rgb(177, 177, 177);
-    text-align: center;
-    margin: 0;
-    padding: 0;
-}
-
-.removeButton {
-    color: rgb(177, 177, 177);
-    font-size: large;
-    font-weight: bold;
-    background: none;
-    border: none;
-    display: flex;
-    margin-right: 0;
-    margin-left: auto;
-}
-
-.removeButton:hover {
-    color:  rgb(255, 255, 255);
-}
-
-.removeButton:active {
-    color:  rgb(118, 118, 118);
 }

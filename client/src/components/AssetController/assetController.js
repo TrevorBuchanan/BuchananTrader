@@ -151,17 +151,36 @@ const AssetController = ({ targetAsset, onRemove }) => {
                         </button>
                     </td>
                 </tr>
+                <tr>
+                    <th colSpan="5">
+                        Trading Engine Settings
+                    </th>
+                </tr>
+                <tr>
+                    <th>Follow Fraction</th>
+
+                </tr>
+                <tr>
+                    <td>
+
+                    </td>
+                </tr>
                 {priceChartVisibility && (
                     <tr>
                         <td colSpan="5">
-                            <SeriesChart series={[{ name: "Price", data: priceSeries }]} labels={timeSeries} />
+                            <h3> Price </h3>
+                            <SeriesChart series={[{name: "Price", data: priceSeries}]} labels={timeSeries}/>
                         </td>
                     </tr>
                 )}
                 {profitLossChartVisibility && (
                     <tr>
                         <td colSpan="5">
-                            <SeriesChart series={[{ name: "Price & Loss", data: profitLossSeries }]} labels={timeSeries} />
+                            <h3> Profit & Loss </h3>
+                            <SeriesChart series={[{name: "Price & Loss", data: profitLossSeries}, {
+                                name: "Test",
+                                data: [0.1, 0.2, 0.25, 0.27]
+                            }]} labels={timeSeries}/>
                         </td>
                     </tr>
                 )}
