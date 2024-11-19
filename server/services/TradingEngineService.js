@@ -1,9 +1,9 @@
-const tradingEngineClient = require('../config/tradingengine'); 
+const tradingEngineClient = require('../config/tradingengine');
+const {getAssetShortLossLimit} = require("../config/tradingengine");
 
 const getAssetAction = async (assetName) => {
     try {
-        const action = await tradingEngineClient.getAssetAction(assetName);
-        return action; 
+        return await tradingEngineClient.getAssetAction(assetName);
     } catch (error) {
         throw new Error(`Error fetching action for ${assetName}: ${error.message}`);
     }
@@ -19,17 +19,31 @@ const addAssetPrice = async (assetName, price, time) => {
 
 const getAssetProfitLoss = async (assetName) => {
     try {
-        const profitLoss = await tradingEngineClient.getAssetProfitLoss(assetName); 
-        return profitLoss;
+        return await tradingEngineClient.getAssetProfitLoss(assetName);
     } catch (error) {
         throw new Error(`Error fetching profit-loss for ${assetName}: ${error.message}`);
     }
 }
 
+const getAssetLongLossLimit = async (assetName) => {
+    try {
+        return await tradingEngineClient.getAssetLongLossLimit(assetName);
+    } catch (error) {
+        throw new Error(`Error fetching asset long limit for ${assetName}: ${error.message}`);
+    }
+}
+
+ const getAssetShortLimit = async (assetName) => {
+    try {
+        return await  tradingEngineClient.getAssetShortLossLimit(assetName);
+    } catch (error) {
+        throw new Error(`Error fetching asset long limit for ${assetName}: ${error.message}`);
+    }
+ }
+
 const removeAsset = async (assetName) => {
     try {
-        resultMsg = await tradingEngineClient.removeAsset(assetName);
-        return resultMsg;
+        return await tradingEngineClient.removeAsset(assetName);
     } catch (error) {
         throw new Error(`Error removing ${assetName}: ${error.message}`);
     }
@@ -39,5 +53,7 @@ module.exports = {
     getAssetAction,
     addAssetPrice,
     getAssetProfitLoss,
+    getAssetLongLossLimit,
+    getAssetShortLossLimit,
     removeAsset,
 };

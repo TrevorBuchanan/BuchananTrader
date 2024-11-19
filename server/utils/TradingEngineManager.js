@@ -27,6 +27,20 @@ class TradingEngineManager {
         return this.#tradingEngines[assetName].getProfitLoss();
     }
 
+    getAssetLongLossLimit(assetName) {
+        if (!this.#tradingEngines[assetName]) {
+            this.#tradingEngines[assetName] = new AssetTradingEngine(assetName);
+        }
+        return this.#tradingEngines[assetName].getLongLossLimit();
+    }
+
+    getAssetShortLossLimit(assetName) {
+        if (!this.#tradingEngines[assetName]) {
+            this.#tradingEngines[assetName] = new AssetTradingEngine(assetName);
+        }
+        return this.#tradingEngines[assetName].getShortLossLimit();
+    }
+
     getAssetAction(assetName) {
         if (!this.#tradingEngines[assetName]) {
             this.#tradingEngines[assetName] = new AssetTradingEngine(assetName);

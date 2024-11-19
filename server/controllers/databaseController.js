@@ -43,6 +43,10 @@ const loginUser = async (req, res) => {
     }
 };
 
+const logPrice = async (req, res) => {
+    const { asset_name, price, time } = req.body;
+}
+
 module.exports = {
     registerUser,
     loginUser,

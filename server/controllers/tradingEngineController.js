@@ -51,6 +51,34 @@ const TradingEngineController = {
         }
     },
 
+    getAssetLongLossLimit: async (req, res) => {
+        const { assetName } = req.query;
+        if (!assetName) {
+            return res.status(400).json({ error: 'Invalid input: assetName is required.' });
+        }
+
+        try {
+            const longLossLimit = await TradingEngineService.getAssetLongLossLimit(assetName);
+            res.json({ longLossLimit });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    },
+
+    getAssetShortLossLimit: async (req, res) => {
+        const { assetName } = req.query;
+        if (!assetName) {
+            return res.status(400).json({ error: 'Invalid input: assetName is required.' });
+        }
+
+        try {
+            const shortLossLimit = await TradingEngineService.getAssetShortLossLimit(assetName);
+            res.json({ shortLossLimit });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    },
+
     removeAsset: async (req, res) => {
         const { assetName } = req.params;
     

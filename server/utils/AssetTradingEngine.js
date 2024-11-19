@@ -61,6 +61,21 @@ class AssetTradingEngine {
         return this.#priceSeries;
     }
 
+    getLongLossLimit() {
+        if (this.#isLonging) {
+            return this.#longLossLimit;
+        }
+        return null;
+    }
+
+
+    getShortLossLimit() {
+        if (this.#isShorting) {
+            return this.#shortLossLimit;
+        }
+        return null;
+    }
+
     addPrice(price, time) {
         this.#currentPrice = price;
         this.#priceSeries.push({'price': price, 'time': time});

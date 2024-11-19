@@ -10,14 +10,17 @@ router.get('/coinbase/products', coinbaseController.getProducts);
 router.get('/coinbase/products/:product_id', coinbaseController.getProduct);
 router.post('/coinbase/transactions', coinbaseController.createTransaction);
 
-// Mock buying API routes 
+// Engine API routes
 router.post('/trading-engine/add-price', tradingEngineController.addAssetPrice);
 router.get('/trading-engine/action', tradingEngineController.getAssetAction);
 router.get('/trading-engine/profit-loss', tradingEngineController.getAssetProfitLoss);
+router.get('/trading-engine/long-loss-limit', tradingEngineController.getAssetLongLossLimit);
+router.get('trading-engine/short-loss-limit', tradingEngineController.getAssetShortLossLimit)
 router.delete('/trading-engine/remove-asset/:assetName', tradingEngineController.removeAsset);
 
 // Database routes
 router.post('/register', databaseController.registerUser);
 router.post('/login', databaseController.loginUser);
-
+router.post('/log-price', databaseController.logPrice);
+router.get('/fetch-prices', databaseController.getPriceSeries);
 module.exports = router;
