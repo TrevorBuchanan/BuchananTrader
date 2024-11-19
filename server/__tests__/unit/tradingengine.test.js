@@ -98,6 +98,50 @@ describe('Trading Engine Config', () => {
     });
 
     /**
+     * Testing getAssetLongLossLimit Success
+     */
+    test('getAssetLongLossLimit should return the current long loss limit for the asset when successful', async () => {
+        const mockLongLossLimit = 1000;
+        TradingEngineManager.prototype.getAssetLongLossLimit.mockResolvedValue(mockLongLossLimit);
+        const longLossLimit = await tradingEngine.getAssetLongLossLimit(assetName);
+        expect(longLossLimit).toBe(mockLongLossLimit);
+        expect(TradingEngineManager.prototype.getAssetLongLossLimit).toHaveBeenCalledWith(assetName);
+    });
+
+    /**
+     * Testing getAssetLongLossLimit Failure
+     */
+    test('getAssetLongLossLimit should throw error when failed', async () => {
+        const mockError = new Error('Get asset long loss limit failed');
+        TradingEngineManager.prototype.getAssetLongLossLimit.mockImplementation(() => {
+            throw mockError;
+        })
+        await expect(tradingEngine.getAssetLongLossLimit(assetName)).rejects.toThrow('Error getting asset long loss limit: Get asset long loss limit failed');
+    });
+
+    /**
+     * Testing getAssetShortLossLimit Success
+     */
+    test('getAssetShortLossLimit should return the current short loss limit for the asset when successful', async () => {
+        const mockShortLossLimit = 1000;
+        TradingEngineManager.prototype.getAssetShortLossLimit.mockResolvedValue(mockShortLossLimit);
+        const shortLossLimit = await tradingEngine.getAssetShortLossLimit(assetName);
+        expect(shortLossLimit).toBe(mockShortLossLimit);
+        expect(TradingEngineManager.prototype.getAssetShortLossLimit).toHaveBeenCalledWith(assetName);
+    });
+
+    /**
+     * Testing getAssetShortLossLimit Success
+     */
+    test('getAssetShortLossLimit should throw error when failed', async () => {
+        const mockError = new Error('Get asset short loss limit failed');
+        TradingEngineManager.prototype.getAssetShortLossLimit.mockImplementation(() => {
+            throw mockError;
+        })
+        await expect(tradingEngine.getAssetShortLossLimit(assetName)).rejects.toThrow('Error getting asset short loss limit: Get asset short loss limit failed');
+    });
+
+    /**
      * Testing removeAsset Success
      */
     test('removeAsset should return success message when asset is removed', async () => {

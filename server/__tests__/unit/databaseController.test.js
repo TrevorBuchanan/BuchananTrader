@@ -123,4 +123,58 @@ describe('Database Controller', () => {
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.json).toHaveBeenCalledWith({error: 'Server error'});
     });
+
+    // Test for successful asset price logging
+    it('should log an asset price successfully', async () => {
+        const req = { body: { asset_name: 'Bitcoin', price: 60000, time: '2024-11-19T10:00:00Z' } };
+        const res = mockResponse();
+        const loggedPriceMock = { id: 1, asset_name: 'Bitcoin', price: 60000, time: '2024-11-19T10:00:00Z' };
+
+        databaseService.logAssetPrice.mockResolvedValue(loggedPriceMock);
+
+        await databaseController.logAssetPrice(req, res);
+        expect(res.status).toHaveBeenCalledWith(201);
+        expect(res.json).toHaveBeenCalledWith(loggedPriceMock);
+    });
+
+    // Test for error during asset price logging
+    it('should handle errors during asset price logging', async () => {
+        const req = { body: { asset_name: 'Bitcoin', price: 60000, time: '2024-11-19T10:00:00Z' } };
+        const res = mockResponse();
+
+        databaseService.logAssetPrice.mockRejectedValue(new Error('Database error'));
+
+        await databaseController.logAssetPrice(req, res);
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({ error: 'Internal server error' });
+    });
+
+    // Test for successful retrieval of asset price series
+    it('should retrieve asset price series successfully', async () => {
+        const req = { query: { asset_name: 'Bitcoin' } };
+        const res = mockResponse();
+        const priceSeriesMock = [
+            { id: 1, asset_name: 'Bitcoin', price: 60000, time: '2024-11-19T10:00:00Z' },
+            { id: 2, asset_name: 'Bitcoin', price: 60500, time: '2024-11-19T11:00:00Z' },
+        ];
+
+        databaseService.getLoggedAssetPriceSeries.mockResolvedValue(priceSeriesMock);
+
+        await databaseController.getAssetPriceSeries(req, res);
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith(priceSeriesMock);
+    });
+
+    // Test for error during retrieval of asset price series
+    it('should handle errors during asset price series retrieval', async () => {
+        const req = { query: { asset_name: 'Bitcoin' } };
+        const res = mockResponse();
+
+        databaseService.getLoggedAssetPriceSeries.mockRejectedValue(new Error('Database error'));
+
+        await databaseController.getAssetPriceSeries(req, res);
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({ error: 'Internal server error' });
+    });
+
 });

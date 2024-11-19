@@ -1,8 +1,10 @@
 // databaseService.test.js
 
 const User = require('../../models/User');
+const AssetPrice = require('../../models/AssetPrice');
 const databaseService = require('../../services/databaseService');
 jest.mock('../../models/User');
+jest.mock('../../models/AssetPrice');
 jest.mock('bcrypt');
 
 describe('Database Service', () => {
@@ -66,5 +68,59 @@ describe('Database Service', () => {
 
         await expect(databaseService.authenticateUser('error@example.com', 'any_password')).rejects.toThrow('Database error');
         expect(User.findOne).toHaveBeenCalledWith({ where: { email: 'error@example.com' } });
+    });
+
+    describe('logAssetPrice', () => {
+        it('should log an asset price successfully', async () => {
+            const assetData = { asset_name: 'Bitcoin', price: 50000, time: new Date() };
+            const mockLoggedPrice = { id: 1, ...assetData };
+            AssetPrice.create.mockResolvedValue(mockLoggedPrice);
+
+            const result = await databaseService.logAssetPrice(
+                assetData.asset_name,
+                assetData.price,
+                assetData.time
+            );
+
+            expect(result).toEqual(mockLoggedPrice);
+            expect(AssetPrice.create).toHaveBeenCalledWith(assetData);
+        });
+
+        it('should throw an error when logging an asset price fails', async () => {
+            const assetData = { asset_name: 'Bitcoin', price: 50000, time: new Date() };
+            AssetPrice.create.mockRejectedValue(new Error('Database error'));
+
+            await expect(
+                databaseService.logAssetPrice(assetData.asset_name, assetData.price, assetData.time)
+            ).rejects.toThrow('Database error');
+        });
+    });
+
+    describe('getLoggedAssetPriceSeries', () => {
+        it('should retrieve logged asset price series successfully', async () => {
+            const assetName = 'Ethereum';
+            const mockPriceSeries = [
+                { id: 1, asset_name: assetName, price: 3000, time: new Date('2024-01-01') },
+                { id: 2, asset_name: assetName, price: 3100, time: new Date('2024-01-02') },
+            ];
+            AssetPrice.findAll.mockResolvedValue(mockPriceSeries);
+
+            const result = await databaseService.getLoggedAssetPriceSeries(assetName);
+
+            expect(result).toEqual(mockPriceSeries);
+            expect(AssetPrice.findAll).toHaveBeenCalledWith({
+                where: { asset_name: assetName },
+                order: [['time', 'ASC']],
+            });
+        });
+
+        it('should throw an error when retrieving asset price series fails', async () => {
+            const assetName = 'Litecoin';
+            AssetPrice.findAll.mockRejectedValue(new Error('Database error'));
+
+            await expect(databaseService.getLoggedAssetPriceSeries(assetName)).rejects.toThrow(
+                'Database error'
+            );
+        });
     });
 });

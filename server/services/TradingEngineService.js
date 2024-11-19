@@ -1,5 +1,4 @@
 const tradingEngineClient = require('../config/tradingengine');
-const {getAssetShortLossLimit} = require("../config/tradingengine");
 
 const getAssetAction = async (assetName) => {
     try {
@@ -33,7 +32,7 @@ const getAssetLongLossLimit = async (assetName) => {
     }
 }
 
- const getAssetShortLimit = async (assetName) => {
+ const getAssetShortLossLimit = async (assetName) => {
     try {
         return await  tradingEngineClient.getAssetShortLossLimit(assetName);
     } catch (error) {

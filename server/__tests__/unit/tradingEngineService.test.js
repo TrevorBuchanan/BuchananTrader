@@ -1,11 +1,13 @@
 // tradingEngineService.test.js
 
 // Import necessary modules
-const tradingEngineClient = require('../../config/tradingengine'); 
+const tradingEngineClient = require('../../config/tradingengine');
 const {
     getAssetAction,
     addAssetPrice,
     getAssetProfitLoss,
+    getAssetLongLossLimit,
+    getAssetShortLossLimit,
     removeAsset,
 } = require('../../services/tradingEngineService');
 
@@ -14,6 +16,8 @@ jest.mock('../../config/tradingengine', () => ({
     getAssetAction: jest.fn(),
     addAssetPrice: jest.fn(),
     getAssetProfitLoss: jest.fn(),
+    getAssetLongLossLimit: jest.fn(),
+    getAssetShortLossLimit: jest.fn(),
     removeAsset: jest.fn(),
 }));
 
@@ -81,6 +85,52 @@ describe('Trading Engine Service Functions', () => {
 
             await expect(getAssetProfitLoss(assetName)).rejects.toThrow(`Error fetching profit-loss for ${assetName}: ${errorMessage}`);
             expect(tradingEngineClient.getAssetProfitLoss).toHaveBeenCalledWith(assetName);
+        });
+    });
+
+    describe('getAssetLongLossLimit', () => {
+        it('should return the long loss limit when getAssetLongLossLimit is successful', async () => {
+            const assetName = 'Bitcoin';
+            const mockLongLossLimit = 5000;
+            tradingEngineClient.getAssetLongLossLimit.mockResolvedValue(mockLongLossLimit);
+
+            const result = await getAssetLongLossLimit(assetName);
+            expect(result).toBe(mockLongLossLimit);
+            expect(tradingEngineClient.getAssetLongLossLimit).toHaveBeenCalledWith(assetName);
+        });
+
+        it('should throw an error when getAssetLongLossLimit fails', async () => {
+            const assetName = 'Bitcoin';
+            const errorMessage = 'Failed to retrieve long loss limit';
+            tradingEngineClient.getAssetLongLossLimit.mockRejectedValue(new Error(errorMessage));
+
+            await expect(getAssetLongLossLimit(assetName)).rejects.toThrow(
+                `Error fetching asset long limit for ${assetName}: ${errorMessage}`
+            );
+            expect(tradingEngineClient.getAssetLongLossLimit).toHaveBeenCalledWith(assetName);
+        });
+    });
+
+    describe('getAssetShortLossLimit', () => {
+        it('should return the short loss limit when getAssetShortLossLimit is successful', async () => {
+            const assetName = 'Ethereum';
+            const mockShortLossLimit = 3000;
+            tradingEngineClient.getAssetShortLossLimit.mockResolvedValue(mockShortLossLimit);
+
+            const result = await getAssetShortLossLimit(assetName);
+            expect(result).toBe(mockShortLossLimit);
+            expect(tradingEngineClient.getAssetShortLossLimit).toHaveBeenCalledWith(assetName);
+        });
+
+        it('should throw an error when getAssetShortLossLimit fails', async () => {
+            const assetName = 'Ethereum';
+            const errorMessage = 'Failed to retrieve short loss limit';
+            tradingEngineClient.getAssetShortLossLimit.mockRejectedValue(new Error(errorMessage));
+
+            await expect(getAssetShortLossLimit(assetName)).rejects.toThrow(
+                `Error fetching asset long limit for ${assetName}: ${errorMessage}`
+            );
+            expect(tradingEngineClient.getAssetShortLossLimit).toHaveBeenCalledWith(assetName);
         });
     });
 

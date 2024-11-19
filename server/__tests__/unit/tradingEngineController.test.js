@@ -131,6 +131,82 @@ describe('TradingEngineController', () => {
         });
     });
 
+    describe('getAssetLongLossLimit', () => {
+        it('should return 400 if assetName is missing', async () => {
+            const req = { query: {} }; // No assetName provided
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+            await TradingEngineController.getAssetLongLossLimit(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Invalid input: assetName is required.' });
+            expect(TradingEngineService.getAssetLongLossLimit).not.toHaveBeenCalled();
+        });
+
+        it('should return 500 when service throws an error', async () => {
+            const req = { query: { assetName: 'Bitcoin' } };
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+            TradingEngineService.getAssetLongLossLimit.mockRejectedValue(new Error('Service error'));
+
+            await TradingEngineController.getAssetLongLossLimit(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Service error' });
+        });
+
+        it('should return long loss limit on valid input', async () => {
+            const req = { query: { assetName: 'Bitcoin' } };
+            const res = { json: jest.fn() };
+
+            const mockLongLossLimit = 5000;
+            TradingEngineService.getAssetLongLossLimit.mockResolvedValue(mockLongLossLimit);
+
+            await TradingEngineController.getAssetLongLossLimit(req, res);
+
+            expect(res.json).toHaveBeenCalledWith({ longLossLimit: mockLongLossLimit });
+            expect(TradingEngineService.getAssetLongLossLimit).toHaveBeenCalledWith('Bitcoin');
+        });
+    });
+
+    describe('getAssetShortLossLimit', () => {
+        it('should return 400 if assetName is missing', async () => {
+            const req = { query: {} }; // No assetName provided
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+            await TradingEngineController.getAssetShortLossLimit(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Invalid input: assetName is required.' });
+            expect(TradingEngineService.getAssetShortLossLimit).not.toHaveBeenCalled();
+        });
+
+        it('should return 500 when service throws an error', async () => {
+            const req = { query: { assetName: 'Ethereum' } };
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+            TradingEngineService.getAssetShortLossLimit.mockRejectedValue(new Error('Service error'));
+
+            await TradingEngineController.getAssetShortLossLimit(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(500);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Service error' });
+        });
+
+        it('should return short loss limit on valid input', async () => {
+            const req = { query: { assetName: 'Ethereum' } };
+            const res = { json: jest.fn() };
+
+            const mockShortLossLimit = 3000;
+            TradingEngineService.getAssetShortLossLimit.mockResolvedValue(mockShortLossLimit);
+
+            await TradingEngineController.getAssetShortLossLimit(req, res);
+
+            expect(res.json).toHaveBeenCalledWith({ shortLossLimit: mockShortLossLimit });
+            expect(TradingEngineService.getAssetShortLossLimit).toHaveBeenCalledWith('Ethereum');
+        });
+    });
+
     describe('removeAsset', () => {
         it('should return 400 for missing assetName', async () => {
             const req = { params: {} };
