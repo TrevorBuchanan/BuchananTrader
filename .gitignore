@@ -10,6 +10,9 @@ lerna-debug.log*
 # vscode
 .vscode
 
+# idea
+.idea
+
 # Default ignored files
 /shelf/
 /workspace.xml
