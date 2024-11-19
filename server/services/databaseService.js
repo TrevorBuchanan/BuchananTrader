@@ -1,11 +1,12 @@
 // databaseService.js
 
-const User = require('../models/User'); 
+const User = require('../models/User');
+const AssetPrice = require('../models/AssetPrice');
+const {Op} = require("sequelize");
 
 const createUser = async (userData) => {
     try {
-        const user = await User.create(userData);
-        return user;
+        return await User.create(userData);
     } catch (err) {
         throw err;
     }
@@ -25,7 +26,7 @@ const findUserByEmail = async (email) => {
 const authenticateUser = async (email, password) => {
     try {
         const user = await findUserByEmail(email);
-        console.log(user);
+        // console.log(user);
         if (!user) return null;
 
         // Check if password matches
@@ -37,8 +38,35 @@ const authenticateUser = async (email, password) => {
     }
 };
 
+// Log asset price
+const logAssetPrice = async (asset_name, price, time) => {
+    try {
+        return await AssetPrice.create({ asset_name, price, time });
+    } catch (err) {
+        console.error('Error logging asset price:', err);
+        throw err;
+    }
+};
+
+// Retrieve logged asset price series
+const getLoggedAssetPriceSeries = async (asset_name) => {
+    try {
+        return await AssetPrice.findAll({
+            where: {
+                asset_name,
+            },
+            order: [['time', 'ASC']], // Sort by time in ascending order
+        });
+    } catch (err) {
+        console.error('Error retrieving asset price series:', err);
+        throw err;
+    }
+};
+
 module.exports = {
     createUser,
     findUserByEmail,
     authenticateUser,
+    logAssetPrice,
+    getLoggedAssetPriceSeries,
 };

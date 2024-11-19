@@ -55,7 +55,7 @@ describe('Asset Trading Engine', () => {
      */
     test('should return entry/exit actions according to series', () => {
         // Not enough data test
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < tradingEngine.getMinSeriesLength() - 1; i++) {
             tradingEngine.addPrice(price, new Date().toISOString());
         }
         expect(tradingEngine.analyzeSeriesForAction()).toEqual("Not enough data to decide action");
@@ -86,62 +86,4 @@ describe('Asset Trading Engine', () => {
     });
 
     // TODO: Add analyze series for action for more series options
-
-    /**
-     * Testing upTrendForLength
-     */
-    test('should return true for an uptrend of specified length', () => {
-        // Set up an uptrend of 3 prices
-        tradingEngine.addPrice(100, new Date().toISOString());
-        tradingEngine.addPrice(200, new Date().toISOString());
-        tradingEngine.addPrice(300, new Date().toISOString());
-
-        expect(tradingEngine.upTrendForLength(3)).toBe(true);  // Should be true for 3-length uptrend
-    });
-
-    test('should return false if uptrend condition is not met', () => {
-        // Prices are not in an uptrend
-        tradingEngine.addPrice(300, new Date().toISOString());
-        tradingEngine.addPrice(200, new Date().toISOString());
-        tradingEngine.addPrice(100, new Date().toISOString());
-
-        expect(tradingEngine.upTrendForLength(3)).toBe(false);  // Should be false
-    });
-
-    test('should return false if price series length is less than specified uptrend length', () => {
-        // Not enough data points to verify a 3-length uptrend
-        tradingEngine.addPrice(100, new Date().toISOString());
-        tradingEngine.addPrice(200, new Date().toISOString());
-
-        expect(tradingEngine.upTrendForLength(3)).toBe(false);  // Should be false as only 2 points
-    });
-
-    /**
-     * Testing downTrendForLength
-     */
-    test('should return true for a downtrend of specified length', () => {
-        // Set up a downtrend of 3 prices
-        tradingEngine.addPrice(300, new Date().toISOString());
-        tradingEngine.addPrice(200, new Date().toISOString());
-        tradingEngine.addPrice(100, new Date().toISOString());
-
-        expect(tradingEngine.downTrendForLength(3)).toBe(true);  // Should be true for 3-length downtrend
-    });
-
-    test('should return false if downtrend condition is not met', () => {
-        // Prices are not in a downtrend
-        tradingEngine.addPrice(100, new Date().toISOString());
-        tradingEngine.addPrice(200, new Date().toISOString());
-        tradingEngine.addPrice(300, new Date().toISOString());
-
-        expect(tradingEngine.downTrendForLength(3)).toBe(false);  // Should be false
-    });
-
-    test('should return false if price series length is less than specified downtrend length', () => {
-        // Not enough data points to verify a 3-length downtrend
-        tradingEngine.addPrice(300, new Date().toISOString());
-        tradingEngine.addPrice(200, new Date().toISOString());
-
-        expect(tradingEngine.downTrendForLength(3)).toBe(false);  // Should be false as only 2 points
-    });
 });

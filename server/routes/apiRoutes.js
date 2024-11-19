@@ -21,6 +21,7 @@ router.delete('/trading-engine/remove-asset/:assetName', tradingEngineController
 // Database routes
 router.post('/register', databaseController.registerUser);
 router.post('/login', databaseController.loginUser);
-router.post('/log-price', databaseController.logPrice);
-router.get('/fetch-prices', databaseController.getPriceSeries);
+router.post('/log-price', databaseController.logAssetPrice);
+router.get('/fetch-prices', databaseController.getAssetPriceSeries);
+
 module.exports = router;

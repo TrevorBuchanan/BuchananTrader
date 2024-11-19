@@ -61,6 +61,10 @@ class AssetTradingEngine {
         return this.#priceSeries;
     }
 
+    getMinSeriesLength() {
+        return this.#minSeriesLen;
+    }
+
     getLongLossLimit() {
         if (this.#isLonging) {
             return this.#longLossLimit;

@@ -43,11 +43,35 @@ const loginUser = async (req, res) => {
     }
 };
 
-const logPrice = async (req, res) => {
+// Log asset price
+const logAssetPrice = async (req, res) => {
     const { asset_name, price, time } = req.body;
-}
+
+    try {
+        const loggedPrice = await databaseService.logAssetPrice(asset_name, price, time);
+        res.status(201).json(loggedPrice);
+    } catch (err) {
+        console.error('Error logging asset price:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+// Get asset price series
+const getAssetPriceSeries = async (req, res) => {
+    const { asset_name } = req.query;
+
+    try {
+        const priceSeries = await databaseService.getLoggedAssetPriceSeries(asset_name);
+        res.status(200).json(priceSeries);
+    } catch (err) {
+        console.error('Error retrieving asset price series:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
 
 module.exports = {
     registerUser,
     loginUser,
+    logAssetPrice,
+    getAssetPriceSeries,
 };

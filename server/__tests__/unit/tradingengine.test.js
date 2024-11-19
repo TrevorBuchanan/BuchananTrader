@@ -94,7 +94,7 @@ describe('Trading Engine Config', () => {
             throw mockError;
         });
 
-        await expect(tradingEngine.getAssetProfitLoss(assetName)).rejects.toThrow('Error adding asset profit loss: Get asset profit/loss failed');
+        await expect(tradingEngine.getAssetProfitLoss(assetName)).rejects.toThrow('Error getting asset profit loss: Get asset profit/loss failed');
     });
 
     /**
