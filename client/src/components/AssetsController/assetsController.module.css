@@ -14,7 +14,7 @@
 
 
 .searchContainer {
-    margin: 0.5rem;
+    margin: 1rem 0.5rem 0.5rem;
     border-radius: 5px;
     background-color: #161b23;
     border: 1px solid #292e3a;
@@ -23,5 +23,5 @@
 }
 
 .asset {
-    margin: 1rem;
+    margin: 0 1rem 2rem;
 }

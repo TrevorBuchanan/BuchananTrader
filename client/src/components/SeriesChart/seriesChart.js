@@ -8,6 +8,7 @@ const SeriesChart = ({ name, series, labels }) => {
     const chartOptions = {
         chart: {
             type: 'line',
+            animations: { enabled: true, easing: 'linear', speed: 800 },
             toolbar: {
                 tools: {
                     download: true,

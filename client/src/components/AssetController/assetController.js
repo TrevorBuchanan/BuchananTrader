@@ -12,6 +12,7 @@ import {
 
 const AssetController = ({targetAsset, onRemove}) => {
     const [frequency, setFrequency] = useState(10);
+    const [tempFrequency, setTempFrequency] = useState(frequency);
     const [priceSeries, setPriceSeries] = useState([]);
     const [profitLossSeries, setProfitLossSeries] = useState([]);
     const [timeSeries, setTimeSeries] = useState([]);
@@ -45,6 +46,8 @@ const AssetController = ({targetAsset, onRemove}) => {
         const parsedValue = parseInt(value, 10);
         if (!isNaN(parsedValue) && parsedValue > 0) {
             setFrequency(parsedValue);
+        } else {
+            setFrequency(10); // Default frequency value is 10
         }
     };
 
@@ -120,22 +123,24 @@ const AssetController = ({targetAsset, onRemove}) => {
                     <td>
                         <button
                             onClick={toggleLogging}
-                            className={styles.actionButton}
+                            className={`${styles.actionButton} ${isLogging ? styles.activeButton : styles.inactiveButton}`}
                         >
-                            {isLogging ? "Active" : "Inactive"}
+                            {isLogging ? "Stop" : "Start"}
                         </button>
                     </td>
                     <td>
                         <button
                             onClick={toggleTrading}
-                            className={styles.actionButton}
+                            className={`${styles.actionButton} ${isTrading ? styles.activeButton : styles.inactiveButton}`}
                         >
-                            {isTrading ? "Active" : "Inactive"}
+                            {isTrading ? "Stop" : "Start"}
                         </button>
                     </td>
                     <td>
                         <input
                             type="number"
+                            value={tempFrequency}
+                            onChange={(e) => setTempFrequency(parseInt(e.target.value))}
                             onBlur={(e) => handleFrequencyChange(e.target.value)}
                             className={styles.tableInput}
                         />
@@ -143,7 +148,7 @@ const AssetController = ({targetAsset, onRemove}) => {
                     <td>
                         <button
                             onClick={togglePriceChartVisibility}
-                            className={styles.actionButton}
+                            className={`${styles.actionButton} ${priceChartVisibility ? styles.activeButton : styles.inactiveButton}`}
                         >
                             {priceChartVisibility ? "Hide" : "Show"}
                         </button>
@@ -151,7 +156,7 @@ const AssetController = ({targetAsset, onRemove}) => {
                     <td>
                         <button
                             onClick={toggleProfitLossChartVisibility}
-                            className={styles.actionButton}
+                            className={`${styles.actionButton} ${profitLossChartVisibility ? styles.activeButton : styles.inactiveButton}`}
                         >
                             {profitLossChartVisibility ? "Hide" : "Show"}
                         </button>
@@ -176,34 +181,37 @@ const AssetController = ({targetAsset, onRemove}) => {
                         <input
                             type="number"
                             className={styles.tableInput}
+                            value={0}
                         />
                     </td>
                     <td>
                         <input
                             type="number"
                             className={styles.tableInput}
+                            value={0}
                         />
                     </td>
                     <td>
                         <input
                             type="number"
                             className={styles.tableInput}
+                            value={0}
                         />
                     </td>
                     <td>
                         <button
                             onClick={toggleProfitLossChartVisibility}
-                            className={styles.actionButton}
+                            className={`${styles.actionButton} ${profitLossChartVisibility ? styles.activeButton : styles.inactiveButton}`}
                         >
-                            Hide
+                            {profitLossChartVisibility ? "Hide" : "Show"}
                         </button>
                     </td>
                     <td>
                         <button
-
-                            className={styles.actionButton}
+                            onClick={toggleProfitLossChartVisibility}
+                            className={`${styles.actionButton} ${profitLossChartVisibility ? styles.activeButton : styles.inactiveButton}`}
                         >
-                            Hide
+                            {profitLossChartVisibility ? "Hide" : "Show"}
                         </button>
                     </td>
                 </tr>
