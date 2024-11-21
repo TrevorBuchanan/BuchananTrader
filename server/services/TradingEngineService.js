@@ -36,7 +36,7 @@ const getAssetLongLossLimit = async (assetName) => {
     try {
         return await  tradingEngineClient.getAssetShortLossLimit(assetName);
     } catch (error) {
-        throw new Error(`Error fetching asset long limit for ${assetName}: ${error.message}`);
+        throw new Error(`Error fetching asset short limit for ${assetName}: ${error.message}`);
     }
  }
 

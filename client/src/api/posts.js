@@ -28,7 +28,7 @@ const getCoinbaseAssetPrice = async (assetName) => {
 const getAssetProfitLoss = async (assetName) => {
     try {
         const response = await axios.get(`/api/trading-engine/profit-loss?assetName=${assetName}`);
-        return response.data;  // You might want to return the profit/loss data
+        return response.data;
     } catch (err) {
         console.error('Failed to fetch profit-loss:', err.message);
         throw new Error('Failed to fetch profit-loss');
@@ -82,6 +82,26 @@ const getSpotAssets = async () => {
     }
 }
 
+const getAssetLongLossLimit = async (assetName) => {
+    try {
+        const response = await axios.get(`/api/trading-engine/long-loss-limit?assetName=${assetName}`);
+        return response.data;
+    } catch (err) {
+        console.error('Failed to fetch long loss limit:', err.message);
+        throw new Error('Failed to fetch long loss limit');
+    }
+}
+
+const getAssetShortLossLimit = async (assetName) => {
+    try {
+        const response = await axios.get(`/api/trading-engine/short-loss-limit?assetName=${assetName}`);
+        return response.data;
+    } catch (err) {
+        console.error('Failed to fetch short loss limit:', err.message);
+        throw new Error('Failed to fetch short loss limit');
+    }
+}
+
 export {
     getSpotAssets,
     addAssetPriceToEngine,
@@ -90,4 +110,6 @@ export {
     tradeAsset,
     logAssetPrice,
     removeAsset,
+    getAssetLongLossLimit,
+    getAssetShortLossLimit,
 };

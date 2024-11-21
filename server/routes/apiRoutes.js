@@ -15,7 +15,7 @@ router.post('/trading-engine/add-price', tradingEngineController.addAssetPrice);
 router.get('/trading-engine/action', tradingEngineController.getAssetAction);
 router.get('/trading-engine/profit-loss', tradingEngineController.getAssetProfitLoss);
 router.get('/trading-engine/long-loss-limit', tradingEngineController.getAssetLongLossLimit);
-router.get('trading-engine/short-loss-limit', tradingEngineController.getAssetShortLossLimit)
+router.get('/trading-engine/short-loss-limit', tradingEngineController.getAssetShortLossLimit)
 router.delete('/trading-engine/remove-asset/:assetName', tradingEngineController.removeAsset);
 
 // Database routes

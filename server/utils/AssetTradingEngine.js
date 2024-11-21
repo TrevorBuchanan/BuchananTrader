@@ -19,6 +19,8 @@ class AssetTradingEngine {
     #shortEntryPrice
     #isLonging
     #isShorting
+    #justClosedLong
+    #justClosedShort
 
     #longLossLimit
     #shortLossLimit
@@ -39,6 +41,9 @@ class AssetTradingEngine {
 
         this.#isLonging = false;
         this.#isShorting = false;
+
+        this.#justClosedLong = false;
+        this.#justClosedShort = false;
 
         this.#profitLoss = 0;
 
@@ -66,6 +71,9 @@ class AssetTradingEngine {
     }
 
     getLongLossLimit() {
+        if (this.#justClosedLong) {
+            return this.#longLossLimit;
+        }
         if (this.#isLonging) {
             return this.#longLossLimit;
         }
@@ -74,6 +82,9 @@ class AssetTradingEngine {
 
 
     getShortLossLimit() {
+        if (this.#justClosedShort) {
+            return this.#shortLossLimit;
+        }
         if (this.#isShorting) {
             return this.#shortLossLimit;
         }
@@ -89,6 +100,8 @@ class AssetTradingEngine {
         if (this.#priceSeries.length < this.#minSeriesLen) {
             return "Not enough data to decide action";
         }
+        this.#justClosedLong = false;
+        this.#justClosedShort = false;
         const actions = [];
 
         // Loss limit updates
@@ -128,6 +141,7 @@ class AssetTradingEngine {
 
     #closeLong(actions) {
         if (this.#shouldCloseLong()) {
+            this.#justClosedLong = true;
             this.#profitLoss += this.#currentPrice - this.#longEntryPrice;
             this.#isLonging = false;
             actions.push("Close Long");
@@ -145,6 +159,7 @@ class AssetTradingEngine {
 
     #closeShort(actions) {
         if (this.#shouldCloseShort()) {
+            this.#justClosedShort = true;
             this.#profitLoss += this.#shortEntryPrice - this.#currentPrice;
             this.#isShorting = false;
             actions.push("Close Short");

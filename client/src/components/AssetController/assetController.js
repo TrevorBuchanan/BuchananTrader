@@ -7,22 +7,42 @@ import {
     getCoinbaseAssetPrice,
     logAssetPrice,
     removeAsset,
-    tradeAsset
+    tradeAsset,
+    getAssetLongLossLimit,
+    getAssetShortLossLimit,
 } from "../../api";
 
 const AssetController = ({targetAsset, onRemove}) => {
+    // Asset controller
     const [frequency, setFrequency] = useState(10);
     const [tempFrequency, setTempFrequency] = useState(frequency);
+    const [isRemoving, setIsRemoving] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // Series
     const [priceSeries, setPriceSeries] = useState([]);
     const [profitLossSeries, setProfitLossSeries] = useState([]);
     const [timeSeries, setTimeSeries] = useState([]);
-    const [isRemoving, setIsRemoving] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [longLossLimitSeries, setLongLossLimitSeries] = useState([]);
+    const [shortLossLimitSeries, setShortLossLimitSeries] = useState([]);
+
+    // Toggles
     const [priceChartVisibility, setPriceChartVisibility] = useState(true);
     const [profitLossChartVisibility, setProfitLossChartVisibility] = useState(false);
+    const [longLossLimitVisibility, setLongLossLimitVisibility] = useState(true);
+    const [shortLossLimitVisibility, setShortLossLimitVisibility] = useState(true);
     const [isTrading, setIsTrading] = useState(false);
     const [isLogging, setIsLogging] = useState(false);
-    const [error, setError] = useState(null);
+
+    // Engine
+    const [maxLossLimit, setMaxLossLimit] = useState(10);
+    const [tempMaxLossLimit, setTempMaxLossLimit] = useState(frequency);
+
+
+    const setInitialEngineUseStates = async () => {
+
+    }
 
     const handleRemoveAsset = async () => {
         setIsRemoving(true);
@@ -41,6 +61,8 @@ const AssetController = ({targetAsset, onRemove}) => {
     const toggleTrading = () => setIsTrading((prev) => !prev);
     const togglePriceChartVisibility = () => setPriceChartVisibility((prev) => !prev);
     const toggleProfitLossChartVisibility = () => setProfitLossChartVisibility((prev) => !prev);
+    const toggleLongLossVisibility = () => setLongLossLimitVisibility((prev) => !prev);
+    const toggleShortLossLimit = () => setShortLossLimitVisibility((prev) => !prev);
 
     const handleFrequencyChange = (value) => {
         const parsedValue = parseInt(value, 10);
@@ -54,10 +76,8 @@ const AssetController = ({targetAsset, onRemove}) => {
     useEffect(() => {
         const update = async () => {
             try {
-                const result = await getCoinbaseAssetPrice(targetAsset);
-                const price = result.price;
                 const time = new Date().toLocaleTimeString();
-
+                const { price } = await getCoinbaseAssetPrice(targetAsset);
                 await addAssetPriceToEngine(targetAsset, price, time);
 
                 if (isLogging) {
@@ -68,10 +88,14 @@ const AssetController = ({targetAsset, onRemove}) => {
                 }
 
                 const {profitLoss} = await getAssetProfitLoss(targetAsset, price, time);
+                const { longLossLimit } = await getAssetLongLossLimit(targetAsset);
+                const { shortLossLimit } = await getAssetShortLossLimit(targetAsset);
 
                 setPriceSeries((prev) => [...prev, price]);
                 setProfitLossSeries((prev) => [...prev, profitLoss]);
                 setTimeSeries((prev) => [...prev, time]);
+                setLongLossLimitSeries((prev) => [...prev, longLossLimit]);
+                setShortLossLimitSeries((prev) => [...prev, shortLossLimit]);
 
             } catch (error) {
                 setError(`Error updating asset ${targetAsset}: ${error.message}`);
@@ -89,7 +113,27 @@ const AssetController = ({targetAsset, onRemove}) => {
     }, [frequency, isLogging, isTrading, targetAsset]);
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Loading...</th>
+                </tr>
+                </thead>
+            </table>
+        </div>;
+    }
+
+    if (isRemoving) {
+        return <div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Removing...</th>
+                </tr>
+                </thead>
+            </table>
+        </div>;
     }
 
     return (
@@ -173,11 +217,12 @@ const AssetController = ({targetAsset, onRemove}) => {
                     <th>Follow Fraction</th>
                     <th>Min Series Length</th>
                     <th>Max Loss Limit</th>
-                    <th>Show Short Limit</th>
                     <th>Show Long Limit</th>
+                    <th>Show Short Limit</th>
                 </tr>
                 <tr>
                     <td>
+                        {/* Follow Fraction */}
                         <input
                             type="number"
                             className={styles.tableInput}
@@ -185,6 +230,7 @@ const AssetController = ({targetAsset, onRemove}) => {
                         />
                     </td>
                     <td>
+                        {/* Min Series Length */}
                         <input
                             type="number"
                             className={styles.tableInput}
@@ -192,6 +238,7 @@ const AssetController = ({targetAsset, onRemove}) => {
                         />
                     </td>
                     <td>
+                        {/* Max Loss Limit */}
                         <input
                             type="number"
                             className={styles.tableInput}
@@ -199,27 +246,54 @@ const AssetController = ({targetAsset, onRemove}) => {
                         />
                     </td>
                     <td>
+                        {/* Show Long Limit */}
                         <button
-                            onClick={toggleProfitLossChartVisibility}
-                            className={`${styles.actionButton} ${profitLossChartVisibility ? styles.activeButton : styles.inactiveButton}`}
+                            onClick={toggleLongLossVisibility}
+                            className={`${styles.actionButton} ${longLossLimitVisibility ? styles.activeButton : styles.inactiveButton}`}
+                            disabled={!priceChartVisibility}
                         >
-                            {profitLossChartVisibility ? "Hide" : "Show"}
+                            {longLossLimitVisibility ? "Hide" : "Show"}
                         </button>
                     </td>
                     <td>
+                        {/* Show Short Limit */}
                         <button
-                            onClick={toggleProfitLossChartVisibility}
-                            className={`${styles.actionButton} ${profitLossChartVisibility ? styles.activeButton : styles.inactiveButton}`}
+                            onClick={toggleShortLossLimit}
+                            className={`${styles.actionButton} ${shortLossLimitVisibility ? styles.activeButton : styles.inactiveButton}`}
+                            disabled={!priceChartVisibility}
                         >
-                            {profitLossChartVisibility ? "Hide" : "Show"}
+                            {shortLossLimitVisibility ? "Hide" : "Show"}
                         </button>
                     </td>
                 </tr>
                 {priceChartVisibility && (
                     <tr>
                         <td colSpan="5">
-                            <SeriesChart name={"Price Chart"} series={[{name: "Price", data: priceSeries}]}
-                                         labels={timeSeries}/>
+                            <SeriesChart
+                                name={"Price Chart"}
+                                series={
+                                    longLossLimitVisibility && shortLossLimitVisibility
+                                        ? [
+                                            {name: "Price", data: priceSeries},
+                                            {name: "Long Loss Limit", data: longLossLimitSeries},
+                                            {name: "Short Loss Limit", data: shortLossLimitSeries}
+                                        ]
+                                        : longLossLimitVisibility
+                                            ? [
+                                                {name: "Price", data: priceSeries},
+                                                {name: "Long Loss Limit", data: longLossLimitSeries}
+                                            ]
+                                            : shortLossLimitVisibility
+                                                ? [
+                                                    {name: "Price", data: priceSeries},
+                                                    {name: "Short Loss Limit", data: shortLossLimitSeries}
+                                                ]
+                                                : [
+                                                    {name: "Price", data: priceSeries}
+                                                ]
+                                }
+                                labels={timeSeries}
+                            />
                         </td>
                     </tr>
                 )}
@@ -227,10 +301,7 @@ const AssetController = ({targetAsset, onRemove}) => {
                     <tr>
                         <td colSpan="5">
                             <SeriesChart name={"Profit & Loss Chart"}
-                                         series={[{name: "Profit & Loss", data: profitLossSeries}, {
-                                             name: "Test",
-                                             data: [0.1, 0.2, 0.25, 0.27]
-                                         }]} labels={timeSeries}/>
+                                         series={[{name: "Profit & Loss", data: profitLossSeries}]} labels={timeSeries}/>
                         </td>
                     </tr>
                 )}
