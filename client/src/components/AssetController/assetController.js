@@ -9,7 +9,7 @@ import {
     removeAsset,
     tradeAsset,
     getAssetLongLossLimit,
-    getAssetShortLossLimit,
+    getAssetShortLossLimit, closeEngineAssetAllPositions,
 } from "../../api";
 
 const AssetController = ({targetAsset, onRemove}) => {
@@ -58,7 +58,20 @@ const AssetController = ({targetAsset, onRemove}) => {
     };
 
     const toggleLogging = () => setIsLogging((prev) => !prev);
-    const toggleTrading = () => setIsTrading((prev) => !prev);
+    const toggleTrading = async () => {
+        if (isTrading) {
+            // If currently trading, attempt to close all positions
+            try {
+                await closeEngineAssetAllPositions(targetAsset);
+            } catch (error) {
+                setError(`Error closing positions for asset in engine ${targetAsset}: ${error.message}`);
+                console.error(error);
+            }
+        }
+
+        // Toggle the trading state
+        setIsTrading((prev) => !prev);
+    };
     const togglePriceChartVisibility = () => setPriceChartVisibility((prev) => !prev);
     const toggleProfitLossChartVisibility = () => setProfitLossChartVisibility((prev) => !prev);
     const toggleLongLossVisibility = () => setLongLossLimitVisibility((prev) => !prev);
@@ -157,7 +170,7 @@ const AssetController = ({targetAsset, onRemove}) => {
                 <tr>
                     <th>Log Prices</th>
                     <th>Trade Asset</th>
-                    <th>Update Frequency</th>
+                    <th>Update Frequency (sec) </th>
                     <th>Price Chart</th>
                     <th>Profit & Loss Chart</th>
                 </tr>

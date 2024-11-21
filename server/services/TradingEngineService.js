@@ -40,6 +40,14 @@ const getAssetLongLossLimit = async (assetName) => {
     }
  }
 
+ const closeAssetAllPositions = async (assetName) => {
+    try {
+        return await tradingEngineClient.closeAssetAllPositions(assetName);
+    } catch (error) {
+        throw new Error(`Error closing positions for asset: ${error.message}`);
+    }
+ }
+
 const removeAsset = async (assetName) => {
     try {
         return await tradingEngineClient.removeAsset(assetName);
@@ -54,5 +62,6 @@ module.exports = {
     getAssetProfitLoss,
     getAssetLongLossLimit,
     getAssetShortLossLimit,
+    closeAssetAllPositions,
     removeAsset,
 };

@@ -79,6 +79,20 @@ const TradingEngineController = {
         }
     },
 
+    closeAssetAllPositions: async (req, res) => {
+        const { assetName } = req.body;
+        if (!assetName) {
+            return res.status(400).json({ error: 'Invalid input: assetName is required.' });
+        }
+
+        try {
+            await TradingEngineService.closeAssetAllPositions(assetName);
+            res.status(200).json({ message: 'Closed positions successfully' });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    },
+
     removeAsset: async (req, res) => {
         const { assetName } = req.params;
     

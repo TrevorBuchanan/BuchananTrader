@@ -12,6 +12,7 @@ import {
     removeAsset,
     getAssetLongLossLimit,
     getAssetShortLossLimit,
+    closeEngineAssetAllPositions,
 } from './posts';
 
 export {
@@ -27,4 +28,5 @@ export {
     removeAsset,
     getAssetLongLossLimit,
     getAssetShortLossLimit,
+    closeEngineAssetAllPositions,
 };

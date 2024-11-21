@@ -48,6 +48,15 @@ class TradingEngineManager {
         return this.#tradingEngines[assetName].analyzeSeriesForAction();
     }
 
+    closeAssetAllPositions(assetName) {
+        if (this.#tradingEngines[assetName]) {
+            this.#tradingEngines[assetName].closeAllPositions()
+            return `Positions closed for engine with ${assetName}.`;
+        } else {
+            throw new Error('Unable to close all positions for asset.');
+        }
+    }
+
     removeAssetTradingEngine(assetName) {
         if (this.#tradingEngines[assetName]) {
             delete this.#tradingEngines[assetName];

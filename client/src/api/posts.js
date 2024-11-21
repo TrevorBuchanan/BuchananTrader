@@ -58,7 +58,7 @@ const logAssetPrice = async (assetName, price, time) => {
         console.error('Failed to log asset price:', err.message);
         throw new Error('Failed to log asset price');
     }
-}
+};
 
 const removeAsset = async (assetName) => {
     try {
@@ -80,7 +80,7 @@ const getSpotAssets = async () => {
     } catch (error) {
         console.error('Error fetching spot products:', error);
     }
-}
+};
 
 const getAssetLongLossLimit = async (assetName) => {
     try {
@@ -90,7 +90,19 @@ const getAssetLongLossLimit = async (assetName) => {
         console.error('Failed to fetch long loss limit:', err.message);
         throw new Error('Failed to fetch long loss limit');
     }
-}
+};
+
+const closeEngineAssetAllPositions = async (assetName) => {
+    try {
+        const response = await axios.post('/api/trading-engine/close-positions', {
+            assetName,
+        });
+        return response.data;
+    } catch (err) {
+        console.error('Failed to close positions in engine:', err.message);
+        throw new Error('Failed to close positions in engine');
+    }
+};
 
 const getAssetShortLossLimit = async (assetName) => {
     try {
@@ -100,7 +112,7 @@ const getAssetShortLossLimit = async (assetName) => {
         console.error('Failed to fetch short loss limit:', err.message);
         throw new Error('Failed to fetch short loss limit');
     }
-}
+};
 
 export {
     getSpotAssets,
@@ -112,4 +124,5 @@ export {
     removeAsset,
     getAssetLongLossLimit,
     getAssetShortLossLimit,
+    closeEngineAssetAllPositions,
 };
