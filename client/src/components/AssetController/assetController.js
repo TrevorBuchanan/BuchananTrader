@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import SeriesChart from "../SeriesChart/seriesChart";
+import TextViewer from "../TextViewer/textViewer";
 import styles from "./assetController.module.css";
 import {
     addAssetPriceToEngine,
@@ -9,8 +10,18 @@ import {
     removeAsset,
     tradeAsset,
     getAssetLongLossLimit,
-    getAssetShortLossLimit, closeEngineAssetAllPositions,
+    getAssetShortLossLimit,
+    closeEngineAssetAllPositions,
+    getAssetEMA,
+    fetchAssetLoggedPrices,
 } from "../../api";
+
+// TODO:
+// Dynamic changes according to large scale and small scale swings
+// Change price to average in interval view (have trading interval and a price interval)
+// User sessions (users actions and set up are saved when returning to site)
+// Clear logged prices for asset
+
 
 const AssetController = ({targetAsset, onRemove}) => {
     // Asset controller
@@ -26,6 +37,8 @@ const AssetController = ({targetAsset, onRemove}) => {
     const [timeSeries, setTimeSeries] = useState([]);
     const [longLossLimitSeries, setLongLossLimitSeries] = useState([]);
     const [shortLossLimitSeries, setShortLossLimitSeries] = useState([]);
+    const [emaSeries, setEmaSeries] = useState([]);
+    const [lerpSeries, setLerpSeries] = useState([]);
 
     // Toggles
     const [priceChartVisibility, setPriceChartVisibility] = useState(true);
@@ -38,6 +51,9 @@ const AssetController = ({targetAsset, onRemove}) => {
     // Engine
     const [maxLossLimit, setMaxLossLimit] = useState(10);
     const [tempMaxLossLimit, setTempMaxLossLimit] = useState(frequency);
+
+    // Database
+    const [loggedText, setLoggedText] = useState('');
 
 
     const setInitialEngineUseStates = async () => {
@@ -90,7 +106,7 @@ const AssetController = ({targetAsset, onRemove}) => {
         const update = async () => {
             try {
                 const time = new Date().toLocaleTimeString();
-                const { price } = await getCoinbaseAssetPrice(targetAsset);
+                const {price} = await getCoinbaseAssetPrice(targetAsset);
                 await addAssetPriceToEngine(targetAsset, price, time);
 
                 if (isLogging) {
@@ -101,14 +117,16 @@ const AssetController = ({targetAsset, onRemove}) => {
                 }
 
                 const {profitLoss} = await getAssetProfitLoss(targetAsset, price, time);
-                const { longLossLimit } = await getAssetLongLossLimit(targetAsset);
-                const { shortLossLimit } = await getAssetShortLossLimit(targetAsset);
+                const {longLossLimit} = await getAssetLongLossLimit(targetAsset);
+                const {shortLossLimit} = await getAssetShortLossLimit(targetAsset);
+                const {ema} = await getAssetEMA(targetAsset);
 
                 setPriceSeries((prev) => [...prev, price]);
                 setProfitLossSeries((prev) => [...prev, profitLoss]);
                 setTimeSeries((prev) => [...prev, time]);
                 setLongLossLimitSeries((prev) => [...prev, longLossLimit]);
                 setShortLossLimitSeries((prev) => [...prev, shortLossLimit]);
+                setEmaSeries((prev) => [...prev, ema]);
 
             } catch (error) {
                 setError(`Error updating asset ${targetAsset}: ${error.message}`);
@@ -124,6 +142,18 @@ const AssetController = ({targetAsset, onRemove}) => {
 
         return () => clearInterval(intervalId);
     }, [frequency, isLogging, isTrading, targetAsset]);
+
+    const updateLoggedText = async () => {
+        try {
+            // const { loggedPriceSeries } = await fetchAssetLoggedPrices(targetAsset);
+            const loggedPriceSeries = "Hello";
+            console.log(loggedPriceSeries);
+            setLoggedText(loggedPriceSeries);
+        } catch (error) {
+            console.error('Error fetching logged prices:', error);
+            setError(`Error fetching logged prices: ${error.message}`);
+        }
+    };
 
     if (isLoading) {
         return <div>
@@ -170,7 +200,7 @@ const AssetController = ({targetAsset, onRemove}) => {
                 <tr>
                     <th>Log Prices</th>
                     <th>Trade Asset</th>
-                    <th>Update Frequency (sec) </th>
+                    <th>Update Frequency (sec)</th>
                     <th>Price Chart</th>
                     <th>Profit & Loss Chart</th>
                 </tr>
@@ -288,21 +318,25 @@ const AssetController = ({targetAsset, onRemove}) => {
                                     longLossLimitVisibility && shortLossLimitVisibility
                                         ? [
                                             {name: "Price", data: priceSeries},
+                                            {name: "EMA", data: emaSeries},
                                             {name: "Long Loss Limit", data: longLossLimitSeries},
                                             {name: "Short Loss Limit", data: shortLossLimitSeries}
                                         ]
                                         : longLossLimitVisibility
                                             ? [
                                                 {name: "Price", data: priceSeries},
+                                                {name: "EMA", data: emaSeries},
                                                 {name: "Long Loss Limit", data: longLossLimitSeries}
                                             ]
                                             : shortLossLimitVisibility
                                                 ? [
                                                     {name: "Price", data: priceSeries},
+                                                    {name: "EMA", data: emaSeries},
                                                     {name: "Short Loss Limit", data: shortLossLimitSeries}
                                                 ]
                                                 : [
-                                                    {name: "Price", data: priceSeries}
+                                                    {name: "Price", data: priceSeries},
+                                                    {name: "EMA", data: emaSeries},
                                                 ]
                                 }
                                 labels={timeSeries}
@@ -314,10 +348,19 @@ const AssetController = ({targetAsset, onRemove}) => {
                     <tr>
                         <td colSpan="5">
                             <SeriesChart name={"Profit & Loss Chart"}
-                                         series={[{name: "Profit & Loss", data: profitLossSeries}]} labels={timeSeries}/>
+                                         series={[{name: "Profit & Loss", data: profitLossSeries}]}
+                                         labels={timeSeries}/>
                         </td>
                     </tr>
                 )}
+                <tr>
+                    <td colSpan="5">
+                        <button onClick={updateLoggedText} className={styles.actionButton}>
+                            Update Logged Text
+                        </button>
+                        <TextViewer text={loggedText}/>
+                    </td>
+                </tr>
                 </tbody>
             </table>
             {/*{error && <div className={styles.error}>{error}</div>}*/}

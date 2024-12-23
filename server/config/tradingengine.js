@@ -42,6 +42,14 @@ const getAssetShortLossLimit = async (assetName) => {
     }
 }
 
+const getAssetEMA = async (assetName) => {
+    try {
+        return tradingEngineManager.getAssetEMA(assetName);
+    } catch (error) {
+        throw new Error(`Error getting asset EMA: ${error.message}`);
+    }
+}
+
 const closeAssetAllPositions = async (assetName) => {
     try {
         tradingEngineManager.closeAssetAllPositions(assetName);
@@ -65,6 +73,7 @@ module.exports = {
     getAssetProfitLoss,
     getAssetLongLossLimit,
     getAssetShortLossLimit,
+    getAssetEMA,
     closeAssetAllPositions,
     removeAsset,
 };

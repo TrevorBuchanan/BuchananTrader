@@ -10,7 +10,7 @@ const getAssetAction = async (assetName) => {
 
 const addAssetPrice = async (assetName, price, time) => {
     try {
-        await tradingEngineClient.addAssetPrice(assetName, price, time); 
+        await tradingEngineClient.addAssetPrice(assetName, price, time);
     } catch (error) {
         throw new Error(`Error adding price to ${assetName} trading engine: ${error.message}`);
     }
@@ -32,21 +32,29 @@ const getAssetLongLossLimit = async (assetName) => {
     }
 }
 
- const getAssetShortLossLimit = async (assetName) => {
+const getAssetShortLossLimit = async (assetName) => {
     try {
-        return await  tradingEngineClient.getAssetShortLossLimit(assetName);
+        return await tradingEngineClient.getAssetShortLossLimit(assetName);
     } catch (error) {
         throw new Error(`Error fetching asset short limit for ${assetName}: ${error.message}`);
     }
- }
+}
 
- const closeAssetAllPositions = async (assetName) => {
+const getAssetEMA = async (assetName) => {
+    try {
+        return await tradingEngineClient.getAssetEMA(assetName);
+    } catch (error) {
+        throw new Error(`Error fetching asset EMA for ${assetName}: ${error.message}`);
+    }
+}
+
+const closeAssetAllPositions = async (assetName) => {
     try {
         return await tradingEngineClient.closeAssetAllPositions(assetName);
     } catch (error) {
         throw new Error(`Error closing positions for asset: ${error.message}`);
     }
- }
+}
 
 const removeAsset = async (assetName) => {
     try {
@@ -62,6 +70,7 @@ module.exports = {
     getAssetProfitLoss,
     getAssetLongLossLimit,
     getAssetShortLossLimit,
+    getAssetEMA,
     closeAssetAllPositions,
     removeAsset,
 };

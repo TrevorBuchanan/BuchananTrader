@@ -16,6 +16,7 @@ router.get('/trading-engine/action', tradingEngineController.getAssetAction);
 router.get('/trading-engine/profit-loss', tradingEngineController.getAssetProfitLoss);
 router.get('/trading-engine/long-loss-limit', tradingEngineController.getAssetLongLossLimit);
 router.get('/trading-engine/short-loss-limit', tradingEngineController.getAssetShortLossLimit)
+router.get('/trading-engine/ema', tradingEngineController.getAssetEMA)
 router.post('/trading-engine/close-positions', tradingEngineController.closeAssetAllPositions)
 router.delete('/trading-engine/remove-asset/:assetName', tradingEngineController.removeAsset);
 
@@ -23,6 +24,6 @@ router.delete('/trading-engine/remove-asset/:assetName', tradingEngineController
 router.post('/register', databaseController.registerUser);
 router.post('/login', databaseController.loginUser);
 router.post('/log-price', databaseController.logAssetPrice);
-router.get('/fetch-prices', databaseController.getAssetPriceSeries);
+router.get('/fetch-prices', databaseController.getAssetLoggedPriceSeries);
 
 module.exports = router;

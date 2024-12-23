@@ -41,6 +41,14 @@ class TradingEngineManager {
         return this.#tradingEngines[assetName].getShortLossLimit();
     }
 
+    getAssetEMA(assetName) {
+        if (!this.#tradingEngines[assetName]) {
+            this.#tradingEngines[assetName] = new AssetTradingEngine(assetName);
+        }
+        return this.#tradingEngines[assetName].getEMA();
+    }
+
+
     getAssetAction(assetName) {
         if (!this.#tradingEngines[assetName]) {
             this.#tradingEngines[assetName] = new AssetTradingEngine(assetName);

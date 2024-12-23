@@ -4,6 +4,7 @@ const EMA = require('./EMA');
 
 class AssetTradingEngine {
     #minSeriesLen
+    #lerpFraction
     #sellFraction
 
     #assetName
@@ -16,8 +17,10 @@ class AssetTradingEngine {
     // TODO: Possibly change to multiple to not restrict to only one short or long at a time
     #longEntryPrice
     #shortEntryPrice
+
     #isLonging
     #isShorting
+
     #justClosedLong
     #justClosedShort
 
@@ -29,9 +32,13 @@ class AssetTradingEngine {
     #emaWindowSize
     #emaSeries
 
+    #lerpValue
+    #lerpSeries
+
     constructor(assetName) {
         this.#minSeriesLen = 3;
-        this.#sellFraction = 1 / 4;
+        this.#sellFraction = 0.4;
+        this.#lerpFraction = 0.3;
         this.#maxLossLimit = 1;
 
         this.#assetName = assetName;
@@ -53,9 +60,12 @@ class AssetTradingEngine {
         this.#longLossLimit = 0;
         this.#shortLossLimit = 0;
 
-        this.#emaWindowSize = 5
+        this.#emaWindowSize = 5;
         this.#ema = new EMA(this.#emaWindowSize);
-        this.#emaSeries = []
+        this.#emaSeries = [];
+
+        this.#lerpValue = 0;
+        this.#lerpSeries = [];
     }
 
     getProfitLoss() {
@@ -97,10 +107,20 @@ class AssetTradingEngine {
         return null;
     }
 
+    getEMA() {
+        return this.#ema.current();
+    }
+
     addPrice(price, time) {
         this.#currentPrice = price;
         this.#priceSeries.push({'price': price, 'time': time});
         this.#emaSeries.push({'price': this.#ema.update(price), 'time': time});
+        if (this.#lerpSeries.length === 0) {
+            this.#lerpValue = price;
+        } else {
+            this.#lerpValue = Utils.lerp(this.#lerpValue, price, this.#lerpFraction);
+        }
+        this.#lerpSeries.push(this.#lerpValue);
     }
 
     closeAllPositions() {
@@ -124,18 +144,19 @@ class AssetTradingEngine {
         this.#justClosedShort = false;
         const actions = [];
 
-        const price = this.#ema.current();
+        const apply_price = this.#ema.current();
+        const apply_series = this.#emaSeries;
 
         // Loss limit updates
-        this.#updateLimits(price)
+        this.#updateLimits(apply_price)
 
         // Enter logic: Should we enter a long or short position?
-        this.#long(actions)
-        this.#short(actions)
+        this.#long(apply_series, apply_price, actions)
+        this.#short(apply_series, apply_price, actions)
 
         // Exit logic: Should we close a long or short position?
-        this.#closeLong(actions)
-        this.#closeShort(actions)
+        this.#closeLong(apply_price, actions)
+        this.#closeShort(apply_price, actions)
 
         // Hold if no other actions
         this.#hold(actions)
@@ -143,7 +164,7 @@ class AssetTradingEngine {
         return actions;
     }
 
-    #updateLimits(price) { // TODO: Test with current price and ema price
+    #updateLimits(price) {
         if (this.#isLonging) {
             this.#longLossLimit = Utils.lerp(this.#longLossLimit, price, this.#sellFraction)
         }
@@ -152,17 +173,17 @@ class AssetTradingEngine {
         }
     }
 
-    #long(actions) {
-        if (this.#shouldLong(this.#emaSeries)) {
+    #long(series, price, actions) {
+        if (this.#shouldLong(series)) {
             this.#longEntryPrice = this.#currentPrice;
             this.#isLonging = true;
-            this.#longLossLimit = this.#currentPrice - this.#maxLossLimit
+            this.#longLossLimit = price - this.#maxLossLimit
             actions.push("Long");
         }
     }
 
-    #closeLong(actions) {
-        if (this.#shouldCloseLong(this.#ema.current())) {
+    #closeLong(price, actions) {
+        if (this.#shouldCloseLong(price)) {
             this.#justClosedLong = true;
             this.#profitLoss += this.#currentPrice - this.#longEntryPrice;
             this.#isLonging = false;
@@ -170,17 +191,17 @@ class AssetTradingEngine {
         }
     }
 
-    #short(actions) {
-        if (this.#shouldShort(this.#emaSeries)) {
+    #short(series, price, actions) {
+        if (this.#shouldShort(series)) {
             this.#shortEntryPrice = this.#currentPrice;
             this.#isShorting = true;
-            this.#shortLossLimit = this.#currentPrice + this.#maxLossLimit
+            this.#shortLossLimit = price + this.#maxLossLimit
             actions.push("Short");
         }
     }
 
-    #closeShort(actions) {
-        if (this.#shouldCloseShort(this.#ema.current())) {
+    #closeShort(price, actions) {
+        if (this.#shouldCloseShort(price)) {
             this.#justClosedShort = true;
             this.#profitLoss += this.#shortEntryPrice - this.#currentPrice;
             this.#isShorting = false;
@@ -203,11 +224,13 @@ class AssetTradingEngine {
     }
 
     #shouldLong(series) {
-        return Utils.upTrendForLength(series, 3) && !this.#isLonging;
+        return Utils.upTrendForLength(series, 3) && !this.#isLonging &&
+            Utils.upTrendForLength(this.#priceSeries, 3);
     }
 
     #shouldShort(series) {
-        return Utils.downTrendForLength(series, 3) && !this.#isShorting;
+        return Utils.downTrendForLength(series, 3) && !this.#isShorting &&
+            Utils.downTrendForLength(this.#priceSeries, 3);
     }
 
     #shouldCloseLong(price) {

@@ -79,6 +79,20 @@ const TradingEngineController = {
         }
     },
 
+    getAssetEMA: async (req, res) => {
+        const { assetName } = req.query;
+        if (!assetName) {
+            return res.status(400).json({ error: 'Invalid input: assetName is required.' });
+        }
+
+        try {
+            const ema = await TradingEngineService.getAssetEMA(assetName);
+            res.json({ ema });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    },
+
     closeAssetAllPositions: async (req, res) => {
         const { assetName } = req.body;
         if (!assetName) {

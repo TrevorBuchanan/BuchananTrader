@@ -9,9 +9,11 @@ import {
     getAssetProfitLoss,
     tradeAsset,
     logAssetPrice,
+    fetchAssetLoggedPrices,
     removeAsset,
     getAssetLongLossLimit,
     getAssetShortLossLimit,
+    getAssetEMA,
     closeEngineAssetAllPositions,
 } from './posts';
 
@@ -25,8 +27,10 @@ export {
     getAssetProfitLoss,
     tradeAsset,
     logAssetPrice,
+    fetchAssetLoggedPrices,
     removeAsset,
     getAssetLongLossLimit,
     getAssetShortLossLimit,
+    getAssetEMA,
     closeEngineAssetAllPositions,
 };

@@ -60,6 +60,21 @@ const logAssetPrice = async (assetName, price, time) => {
     }
 };
 
+const fetchAssetLoggedPrices = async (assetName) => {
+    try {
+        const response = await axios.get(`/api/fetch-prices?assetName=${assetName}`);
+        // const responseObj = response.data;
+        return response.data;
+    } catch (err) {
+        console.error('Failed to fetch logged prices:', err.message);
+        throw new Error('Failed to fetch logged prices');
+    }
+}
+
+const clearAssetLoggedPrices = async (assetName) => {
+
+}
+
 const removeAsset = async (assetName) => {
     try {
         await axios.delete(`/api/trading-engine/remove-asset/${assetName}`);
@@ -114,6 +129,16 @@ const getAssetShortLossLimit = async (assetName) => {
     }
 };
 
+const getAssetEMA = async (assetName) => {
+    try {
+        const response = await axios.get(`/api/trading-engine/ema?assetName=${assetName}`);
+        return response.data;
+    } catch (err) {
+        console.error('Failed to fetch EMA:', err.message);
+        throw new Error('Failed to fetch EMA');
+    }
+};
+
 export {
     getSpotAssets,
     addAssetPriceToEngine,
@@ -121,8 +146,10 @@ export {
     getAssetProfitLoss,
     tradeAsset,
     logAssetPrice,
+    fetchAssetLoggedPrices,
     removeAsset,
     getAssetLongLossLimit,
     getAssetShortLossLimit,
+    getAssetEMA,
     closeEngineAssetAllPositions,
 };

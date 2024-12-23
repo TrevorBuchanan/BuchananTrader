@@ -2,6 +2,7 @@
 
 const databaseService = require('../services/databaseService');
 const jwt = require('jsonwebtoken');
+const {c} = require("sinon/lib/sinon/spy-formatters");
 require('dotenv').config();
 
 const registerUser = async (req, res) => {
@@ -45,10 +46,10 @@ const loginUser = async (req, res) => {
 
 // Log asset price
 const logAssetPrice = async (req, res) => {
-    const { asset_name, price, time } = req.body;
+    const { assetName, price, time } = req.body;
 
     try {
-        const loggedPrice = await databaseService.logAssetPrice(asset_name, price, time);
+        const loggedPrice = await databaseService.logAssetPrice(assetName, price, time);
         res.status(201).json(loggedPrice);
     } catch (err) {
         console.error('Error logging asset price:', err);
@@ -57,21 +58,24 @@ const logAssetPrice = async (req, res) => {
 };
 
 // Get asset price series
-const getAssetPriceSeries = async (req, res) => {
+const getAssetLoggedPriceSeries = async (req, res) => {
     const { asset_name } = req.query;
-
-    try {
-        const priceSeries = await databaseService.getLoggedAssetPriceSeries(asset_name);
-        res.status(200).json(priceSeries);
-    } catch (err) {
-        console.error('Error retrieving asset price series:', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+    console.log("+++++++++++++++++HERE+++++++++++++++++++");
+    console.log(asset_name);
+    const loggedPriceSeries = "test";
+    res.status(200).json(loggedPriceSeries);
+    // try {
+    //     const loggedPriceSeries = await databaseService.getLoggedAssetPriceSeries(asset_name);
+    //     res.status(200).json(loggedPriceSeries);
+    // } catch (err) {
+    //     console.error('Error retrieving asset price series:', err);
+    //     res.status(500).json({ error: 'Internal server error' });
+    // }
 };
 
 module.exports = {
     registerUser,
     loginUser,
     logAssetPrice,
-    getAssetPriceSeries,
+    getAssetLoggedPriceSeries,
 };
