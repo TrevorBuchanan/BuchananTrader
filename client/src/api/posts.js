@@ -1,6 +1,12 @@
 // src/api/posts.js
 import axios from "axios";
 
+//
+// TODO: Calculate some sort of index of how likely an asset price is going to 
+// move in the same direction as previously for some given time-step
+//
+
+
 const addAssetPriceToEngine = async (assetName, price, time) => {
     try {
         const response = await axios.post('/api/trading-engine/add-price', {
@@ -20,10 +26,20 @@ const getCoinbaseAssetPrice = async (assetName) => {
         const response = await axios.get(`/api/coinbase/products/${assetName}`);
         return response.data;  // Return the fetched data
     } catch (err) {
-        console.error('Failed to fetch price:', err.message);
+        console.error('Failed to fetch price: ', err.message);
         throw new Error('Failed to fetch price');
     }
 };
+
+const getCoinbasePriceHistory = async (assetName) => {
+    try {
+        const response = await axios.get(`/api/coinbase/history-stuff/${assetName}`); // TODO: Get actual price history
+        return response.data;
+    } catch (err) {
+        console.error('Failed to fetch price history: ', err.message);
+        throw new Error('Failed to fetch price history');
+    }
+}
 
 const getAssetProfitLoss = async (assetName) => {
     try {
@@ -72,7 +88,7 @@ const fetchAssetLoggedPrices = async (assetName) => {
 }
 
 const clearAssetLoggedPrices = async (assetName) => {
-
+    // Don't know what this is for
 }
 
 const removeAsset = async (assetName) => {
