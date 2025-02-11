@@ -1,10 +1,11 @@
 # Project Notes
 
-## Run Website
+## Commands
+
+### Run Website
+
 * To run front and back end: `npm start`
 
-## Commands
-**Database**
 ### Database
 
 * Show services: `brew services list`
@@ -12,7 +13,7 @@
 * Restart db: `brew services restart postgresql`
 * Stop db: `brew services stop postgresql`
 * Enter postgresql shell: `psql postgres`
-* Enter at specific: `psql -U trevorbuchanan -d buchanantrader`
+* Enter at specific: `psql -U trevorbuchanan -d buchanantraderdb`
 * Make db: `CREATE DATABASE <database-name>;`
 * Check permissions: `SELECT * FROM pg_roles WHERE rolname='trevorbuchanan';`
 * Show dbs: `\l`
@@ -23,8 +24,13 @@
 * Grant privileges: `GRANT ALL PRIVILEGES ON DATABASE <database-name> TO <username>`;
 * Drop db: `DROP DATABASE <database-name> IF EXISTS <database_name>;`
 * Drop role: `DROP ROLE IF EXISTS buchanan;`
+* Show tables: `\dt`
+* Remove all items in a table: `DELETE FROM <table-name>;`
+* Remove all items in a table without triggering any additional checks or constraints: `TRUNCATE TABLE <table-name>`
+* Get all items in table: `SELECT * FROM <table-name>;`
 
-**Misc**
+### Misc
+
 * Show which process is running on port-number: `lsof -i :<port-number>`
 * Kill process: `kill -9 <PID>`
 * Show tree without node_modules: tree -I "node_modules|target" -d /path/to/your-project > folder_structure.txt

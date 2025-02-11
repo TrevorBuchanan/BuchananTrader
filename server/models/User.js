@@ -23,6 +23,14 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    apiKey: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    privateKey: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 }, {
     // Additional model options
     tableName: 'users',

@@ -11,7 +11,7 @@ import Register from './register';
 import NotFound from './notFound';
 import PrivateRoute from './privateRoute';
 import UserProfile from './userProfile';
-import UserHub from './userHub';
+import TradingHub from './tradingHub';
 import { AuthProvider } from '../context/authContext';
 
 const theme = createTheme({
@@ -39,7 +39,7 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route element={<PrivateRoute />}>
                     <Route path="/user-profile" element={<UserProfile />} />
-                    <Route path="/user-hub" element={<UserHub />} />
+                    <Route path="/trading-hub" element={<TradingHub />} />
                   </Route>
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />

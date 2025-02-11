@@ -12,8 +12,8 @@ function Home() {
       <Grid2 container spacing={2}>
         <Grid2 item xs={12} md={6}>
           <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-            <Typography variant="h5">Feature 1</Typography>
-            <Typography>Explore our awesome features.</Typography>
+            <Typography variant="h5">Integrated Visualizations</Typography>
+            <Typography>Track your progress easily.</Typography>
             <Button variant="outlined" color="primary" sx={{ mt: 2 }}>
               Learn More
             </Button>
@@ -21,8 +21,8 @@ function Home() {
         </Grid2>
         <Grid2 item xs={12} md={6}>
           <Paper elevation={2} sx={{ p: 3, textAlign: 'center' }}>
-            <Typography variant="h5">Feature 2</Typography>
-            <Typography>Track your progress easily.</Typography>
+            <Typography variant="h5">Trading Engine</Typography>
+            <Typography>Explore our built in trading engine.</Typography>
             <Button variant="contained" color="primary" sx={{ mt: 2 }}>
               Get Started
             </Button>
@@ -36,10 +36,6 @@ function Home() {
 export default Home;
 
 
-// function Home() {
-//     return (
-//         <>
-//             <div className="gradient"></div>
 //             <h1>Home</h1>
 
 //             <h2>Home/page details</h2>
@@ -66,9 +62,3 @@ export default Home;
 //             <li> Overall statistics (Profit loss etc.) </li>
 //             <li> Account information </li>
 //             <li> Login/logout </li>
-            
-//         </>
-//     );
-// }
-
-// export default Home;
