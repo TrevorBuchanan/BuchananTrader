@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Avatar, Link, Stack, IconButton } from '@mui/material';
 import { GitHub, LinkedIn } from '@mui/icons-material';
-import photo from '../assets/images/ProfilePic.jpeg';
+import photo from '../../assets/images/ProfilePic.jpeg';
 
 function Footer() {
   return (

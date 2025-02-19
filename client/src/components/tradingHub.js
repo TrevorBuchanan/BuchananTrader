@@ -1,74 +1,70 @@
 import React, { useState } from 'react';
-import { Container, Typography, Box, TextField, Button, Divider } from '@mui/material';
-import CoinbaseLogo from '../assets/images/coinbase-logo.png'; // Path to your coinbase logo
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 const TradingHub = () => {
+  const [open, setOpen] = useState(false);
   const [apiKeyName, setApiKeyName] = useState('');
   const [privateKey, setPrivateKey] = useState('');
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-    // Here you can process the entered API key and private key
+  const handleSubmit = () => {
     console.log('API Key Name:', apiKeyName);
     console.log('Private Key:', privateKey);
-
-    // Reset form fields
-    setApiKeyName('');
-    setPrivateKey('');
+    // Add your API connection logic here
+    handleClose();
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 5 }}>
-      {/* Header Section */}
-      <Box sx={{ textAlign: 'center', mb: 3 }}>
-        <Typography variant="h4">Trading Hub</Typography>
-        <Typography variant="h6" sx={{ mt: 2 }}>
-          Select a brokerage and enter your API credentials
-        </Typography>
-      </Box>
+    <Box p={2}>
+      <Typography variant="h4" gutterBottom>
+        Trading Hub
+      </Typography>
+      <Button variant="contained" color="primary" onClick={handleOpen}>
+        Connect Brokerage
+      </Button>
 
-      {/* Coinbase Logo and Form */}
-      <Box sx={{ textAlign: 'center', mb: 3 }}>
-        <img src={CoinbaseLogo} alt="Coinbase" style={{ width: '150px' }} />
-      </Box>
-
-      <form onSubmit={handleSubmit}>
-        {/* API Key Name Input */}
-        <TextField
-          label="API Key Name"
-          variant="outlined"
-          fullWidth
-          value={apiKeyName}
-          onChange={(e) => setApiKeyName(e.target.value)}
-          sx={{ mb: 2 }}
-          required
-        />
-
-        {/* Private Key Input */}
-        <TextField
-          label="Private Key"
-          variant="outlined"
-          fullWidth
-          type="password"
-          value={privateKey}
-          onChange={(e) => setPrivateKey(e.target.value)}
-          sx={{ mb: 2 }}
-          required
-        />
-
-        {/* Submit Button */}
-        <Button type="submit" variant="contained" color="primary" fullWidth>
-          Submit API Keys
-        </Button>
-      </form>
-
-      {/* Divider Section */}
-      <Box sx={{ textAlign: 'center', mt: 4 }}>
-        <Divider sx={{ mb: 2 }} />
-        <Typography variant="body1">More brokerages coming soon...</Typography>
-      </Box>
-    </Container>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Connect Brokerage</DialogTitle>
+        <DialogContent>
+          <Box component="form" display="flex" flexDirection="column" gap={2} mt={1}>
+            <TextField
+              label="API Key Name"
+              fullWidth
+              value={apiKeyName}
+              onChange={(e) => setApiKeyName(e.target.value)}
+              variant="outlined"
+            />
+            <TextField
+              label="Private Key"
+              type="password"
+              fullWidth
+              value={privateKey}
+              onChange={(e) => setPrivateKey(e.target.value)}
+              variant="outlined"
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} variant="contained" color="primary">
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 

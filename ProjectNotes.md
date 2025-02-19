@@ -28,6 +28,7 @@
 * Remove all items in a table: `DELETE FROM <table-name>;`
 * Remove all items in a table without triggering any additional checks or constraints: `TRUNCATE TABLE <table-name>`
 * Get all items in table: `SELECT * FROM <table-name>;`
+* Alter table: `ALTER TABLE <table-name> ADD COLUMN "<column name>" VARCHAR;` (VARCHAR?)
 
 ### Misc
 

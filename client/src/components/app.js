@@ -3,25 +3,25 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, CssBaseline, createTheme, Box } from '@mui/material';
-import Header from './header';
-import Footer from './footer';
+import Header from './layout/header';
+import Footer from './layout/footer';
 import Home from './home';
-import Login from './login';
-import Register from './register';
-import NotFound from './notFound';
-import PrivateRoute from './privateRoute';
-import UserProfile from './userProfile';
+import Login from './user/login';
+import Register from './user/register';
+import NotFound from './layout/notFound';
+import PrivateRoute from './layout/privateRoute';
+import UserProfile from './user/userProfile';
 import TradingHub from './tradingHub';
 import { AuthProvider } from '../context/authContext';
 
 const theme = createTheme({
   palette: {
-    mode: 'dark', // Use 'light' for light mode
+    mode: 'dark', 
     primary: {
-      main: '#407E3D', 
+      main: '#407E3D',
     },
     secondary: {
-      main: '#7c4e31',
+      main: '#885b3f',
     },
   },
 });
