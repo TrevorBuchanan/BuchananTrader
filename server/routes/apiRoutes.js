@@ -20,10 +20,7 @@ router.post('/trading-engine/close-positions', tradingEngineController.closeAsse
 router.delete('/trading-engine/remove-asset/:assetName', tradingEngineController.removeAsset);
 
 // Database routes
-router.post('/register', databaseController.registerUser);
-router.post('/login', databaseController.loginUser);
 router.post('/log-price', databaseController.logAssetPrice);
 router.get('/fetch-prices', databaseController.getAssetLoggedPriceSeries);
-router.post('/set-user-keys', databaseController.setUserKeys);
 
 module.exports = router;

@@ -5,14 +5,14 @@ const client = require('../config/coinbase');
 // Function to get all available assets (trading pairs)
 const getAssetsList = async () => {
   try {
-    const response = await client.makeRequest('GET', '/products');
+    const response = await client.makeRequest('GET', '/products'); 
     if (response && response.data) {
       return response.data;  
     } else {
       throw new Error('Invalid response structure');
     }
   } catch (error) {
-    throw new Error(`Error (service) fetching available assets list: ${error.message}`);
+    throw new Error(`Error fetching products: ${error.message}`);
   }
 };
 

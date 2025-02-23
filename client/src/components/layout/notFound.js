@@ -6,7 +6,7 @@ const NotFound = () => {
   const navigate = useNavigate();
 
   const handleGoHome = () => {
-    navigate('/');
+    navigate('/trading-hub'); // FIXME: Change back to '/' when cleanup is finished 
   };
 
   return (
@@ -26,7 +26,7 @@ const NotFound = () => {
         onClick={handleGoHome}
         sx={{ mt: 2 }}
       >
-        Go Back to Home
+        Go Back to Trading Hub
       </Button>
     </Container>
   );

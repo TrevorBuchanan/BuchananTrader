@@ -1,12 +1,6 @@
 // src/api/index.js
 
 // Import API functions from different files
-import { 
-    loginUser, 
-    registerUser, 
-    logoutUser 
-} from './authPosts';
-
 import {
 } from './enginePosts';
 
@@ -22,11 +16,6 @@ import {
 } from './databasePosts';
 
 export {
-    // Auth
-    loginUser,
-    registerUser,
-    logoutUser,
-
     // Engine
 
 

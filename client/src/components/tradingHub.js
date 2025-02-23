@@ -18,9 +18,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { 
     getCoinbaseAssetsList,
-    setUserApiKeys,
 } from '../api';
-import { useAuth } from '../context/authContext';
 
 const debounce = (func, delay) => {
     let timeoutId;
@@ -33,12 +31,8 @@ const debounce = (func, delay) => {
 };
 
 const TradingHub = () => {
-    const { user } = useAuth();
-
     const [open, setOpen] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [apiKeyName, setApiKeyName] = useState('');
-    const [privateKey, setPrivateKey] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedAsset, setSelectedAsset] = useState('');
     const [assets, setAssets] = useState([]);
@@ -87,23 +81,7 @@ const TradingHub = () => {
     const handleDrawerClose = () => setDrawerOpen(false);
 
     const handleSubmit = () => {
-        console.log(user);
-
-        if (!user || !user.id) {
-            console.error('User not authenticated or missing ID');
-            return;
-        }
-
-        const userId = user.id; // Get the current user's ID
-
-        setUserApiKeys(userId, apiKeyName, privateKey)
-            .then(response => {
-                console.log('API keys updated:', response);
-            })
-            .catch(error => {
-                console.error('Failed to update API keys:', error.message);
-            });
-
+        
         handleClose();
     };
 
@@ -119,46 +97,12 @@ const TradingHub = () => {
                 Trading Hub
             </Typography>
             <Box display="flex" justifyContent="space-between" mt={2}>
-                <Button variant="contained" color="primary" onClick={handleOpen}>
-                    Update Coinbase Connection
-                </Button>
                 <Button variant="outlined" color="primary" onClick={handleDrawerOpen}>
                     Select Asset
                 </Button>
             </Box>
 
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Coinbase API Connection</DialogTitle>
-                <DialogContent>
-                    <Box component="form" display="flex" flexDirection="column" gap={2} mt={1}>
-                        <TextField
-                            label="API Key Name"
-                            fullWidth
-                            value={apiKeyName}
-                            onChange={(e) => setApiKeyName(e.target.value)}
-                            variant="outlined"
-                        />
-                        <TextField
-                            label="Private Key"
-                            type="password"
-                            fullWidth
-                            value={privateKey}
-                            onChange={(e) => setPrivateKey(e.target.value)}
-                            variant="outlined"
-                        />
-                    </Box>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="secondary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleSubmit} variant="contained" color="primary">
-                        Submit
-                    </Button>
-                </DialogActions>
-            </Dialog>
-
-            <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerClose}>
+            <Drawer anchor="left" open={drawerOpen} onClose={handleDrawerClose}>
                 <Box width={300} p={2}>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                         <Typography variant="h6">Select Asset</Typography>
