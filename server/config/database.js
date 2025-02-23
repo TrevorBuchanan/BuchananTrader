@@ -1,13 +1,13 @@
 // database.js
 
 const { Sequelize } = require('sequelize');
-require('dotenv').config(); // Load environment variables from .env file
+require('dotenv').config(); 
 
 // Create a new Sequelize instance using environment variables
 const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.DB_PASSWORD, {
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT, // Ensure you specify the port if needed
-    dialect: 'postgres', // Specify the dialect (PostgreSQL in this case)
+    port: process.env.DB_PORT, 
+    dialect: 'postgres', 
     logging: false, // Disable logging; set to console.log to see SQL queries
 });
 
@@ -21,7 +21,6 @@ const testConnection = async () => {
     }
 };
 
-// Export the sequelize instance and testConnection function
 module.exports = {
     sequelize,
     testConnection,

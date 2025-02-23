@@ -1,46 +1,36 @@
 const coinbaseService = require('../services/coinbaseService');
 
-const getCurrencies = async (req, res) => {
+const getAssetsList = async (req, res) => {
   try {
-    const currencies = await coinbaseService.getCurrencies();
-    res.json(currencies);
+    const assetsList = await coinbaseService.getAssetsList();
+    res.json(assetsList);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching currencies', error: error.message });
+    res.status(500).json({ message: 'Error (controller) fetching assets list', error: error.message });
   }
 };
 
-const getProducts = async (req, res) => {
+const getAssetInfo = async (req, res) => {
+  const { assetID } = req.params; 
   try {
-    const products = await coinbaseService.getProducts();
-    res.json(products);
+    const asset = await coinbaseService.getAssetInfo(assetID); 
+    res.json(asset);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching products', error: error.message });
+    res.status(500).json({ message: `Error (controller) fetching asset info for ${assetID}`, error: error.message });
   }
 };
 
-const getProduct = async (req, res) => {
-  const { product_id } = req.params; // Extract the product_id from the route parameter
+const getHistory = async (req, res) => {
+  const { assetID, start, end, granularity } = req.body;
   try {
-    const product = await coinbaseService.getProduct(product_id); // Pass product_id to the service
-    res.json(product);
+    const history = await coinbaseService.getHistory(assetID, start, end, granularity);
+    res.json(history);
   } catch (error) {
-    res.status(500).json({ message: `Error fetching product ${product_id}`, error: error.message });
-  }
-};
-
-const createTransaction = async (req, res) => {
-  const { accountId, amount, currency } = req.body;
-  try {
-    const transaction = await coinbaseService.createTransaction(accountId, amount, currency);
-    res.json(transaction);
-  } catch (error) {
-    res.status(500).json({ message: 'Error creating transaction', error: error.message });
+    res.status(500).json({ message: 'Error (controller) fetching history', error: error.message });
   }
 };
 
 module.exports = {
-  getCurrencies,
-  getProducts,
-  getProduct,
-  createTransaction,
+  getAssetsList,
+  getAssetInfo,
+  getHistory,
 };

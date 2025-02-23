@@ -19,7 +19,7 @@
 * Show dbs: `\l`
 * Connect to database: `\c buchanantraderdb;`
 * Exit: `\q`
-* Integrate into project `npm install pg`
+* Integrate into project: `npm install pg`
 * Create db user: `CREATE USER <username> WITH PASSWORD '<password>';`
 * Grant privileges: `GRANT ALL PRIVILEGES ON DATABASE <database-name> TO <username>`;
 * Drop db: `DROP DATABASE <database-name> IF EXISTS <database_name>;`

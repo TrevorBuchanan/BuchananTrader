@@ -26,7 +26,6 @@ const findUserByEmail = async (email) => {
 const authenticateUser = async (email, password) => {
     try {
         const user = await findUserByEmail(email);
-        // console.log(user);
         if (!user) return null;
 
         // Check if password matches
@@ -75,11 +74,11 @@ const logAssetPrice = async (assetName, price, time) => {
 };
 
 // Retrieve logged asset price series
-const getLoggedAssetPriceSeries = async (asset_name) => {
+const getLoggedAssetPriceSeries = async (assetID) => {
     try {
         return await AssetPrice.findAll({
             where: {
-                asset_name,
+                asset_name: assetID,
             },
             order: [['time', 'ASC']], // Sort by time in ascending order
         });
@@ -89,10 +88,40 @@ const getLoggedAssetPriceSeries = async (asset_name) => {
     }
 };
 
+const setUserKeys = async (userId, newApiKey, newPrivateKey) => {
+    try {
+        // Find the user by ID
+        const user = await User.findByPk(userId);
+        
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        // Update the user's keys
+        user.apiKey = newApiKey;
+        user.privateKey = newPrivateKey;
+
+        // Save the updated user
+        await user.save();
+
+        return {
+            success: true,
+            message: 'User keys updated successfully',
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: error.message || 'Failed to update user keys',
+        };
+    }
+};
+
+
 module.exports = {
     createUser,
     findUserByEmail,
     authenticateUser,
     logAssetPrice,
     getLoggedAssetPriceSeries,
+    setUserKeys,
 };

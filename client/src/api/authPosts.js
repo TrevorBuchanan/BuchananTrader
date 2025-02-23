@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const API_URL = '/api'; // Or your actual backend URL
 
-export const loginUser = async (email, password) => {
+const loginUser = async (email, password) => {
     try {
         const response = await axios.post(`${API_URL}/login`, {
             email,
@@ -14,15 +14,16 @@ export const loginUser = async (email, password) => {
 
         // Store the token in localStorage
         localStorage.setItem('token', response.data.token);
-        return response.data;  // Return the token and user data
 
+        // Return the token and user data
+        return response.data; // Now includes { token, user: { id, email } }
     } catch (err) {
         console.error('Login failed:', err.message);
         throw new Error('Login failed. Please check your credentials.');
     }
 };
 
-export const registerUser = async (email, password) => {
+const registerUser = async (email, password) => {
     try {
         const response = await axios.post(`${API_URL}/register`, {
             email,
@@ -41,7 +42,13 @@ export const registerUser = async (email, password) => {
     }
 };
 
-export const logoutUser = () => {
+const logoutUser = () => {
     // Clear the token from localStorage
     localStorage.removeItem('token');
 };
+
+export {
+    loginUser,
+    registerUser,
+    logoutUser
+}

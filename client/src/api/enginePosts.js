@@ -1,11 +1,9 @@
-// src/api/posts.js
 import axios from "axios";
 
 //
 // TODO: Calculate some sort of index of how likely an asset price is going to 
 // move in the same direction as previously for some given time-step
 //
-
 
 const addAssetPriceToEngine = async (assetName, price, time) => {
     try {
@@ -20,26 +18,6 @@ const addAssetPriceToEngine = async (assetName, price, time) => {
         throw new Error('Failed to save price to engine');
     }
 };
-
-const getCoinbaseAssetPrice = async (assetName) => {
-    try {
-        const response = await axios.get(`/api/coinbase/products/${assetName}`);
-        return response.data;  // Return the fetched data
-    } catch (err) {
-        console.error('Failed to fetch price: ', err.message);
-        throw new Error('Failed to fetch price');
-    }
-};
-
-const getCoinbasePriceHistory = async (assetName) => {
-    try {
-        const response = await axios.get(`/api/coinbase/history-stuff/${assetName}`); // TODO: Get actual price history
-        return response.data;
-    } catch (err) {
-        console.error('Failed to fetch price history: ', err.message);
-        throw new Error('Failed to fetch price history');
-    }
-}
 
 const getAssetProfitLoss = async (assetName) => {
     try {
@@ -63,34 +41,6 @@ const tradeAsset = async (assetName) => {
     }
 };
 
-const logAssetPrice = async (assetName, price, time) => {
-    try {
-        await axios.post('/api/log-price', {
-            assetName,
-            price,
-            time,
-        });
-    } catch (err) {
-        console.error('Failed to log asset price:', err.message);
-        throw new Error('Failed to log asset price');
-    }
-};
-
-const fetchAssetLoggedPrices = async (assetName) => {
-    try {
-        const response = await axios.get(`/api/fetch-prices?assetName=${assetName}`);
-        // const responseObj = response.data;
-        return response.data;
-    } catch (err) {
-        console.error('Failed to fetch logged prices:', err.message);
-        throw new Error('Failed to fetch logged prices');
-    }
-}
-
-const clearAssetLoggedPrices = async (assetName) => {
-    // Don't know what this is for
-}
-
 const removeAsset = async (assetName) => {
     try {
         await axios.delete(`/api/trading-engine/remove-asset/${assetName}`);
@@ -98,18 +48,6 @@ const removeAsset = async (assetName) => {
     } catch (err) {
         console.error(`Failed to delete ${assetName} from server:`, err.message);
         throw new Error(`Failed to delete ${assetName} from server`);
-    }
-};
-
-const getSpotAssets = async () => {
-    try {
-        const response = await fetch('/api/coinbase/products');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return await response.json();
-    } catch (error) {
-        console.error('Error fetching spot products:', error);
     }
 };
 
@@ -156,16 +94,5 @@ const getAssetEMA = async (assetName) => {
 };
 
 export {
-    getSpotAssets,
-    addAssetPriceToEngine,
-    getCoinbaseAssetPrice,
-    getAssetProfitLoss,
-    tradeAsset,
-    logAssetPrice,
-    fetchAssetLoggedPrices,
-    removeAsset,
-    getAssetLongLossLimit,
-    getAssetShortLossLimit,
-    getAssetEMA,
-    closeEngineAssetAllPositions,
-};
+    
+}

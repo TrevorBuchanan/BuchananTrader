@@ -16,7 +16,11 @@ import {
     ListItemText,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { getSpotAssets } from '../api';
+import { 
+    getCoinbaseAssetsList,
+    setUserApiKeys,
+} from '../api';
+import { useAuth } from '../context/authContext';
 
 const debounce = (func, delay) => {
     let timeoutId;
@@ -29,11 +33,12 @@ const debounce = (func, delay) => {
 };
 
 const TradingHub = () => {
+    const { user } = useAuth();
+
     const [open, setOpen] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [apiKeyName, setApiKeyName] = useState('');
     const [privateKey, setPrivateKey] = useState('');
-    const [assetType, setAssetType] = useState('Spot');
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedAsset, setSelectedAsset] = useState('');
     const [assets, setAssets] = useState([]);
@@ -45,12 +50,12 @@ const TradingHub = () => {
     useEffect(() => {
         const fetchAssets = async () => {
             try {
-                const data = await getSpotAssets();
-                const dataAssets = data.products;
-                setAssets(dataAssets);
-                setFilteredAssets(dataAssets); // Initially show all assets
+                const data = await getCoinbaseAssetsList();
+                const assetsListData = data.assetsList;
+                setAssets(assetsListData);
+                setFilteredAssets(assetsListData); // Initially show all assets
             } catch (err) {
-                console.error('Error fetching spot products:', err);
+                console.error('Error fetching assets list:', err);
                 setError('Failed to load assets');
             } finally {
                 setLoading(false);
@@ -82,10 +87,23 @@ const TradingHub = () => {
     const handleDrawerClose = () => setDrawerOpen(false);
 
     const handleSubmit = () => {
-        console.log('API Key Name:', apiKeyName);
-        console.log('Private Key:', privateKey);
-        console.log('Selected Asset:', selectedAsset);
-        console.log('Asset Type:', assetType);
+        console.log(user);
+
+        if (!user || !user.id) {
+            console.error('User not authenticated or missing ID');
+            return;
+        }
+
+        const userId = user.id; // Get the current user's ID
+
+        setUserApiKeys(userId, apiKeyName, privateKey)
+            .then(response => {
+                console.log('API keys updated:', response);
+            })
+            .catch(error => {
+                console.error('Failed to update API keys:', error.message);
+            });
+
         handleClose();
     };
 
@@ -102,7 +120,7 @@ const TradingHub = () => {
             </Typography>
             <Box display="flex" justifyContent="space-between" mt={2}>
                 <Button variant="contained" color="primary" onClick={handleOpen}>
-                    Connect to Coinbase
+                    Update Coinbase Connection
                 </Button>
                 <Button variant="outlined" color="primary" onClick={handleDrawerOpen}>
                     Select Asset
@@ -110,7 +128,7 @@ const TradingHub = () => {
             </Box>
 
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Connect to Coinbase</DialogTitle>
+                <DialogTitle>Coinbase API Connection</DialogTitle>
                 <DialogContent>
                     <Box component="form" display="flex" flexDirection="column" gap={2} mt={1}>
                         <TextField
@@ -148,26 +166,6 @@ const TradingHub = () => {
                             <CloseIcon />
                         </IconButton>
                     </Box>
-                    <Box display="flex" justifyContent="space-around" mb={2}>
-                        <Button
-                            variant={assetType === 'Spot' ? 'contained' : 'outlined'}
-                            onClick={() => setAssetType('Spot')}
-                        >
-                            Spot
-                        </Button>
-                        <Button
-                            variant={assetType === 'Futures' ? 'contained' : 'outlined'}
-                            onClick={() => setAssetType('Futures')}
-                        >
-                            Futures
-                        </Button>
-                        <Button
-                            variant={assetType === 'Perps' ? 'contained' : 'outlined'}
-                            onClick={() => setAssetType('Perps')}
-                        >
-                            Perps
-                        </Button>
-                    </Box>
                     <Divider sx={{ my: 2 }} />
                     <TextField
                         label="Search Assets"
@@ -177,7 +175,7 @@ const TradingHub = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         placeholder={loading ? 'Loading assets...' : 'Search tradable assets'}
                     />
-                    <List sx={{ mt: 2, maxHeight: 650, overflowY: 'auto' }}>
+                    <List sx={{ mt: 2, maxHeight: 700, overflowY: 'auto' }}>
                         {filteredAssets.map((asset) => (
                             <ListItem
                                 button
@@ -209,9 +207,12 @@ const TradingHub = () => {
             >
                 <Typography variant="h6">
                     {selectedAsset
-                        ? `Selected Asset: ${selectedAsset}`
+                        ? `${selectedAsset}`
                         : 'No asset selected'}
                 </Typography>
+                
+                
+
             </Box>
         </Box>
     );

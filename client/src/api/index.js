@@ -1,36 +1,41 @@
 // src/api/index.js
 
 // Import API functions from different files
-import { loginUser, registerUser, logoutUser } from './auth';
+import { 
+    loginUser, 
+    registerUser, 
+    logoutUser 
+} from './authPosts';
+
 import {
-    getSpotAssets,
-    addAssetPriceToEngine,
-    getCoinbaseAssetPrice,
-    getAssetProfitLoss,
-    tradeAsset,
-    logAssetPrice,
-    fetchAssetLoggedPrices,
-    removeAsset,
-    getAssetLongLossLimit,
-    getAssetShortLossLimit,
-    getAssetEMA,
-    closeEngineAssetAllPositions,
-} from './posts';
+} from './enginePosts';
+
+import {
+    getCoinbaseAssetsList,
+    getCoinbaseAssetInfo,
+    getCoinbaseAssetPriceHistory
+} from './coinbasePosts';
+
+import {
+    setUserApiKeys,
+    fetchUserDetails,
+} from './databasePosts';
 
 export {
+    // Auth
     loginUser,
     registerUser,
     logoutUser,
-    getSpotAssets,
-    addAssetPriceToEngine,
-    getCoinbaseAssetPrice,
-    getAssetProfitLoss,
-    tradeAsset,
-    logAssetPrice,
-    fetchAssetLoggedPrices,
-    removeAsset,
-    getAssetLongLossLimit,
-    getAssetShortLossLimit,
-    getAssetEMA,
-    closeEngineAssetAllPositions,
+
+    // Engine
+
+
+    // Coinbase
+    getCoinbaseAssetsList,
+    getCoinbaseAssetInfo,
+    getCoinbaseAssetPriceHistory,
+
+    // Database
+    setUserApiKeys,
+    fetchUserDetails,
 };

@@ -2,7 +2,7 @@
 
 const databaseService = require('../services/databaseService');
 const jwt = require('jsonwebtoken');
-const {c} = require("sinon/lib/sinon/spy-formatters");
+const { c } = require("sinon/lib/sinon/spy-formatters");
 require('dotenv').config();
 
 const registerUser = async (req, res) => {
@@ -36,8 +36,14 @@ const loginUser = async (req, res) => {
             return res.status(500).json({ error: 'Error generating token' });
         }
 
-        // Successful response
-        return res.status(200).json({ token });
+        // Successful response, include user details wrapped in a "user" object
+        return res.status(200).json({
+            token,
+            user: {
+                id: user.id,
+                email: user.email,
+            },
+        });
     } catch (error) {
         console.error('Error logging in:', error);
         return res.status(500).json({ error: 'Server error' });
@@ -73,9 +79,46 @@ const getAssetLoggedPriceSeries = async (req, res) => {
     // }
 };
 
+const setUserKeys = async (req, res) => {
+    try {
+        // Extract the user ID and new keys from the request body
+        const { userId, newApiKey, newPrivateKey } = req.body;
+
+        if (!userId || !newApiKey || !newPrivateKey) {
+            return res.status(400).json({
+                success: false,
+                message: 'userId, newApiKey, and newPrivateKey are required.',
+            });
+        }
+
+        // Call the databaseService function to update keys
+        const result = await setUserKeys(userId, newApiKey, newPrivateKey);
+
+        // Return the result to the client
+        if (result.success) {
+            return res.status(200).json({
+                success: true,
+                message: result.message,
+            });
+        } else {
+            return res.status(500).json({
+                success: false,
+                message: result.message,
+            });
+        }
+    } catch (error) {
+        console.error(error);  // Log any errors for debugging
+        return res.status(500).json({
+            success: false,
+            message: 'An error occurred while updating user keys.',
+        });
+    }
+};
+
 module.exports = {
     registerUser,
     loginUser,
     logAssetPrice,
     getAssetLoggedPriceSeries,
+    setUserKeys,
 };

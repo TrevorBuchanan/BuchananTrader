@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { loginUser, registerUser, logoutUser } from '../api'; // Import API functions from src/api/index.js
+import { loginUser, registerUser, logoutUser } from '../api'; // Import API functions
+import { fetchUserDetails } from '../api'; // Import the function to fetch user data
 
 const AuthContext = createContext();
 
@@ -7,20 +8,34 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
-  // Check for a stored token when the component mounts
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      // Optionally decode the token or fetch user data to update the user state
-      setUser({ token }); // This can be expanded if you have user details in the token
+      fetchUserData(token);
     }
   }, []);
+
+  const fetchUserData = async (token) => {
+    try {
+      const userData = await fetchUserDetails(token); // Fetch user data from API
+      setUser({
+        token,
+        ...userData, // Merge token and user details
+      });
+    } catch (err) {
+      console.error('Failed to fetch user data:', err);
+      setError('Failed to fetch user data. Please log in again.');
+      setUser(null); // Clear user state if fetching fails
+    }
+  };
 
   const login = async (email, password) => {
     try {
       const data = await loginUser(email, password); // Call the API function
       localStorage.setItem('token', data.token);
-      setUser({ token: data.token, ...data.user });
+
+      // Fetch user data immediately after login
+      fetchUserData(data.token);
     } catch (error) {
       console.error('Login error:', error);
       setError('Login failed. Please check your credentials.');
@@ -38,7 +53,9 @@ export const AuthProvider = ({ children }) => {
     try {
       const data = await registerUser(email, password); // Call the API function
       localStorage.setItem('token', data.token);
-      setUser({ token: data.token, ...data.user });
+
+      // Fetch user data immediately after registration
+      fetchUserData(data.token);
     } catch (error) {
       console.error('Registration error:', error);
       setError('Registration failed. Please try again.');
