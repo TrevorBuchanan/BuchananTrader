@@ -5,14 +5,10 @@ const client = require('../config/coinbase');
 // Function to get all available assets (trading pairs)
 const getAssetsList = async () => {
   try {
-    const response = await client.makeRequest('GET', '/products'); 
-    if (response && response.data) {
-      return response.data;  
-    } else {
-      throw new Error('Invalid response structure');
-    }
+    const response = await client.makeRequest('GET', '/products');
+    return response.data || response;
   } catch (error) {
-    throw new Error(`Error fetching products: ${error.message}`);
+    throw new Error(`Error (service) fetching products: ${error.message}`);
   }
 };
 
@@ -20,11 +16,7 @@ const getAssetsList = async () => {
 const getAssetInfo = async (assetID) => {
   try {
     const response = await client.makeRequest('GET', `/products/${assetID}`);
-    if (response && response.data) {
-      return response.data;  
-    } else {
-      throw new Error('Invalid response structure');
-    }
+    return response.data || response;
   } catch (error) {
     throw new Error(`Error (service) fetching product ${assetID}: ${error.message}`);
   }
@@ -34,11 +26,7 @@ const getAssetInfo = async (assetID) => {
 const getHistory = async (assetID, start, end, granularity) => {
   try {
     const response = await client.makeRequest('GET', `/products/${assetID}/candles?start=${start}&end=${end}&granularity=${granularity}`);
-    if (response && response.data) {
-      return response.data;  
-    } else {
-      throw new Error('Invalid response structure');
-    }
+    return response.data || response;
   } catch (error) {
     throw new Error(`Error (service) getting asset history: ${error.message}`);
   }

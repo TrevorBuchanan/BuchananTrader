@@ -2,10 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
     Box,
     Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
     TextField,
     Typography,
     Drawer,
@@ -19,6 +15,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { 
     getCoinbaseAssetsList,
 } from '../api';
+import SeriesGraph from './shared/priceGraph';
 
 const debounce = (func, delay) => {
     let timeoutId;
@@ -31,7 +28,6 @@ const debounce = (func, delay) => {
 };
 
 const TradingHub = () => {
-    const [open, setOpen] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedAsset, setSelectedAsset] = useState('');
@@ -45,7 +41,7 @@ const TradingHub = () => {
         const fetchAssets = async () => {
             try {
                 const data = await getCoinbaseAssetsList();
-                const assetsListData = data.assetsList;
+                const assetsListData = data.products;
                 setAssets(assetsListData);
                 setFilteredAssets(assetsListData); // Initially show all assets
             } catch (err) {
@@ -75,15 +71,8 @@ const TradingHub = () => {
         filterAssets(searchTerm);
     }, [searchTerm, assets]);
 
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
     const handleDrawerOpen = () => setDrawerOpen(true);
     const handleDrawerClose = () => setDrawerOpen(false);
-
-    const handleSubmit = () => {
-        
-        handleClose();
-    };
 
     const handleAssetSelect = (asset) => {
         setSelectedAsset(asset.display_name);
@@ -155,7 +144,7 @@ const TradingHub = () => {
                         : 'No asset selected'}
                 </Typography>
                 
-                
+                <SeriesGraph></SeriesGraph>
 
             </Box>
         </Box>

@@ -1,41 +1,7 @@
 // databaseService.js
 
-const User = require('../models/User');
 const AssetPrice = require('../models/AssetPrice');
 const {Op} = require("sequelize");
-
-const createUser = async (userData) => {
-    try {
-        return await User.create(userData);
-    } catch (err) {
-        throw err;
-    }
-};
-
-// Find user by email
-const findUserByEmail = async (email) => {
-    try {
-        return await User.findOne({ where: { email } });
-    } catch (err) {
-        console.log(err)
-        throw err;
-    }
-};
-
-// Authenticate user credentials
-const authenticateUser = async (email, password) => {
-    try {
-        const user = await findUserByEmail(email);
-        if (!user) return null;
-
-        // Check if password matches
-        const isMatch = await user.comparePassword(password);
-        return isMatch ? user : null;
-    } catch (err) {
-        console.log(err)
-        throw err;
-    }
-};
 
 // Log asset price
 const logAssetPrice = async (assetName, price, time) => {
@@ -88,40 +54,7 @@ const getLoggedAssetPriceSeries = async (assetID) => {
     }
 };
 
-const setUserKeys = async (userId, newApiKey, newPrivateKey) => {
-    try {
-        // Find the user by ID
-        const user = await User.findByPk(userId);
-        
-        if (!user) {
-            throw new Error('User not found');
-        }
-
-        // Update the user's keys
-        user.apiKey = newApiKey;
-        user.privateKey = newPrivateKey;
-
-        // Save the updated user
-        await user.save();
-
-        return {
-            success: true,
-            message: 'User keys updated successfully',
-        };
-    } catch (error) {
-        return {
-            success: false,
-            message: error.message || 'Failed to update user keys',
-        };
-    }
-};
-
-
 module.exports = {
-    createUser,
-    findUserByEmail,
-    authenticateUser,
     logAssetPrice,
     getLoggedAssetPriceSeries,
-    setUserKeys,
 };
